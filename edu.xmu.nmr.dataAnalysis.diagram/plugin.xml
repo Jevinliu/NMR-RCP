@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="edu.xmu.nmr.dataanalysis.diagram.multieditor.NMRDiagEditor"
+            default="true"
+            id="edu.xmu.nmr.dataAnalysis.diagram.nmreditor"
+            name="NMR Diagram Editor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:edu.xmu.dataAnalysis.explorer.view?after=additions">
+         <command
+               commandId="edu.xmu.nmr.dataAnalysis.diagram.commands.opennmreditor"
+               id="menu.openwitheditor"
+               label="Open With Editor"
+               mnemonic="O"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            description="Open the params or fid with this editor"
+            id="edu.xmu.nmr.dataAnalysis.diagram.commands.opennmreditor"
+            name="Open NMR Editor">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="edu.xmu.nmr.dataanalysis.diagram.handlers.OpenNMREditorHandler"
+            commandId="edu.xmu.nmr.dataAnalysis.diagram.commands.opennmreditor">
+         <enabledWhen>
+            <reference
+                  definitionId="definition.selection.openeditor">
+            </reference>
+         </enabledWhen>
+      </handler>
+   </extension>
+   <extension
+         point="edu.xmu.nmr.custom.extensions.editorpage">
+      <editorpage
+            class="edu.xmu.nmr.dataanalysis.diagram.multieditor.ParamsEditorPage"
+            editorinput="edu.xmu.nmr.dataanalysis.diagram.multieditor.ParamsEditorInput"
+            id="edu.xmu.nmr.dataAnalysis.diagram.editorparts.paramseditorpage"
+            name="Paramster">
+      </editorpage>
+      <editorpage
+            class="edu.xmu.nmr.dataanalysis.diagram.multieditor.FidEditorPage"
+            editorinput="edu.xmu.nmr.dataanalysis.diagram.multieditor.FidEditorInput"
+            id="edu.xmu.nmr.dataAnalysis.diagram.editorparts.fidEditorPage"
+            name="Fid">
+      </editorpage>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="definition.selection.openeditor">
+         <with
+               variable="org.eclipse.ui.selection">
+            <iterate
+                  ifEmpty="false"
+                  operator="and">
+               <or>
+                  <instanceof
+                        value="edu.xmu.nmr.dataanalysis.logic.explorermodel.FidNode">
+                  </instanceof>
+                  <instanceof
+                        value="edu.xmu.nmr.dataanalysis.logic.explorermodel.ParamtersNode">
+                  </instanceof>
+               </or>
+            </iterate>
+         </with>
+      </definition>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="edu.xmu.nmr.dataanalysis.diagram.pref.DataAnalysisCategory"
+            id="edu.xmu.nmr.dataAnalysis.diagram.page.dataanalysis"
+            name="Data Analysis">
+      </page>
+      <page
+            category="edu.xmu.nmr.dataAnalysis.diagram.page.dataanalysis"
+            class="edu.xmu.nmr.dataanalysis.diagram.pref.FidPrefPage"
+            id="edu.xmu.nmr.dataAnalysis.diagram.page.fid"
+            name="Fid">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="edu.xmu.nmr.dataanalysis.diagram.pref.helper.DataAnalysisPrefInitializer">
+      </initializer>
+   </extension>
+
+</plugin>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            category="edu.xmu.nmr.dataAnalysis.importData.NMRData"
+            class="edu.xmu.nmr.dataanalysis.importvarian.ImportVarianWizard"
+            id="edu.xmu.nmr.dataAnalysis.importVarian.wizard"
+            name="Import Varian Data">
+      </wizard>
+   </extension>
+
+</plugin>

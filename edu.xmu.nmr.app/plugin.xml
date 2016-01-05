@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="edu.xmu.nmr.app.Application">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.ui.main.menu">
+         <menu
+               id="menu.file"
+               label="File"
+               mnemonic="F">
+            <command
+                  commandId="org.eclipse.ui.file.import"
+                  id="menu.file.import"
+                  label="Import"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.eclipse.ui.file.exit"
+                  label="Exit"
+                  style="push">
+            </command>
+         </menu>
+         <menu
+               id="menu.window"
+               label="Window"
+               mnemonic="W">
+            <command
+                  commandId="org.eclipse.ui.views.showView"
+                  id="menu.window.showview"
+                  label="Show View"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.eclipse.ui.window.preferences"
+                  id="menu.window.preference"
+                  label="Preference"
+                  style="push">
+            </command>
+         </menu>
+         <menu
+               id="menu.help"
+               label="Help"
+               mnemonic="H">
+            <command
+                  commandId="org.eclipse.ui.help.aboutAction"
+                  id="menu.help.about"
+                  label="About NMR Studio"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <scheme
+            id="edu.xmu.nmr.app.scheme"
+            name="NMR Data Analysis Key Scheme">
+      </scheme>
+      <key
+            commandId="org.eclipse.ui.file.exit"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="edu.xmu.nmr.app.scheme"
+            sequence="M1+Q">
+      </key>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="edu.xmu.nmr.app.application"
+            name="NMR Studio">
+         <property
+               name="appName"
+               value="NMR Studio">
+         </property>
+      </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="edu.xmu.nmr.app.perspectives.DAPerspectiveFactory"
+            id="edu.xmu.dataAnalysis.explorer.perspective"
+            name="NMR Data Analysis">
+      </perspective>
+   </extension>
+   <extension
+         id="product1"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="edu.xmu.nmr.app.application"
+            name="NMR Studio">
+         <property
+               name="appName"
+               value="NMR Studio">
+         </property>
+      </product>
+   </extension>
+
+</plugin>

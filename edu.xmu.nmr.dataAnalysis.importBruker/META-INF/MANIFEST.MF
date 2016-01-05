@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ImportData
+Bundle-SymbolicName: edu.xmu.nmr.dataAnalysis.importBruker;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: edu.xmu.nmr.importdata.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: resource/lib/log4j-1.2.17.jar,
+ .
+Export-Package: edu.xmu.nmr.dataAnalysis.dataLogic,
+ edu.xmu.nmr.importdata
+Import-Package: edu.xmu.dataanalysis.importpage.wizard,
+ edu.xmu.nmr.dataanalysis.logic.datacenter,
+ edu.xmu.nmr.dataanalysis.logic.explorermodel

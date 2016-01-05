@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="edu.xmu.nmr.custom.extensions.editorpage" name="Editor Page" schema="schema/edu.xmu.nmr.custom.extensions.editorpage.exsd"/>
+
+</plugin>
