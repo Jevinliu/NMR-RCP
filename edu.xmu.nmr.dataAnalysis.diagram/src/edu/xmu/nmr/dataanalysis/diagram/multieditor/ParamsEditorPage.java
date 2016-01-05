@@ -16,9 +16,9 @@ import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import edu.xmu.nmrdataanalysis.diagram.model.ParamsTCProvider;
-import edu.xmu.nmrdataanalysis.diagram.model.ParamsTLProvider;
-import edu.xmu.nmrdataanalysis.diagram.model.ParamsValueEditingSupport;
+import edu.xmu.nmr.dataanalysis.diagram.others.ParamsTCProvider;
+import edu.xmu.nmr.dataanalysis.diagram.others.ParamsTLProvider;
+import edu.xmu.nmr.dataanalysis.diagram.others.ParamsValueEditingSupport;
 
 public class ParamsEditorPage extends EditorPart implements
 		PropertyChangeListener {

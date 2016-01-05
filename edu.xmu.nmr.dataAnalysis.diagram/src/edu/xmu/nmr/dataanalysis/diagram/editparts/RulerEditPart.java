@@ -14,10 +14,8 @@ public class RulerEditPart extends NMRAbstractEditPart {
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if (evt.getPropertyName().equals(Ruler.PRO_RULER_ABSMAX)
-				|| evt.getPropertyName().equals(Ruler.PRO_RULER_STEPSIZE)
+		if (evt.getPropertyName().equals(Ruler.PRO_RULER_STEPSIZE)
 				|| evt.getPropertyName().equals(Ruler.PRO_RULER_INTERVAL)) {
-			System.out.println(evt.getNewValue());
 			refreshVisuals();
 		}
 	}
@@ -33,8 +31,6 @@ public class RulerEditPart extends NMRAbstractEditPart {
 		RulerFigure figure = (RulerFigure) getFigure();
 		Ruler ruler = (Ruler) getModel();
 		figure.setOrient(ruler.getOrient());
-		System.out.println("ruler.absMax: " + ruler.getAbsMax());
-		// figure.setMax(ruler.getAbsMax());
 		figure.setInterval((int) ruler.getInterval());
 		figure.setStepSize(ruler.getStepSize());
 		figure.setLayout(ruler.getLayout());

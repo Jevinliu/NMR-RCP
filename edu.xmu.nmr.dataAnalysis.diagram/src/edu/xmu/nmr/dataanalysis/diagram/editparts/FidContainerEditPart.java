@@ -25,6 +25,13 @@ public class FidContainerEditPart extends NMRAbstractEditPart {
 	}
 
 	@Override
+	protected void refreshVisuals() {
+		FidContainerFigure figure = (FidContainerFigure) getFigure();
+		Container container = (Container) getModel();
+		figure.setLayout(container.getLayout());
+	}
+
+	@Override
 	protected List getModelChildren() {
 		return ((Container) getModel()).getChildren();
 	}

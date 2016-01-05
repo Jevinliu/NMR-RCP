@@ -1,4 +1,4 @@
-package edu.xmu.nmrdataanalysis.diagram.model;
+package edu.xmu.nmr.dataanalysis.diagram.others;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;

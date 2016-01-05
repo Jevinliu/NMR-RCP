@@ -6,8 +6,10 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.TextLayout;
 
 import edu.xmu.nmr.dataanalysis.diagram.layouts.FormatXY;
+import edu.xmu.nmrdataanalysis.diagram.model.Ruler;
 import edu.xmu.nmrdataanalysis.diagram.model.RulerOrient;
 
 public class RulerFigure extends Figure {
@@ -16,17 +18,6 @@ public class RulerFigure extends Figure {
 	 * 每个interval对应的实际的坐标间隔
 	 */
 	private float stepSize;
-	/**
-	 * 输入的数据绝对值的最大值
-	 */
-	private float max;
-
-	/**
-	 * 主要针对x轴方向上两个点之间诸如采样间隔
-	 */
-	private float rawStepSize;
-
-	private int dataSize;
 	/**
 	 * 坐标节点短画线的长度
 	 */
@@ -43,7 +34,7 @@ public class RulerFigure extends Figure {
 	public RulerFigure() {
 		setForegroundColor(ColorConstants.black);
 		setOpaque(true);
-		setFont(new Font(null, "Arial", 6, SWT.NORMAL));
+		setFont(new Font(null, "Arial", 10, SWT.NORMAL));
 	}
 
 	public RulerFigure(float stepSize, RulerOrient orient, int interval) {
@@ -69,18 +60,6 @@ public class RulerFigure extends Figure {
 		return orient;
 	}
 
-	public void setRawStepSize(float rawStepSize) {
-		this.rawStepSize = rawStepSize;
-	}
-
-	public void setDataSize(int dataSize) {
-		this.dataSize = dataSize;
-	}
-
-	public void setMax(float max) {
-		this.max = max;
-	}
-
 	public void setLayout(Rectangle rect) {
 		getParent().setConstraint(this, rect); // 设置子figure在父figure中的位置
 	}
@@ -91,21 +70,24 @@ public class RulerFigure extends Figure {
 		graphics.pushState();
 
 		Rectangle bounds = getBounds();
-		int rightEndX = bounds.x + bounds.width - 2;
+		int rulerLabL = Ruler.AXISLL - 5;
+		int rightEndX = bounds.x + bounds.width - 1;
 		int bottomEndY = bounds.y + bounds.height;
 		int centerY = bounds.y + bounds.height() / 2;
 		int num = bounds.height / interval;
-		// System.out.println("num :" + num);
 		switch (orient) {
 		case LEFT:
-			// stepSize = 2 * max * interval / bounds.height;
 			graphics.drawLine(rightEndX - tall, centerY, rightEndX, centerY);
-			graphics.drawText("0", rightEndX - 30, centerY - 4);
+			TextLayout layout = new TextLayout(null);
+			layout.setText("0");
+			layout.setAlignment(SWT.RIGHT);
+			layout.setWidth(rulerLabL - tall - 1); // 设置文字的宽度，该宽度要去除坐标轴的宽度
+			graphics.drawTextLayout(layout, rightEndX - rulerLabL / 2,
+					centerY - 6);
 			int i = 1;
 			while (i < num / 2 + 1) {
 				int aboveY = centerY - interval * i;
 				int belowY = centerY + interval * i;
-				// System.out.println("i* stepsize" + i * stepSize);
 				if (aboveY >= bounds.y || belowY <= bottomEndY) {
 					graphics.drawLine(rightEndX, centerY + interval * (i - 1),
 							rightEndX, belowY);
@@ -116,7 +98,9 @@ public class RulerFigure extends Figure {
 					if (sy1.length() > 7) {
 						sy1 = FormatXY.getENotation(y1);
 					}
-					graphics.drawText(sy1, rightEndX - 40, belowY - 4); // 绘制坐标值
+					layout.setText(sy1);
+					graphics.drawTextLayout(layout, rightEndX - rulerLabL,
+							belowY - 6);
 					graphics.drawLine(rightEndX, centerY - interval * (i - 1),
 							rightEndX, aboveY);
 					graphics.drawLine(rightEndX - tall, aboveY, rightEndX,
@@ -126,7 +110,9 @@ public class RulerFigure extends Figure {
 					if (sy1.length() > 7) {
 						sy2 = FormatXY.getENotation(y2);
 					}
-					graphics.drawText(sy2, rightEndX - 40, aboveY - 4);
+					layout.setText(sy2);
+					graphics.drawTextLayout(layout, rightEndX - rulerLabL,
+							aboveY - 6);
 				}
 				i++;
 			}
@@ -138,7 +124,6 @@ public class RulerFigure extends Figure {
 		case RIGHT:
 			break;
 		case BOTTOM:
-			// stepSize = dataSize * rawStepSize / bounds.width;
 			int j = 1;
 			while (j * interval <= bounds.width) {
 				int pX = bounds.x + interval * j;
@@ -146,8 +131,17 @@ public class RulerFigure extends Figure {
 						bounds.y);
 				graphics.drawLine(bounds.x + interval * j, bounds.y, pX,
 						bounds.y + tall);
-				graphics.drawText(String.valueOf(j * stepSize), pX, bounds.y
-						+ tall + 30);
+				float b = j * stepSize;
+				String sb = String.valueOf(b);
+				if (sb.length() > 7) {
+					sb = FormatXY.getENotation(b);
+				}
+				TextLayout bLayout = new TextLayout(null);
+				bLayout.setText(sb);
+				bLayout.setWidth(interval);
+				bLayout.setAlignment(SWT.CENTER);
+				graphics.drawTextLayout(bLayout, pX - interval / 2, bounds.y
+						+ tall + 1);
 				j++;
 			}
 			graphics.drawLine(bounds.x + interval * (j - 2), bounds.y,

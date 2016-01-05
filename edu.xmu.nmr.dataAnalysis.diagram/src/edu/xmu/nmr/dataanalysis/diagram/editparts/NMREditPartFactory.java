@@ -10,14 +10,20 @@ import edu.xmu.nmrdataanalysis.diagram.model.Ruler;
 public class NMREditPartFactory implements EditPartFactory {
 
 	public NMREditPartFactory() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public EditPart createEditPart(EditPart context, Object model) {
 		NMRAbstractEditPart part = null;
 		if (model instanceof Container) {
-			part = new FidContainerEditPart();
+			switch (((Container) model).getcType()) {
+			case WORKSPACE:
+				part = new WorkspaceEditPart();
+				break;
+			case FIDCONTAINER:
+				part = new FidContainerEditPart();
+				break;
+			}
 		} else if (model instanceof FidData) {
 			part = new FidEditPart();
 		} else if (model instanceof Ruler) {

@@ -37,24 +37,22 @@ import edu.xmu.nmr.dataanalysis.diagram.pref.helper.DataAnalysisPrefPageUtil;
 public class LineFigure extends Figure {
 
 	private ArrayList<Float> rawData; // 原始数据，如fid数据，proc数据
-	private float rawStepSize; // 主要用于采样时间
 	private float max;
 	private int tolerance = 2;
 	private CoordinateTf ctf;
+	private ArrayList<Integer> selectedIndex;
 	PointList points = new PointList();
 	private IPreferenceStore ips = Activator.getDefault().getPreferenceStore();
 
 	public LineFigure() {
-		ctf = new CoordinateTf();
 		setOpaque(true);
 		getInitConfig();
 		addPreferenceListener();
 	}
 
-	public LineFigure(ArrayList<Float> rawData, float rawStepSize) {
+	public LineFigure(ArrayList<Float> rawData) {
 		this();
 		this.rawData = rawData;
-		this.rawStepSize = rawStepSize;
 	}
 
 	/**
@@ -75,16 +73,22 @@ public class LineFigure extends Figure {
 		return rawData;
 	}
 
+	/**
+	 * 每次在设置完数据后，都进行数据点的筛选
+	 * 
+	 * @param rawData
+	 */
 	public void setRawData(ArrayList<Float> rawData) {
 		this.rawData = rawData;
+		selectPoints();
 	}
 
-	public float getRawStepSize() {
-		return rawStepSize;
+	public void setAbsMax(float max) {
+		this.max = max;
 	}
 
-	public void setRawStepSize(float rawStepSize) {
-		this.rawStepSize = rawStepSize;
+	public void setCoordinatetf(CoordinateTf ctf) {
+		this.ctf = ctf;
 	}
 
 	/**
@@ -94,18 +98,12 @@ public class LineFigure extends Figure {
 		if (ctf == null) {
 			return;
 		}
-		max = PointsTools.getAbsMax(rawData);
-		if (max == 0) {
-			return;
-		}
 		Rectangle rect = getBounds();
 		if (rect == null) {
 			return;
 		}
 		ctf.setxOffset(rect.x);
 		ctf.setyOffset(rect.y);
-		ctf.setxScale((float) (rect.width * 1 / (rawData.size() * 1.0)));
-		ctf.setyScale(rect.height / (2 * max));
 	}
 
 	public CoordinateTf getCoordinateTf() {
@@ -115,13 +113,13 @@ public class LineFigure extends Figure {
 	/**
 	 * 在x值相同时，取出当前位置的原始数据的最大值，最小值，其他该位置上的值舍弃
 	 */
-	private void transformPoints() {
+	private void selectPoints() {
 
 		if (rawData == null || rawData.size() == 0) {
 			return;
 		}
-		this.setCoordinateTf();
-		ArrayList<Integer> selectedIndex = new ArrayList<Integer>();
+
+		selectedIndex = new ArrayList<Integer>();
 		ArrayList<Integer> sameXIndex = new ArrayList<Integer>(); // 记录当下一组x坐标转换后相同的数据点的索引
 		Comparator<Integer> c = new Comparator<Integer>() {
 			@Override
@@ -161,6 +159,13 @@ public class LineFigure extends Figure {
 			sameXIndex.add(i);
 		}
 
+	}
+
+	/**
+	 * 将选择的数据点转换为指定区域下的像素点
+	 */
+	private void transformPoints() {
+		this.setCoordinateTf(); // 主要用于设置相对位移
 		PointList pl = new PointList();
 		for (int i : selectedIndex) {
 			Point p = ctf.transformXY(i, max - rawData.get(i)); // 将0值作为整个fidfigure的纵向中心，

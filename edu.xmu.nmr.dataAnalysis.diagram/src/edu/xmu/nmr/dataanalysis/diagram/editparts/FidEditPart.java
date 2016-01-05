@@ -3,7 +3,6 @@ package edu.xmu.nmr.dataanalysis.diagram.editparts;
 import java.beans.PropertyChangeEvent;
 
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.geometry.Rectangle;
 
 import edu.xmu.nmr.dataanalysis.diagram.figures.LineFigure;
 import edu.xmu.nmrdataanalysis.diagram.model.FidData;
@@ -24,8 +23,9 @@ public class FidEditPart extends NMRAbstractEditPart {
 		LineFigure figure = (LineFigure) getFigure();
 		FidData fidData = (FidData) getModel();
 		figure.setRawData(fidData.getRawData()); // 模型层与view层结合，装填数据
-		figure.setRawStepSize(fidData.getRawStepSize());
-		figure.setLayout(new Rectangle()); // 初始化
+		figure.setAbsMax(fidData.getAbsMax());
+		figure.setCoordinatetf(fidData.getCoordinateTf());
+		figure.setLayout(fidData.getLayout()); // 初始化
 	}
 
 	@Override

@@ -14,6 +14,7 @@ public class FElement implements IAdaptable {
 	private FElement parent;
 	private PropertyChangeSupport listeners;
 	private Rectangle layout;
+	private float WHRatio = 1.25f;
 
 	public FElement() {
 		this.parent = null;
@@ -61,5 +62,13 @@ public class FElement implements IAdaptable {
 
 	public void setLayout(Rectangle layout) {
 		this.layout = layout;
+	}
+
+	public float getWHRatio() {
+		return WHRatio;
+	}
+
+	public void setWHRaioLayout(Rectangle layout) {
+
 	}
 }
