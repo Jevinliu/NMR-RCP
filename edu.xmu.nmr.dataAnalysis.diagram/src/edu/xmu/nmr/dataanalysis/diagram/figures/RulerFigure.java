@@ -82,8 +82,7 @@ public class RulerFigure extends Figure {
 			layout.setText("0");
 			layout.setAlignment(SWT.RIGHT);
 			layout.setWidth(rulerLabL - tall - 1); // 设置文字的宽度，该宽度要去除坐标轴的宽度
-			graphics.drawTextLayout(layout, rightEndX - rulerLabL / 2,
-					centerY - 6);
+			graphics.drawTextLayout(layout, rightEndX - rulerLabL, centerY - 6);
 			int i = 1;
 			while (i < num / 2 + 1) {
 				int aboveY = centerY - interval * i;
@@ -121,8 +120,6 @@ public class RulerFigure extends Figure {
 			graphics.drawLine(rightEndX, centerY - interval * (i - 1),
 					rightEndX, bounds.y);
 			break;
-		case RIGHT:
-			break;
 		case BOTTOM:
 			int j = 1;
 			while (j * interval <= bounds.width) {
@@ -138,10 +135,10 @@ public class RulerFigure extends Figure {
 				}
 				TextLayout bLayout = new TextLayout(null);
 				bLayout.setText(sb);
-				bLayout.setWidth(interval);
+				bLayout.setWidth(interval - 10);
 				bLayout.setAlignment(SWT.CENTER);
-				graphics.drawTextLayout(bLayout, pX - interval / 2, bounds.y
-						+ tall + 1);
+				graphics.drawTextLayout(bLayout, pX - interval / 2 + 5,
+						bounds.y + tall + 1);
 				j++;
 			}
 			graphics.drawLine(bounds.x + interval * (j - 2), bounds.y,

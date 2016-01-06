@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.FigureCanvas;
+import org.eclipse.draw2d.FreeformFigure;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.GraphicalViewer;
@@ -46,6 +49,7 @@ public class FidEditorPage extends GraphicalEditor {
 	private GraphicalViewer viewer;
 	private Rectangle clientArea;
 	private Container container;
+	private ZoomManager zoomManager;
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
@@ -66,17 +70,21 @@ public class FidEditorPage extends GraphicalEditor {
 	protected void configureGraphicalViewer() {
 		super.configureGraphicalViewer();
 		viewer = getGraphicalViewer();
+		ScalableRootEditPart srep = (ScalableRootEditPart) viewer
+				.getRootEditPart();
+		zoomManager = srep.getZoomManager();
 		viewer.getControl().addControlListener(new ControlAdapter() {
 			public void controlResized(ControlEvent e) {
 				FigureCanvas fc = (FigureCanvas) e.getSource();
-				ScalableRootEditPart srep = (ScalableRootEditPart) viewer
-						.getRootEditPart();
-				ZoomManager zm = srep.getZoomManager();
 				org.eclipse.swt.graphics.Rectangle rect = fc.getBounds();
 				if (rect.height > rect.width) {
-					zm.setZoomAsText(ZoomManager.FIT_WIDTH);
+					if (getFitXZoomLevel(0) < 0.01)
+						return;
+					zoomManager.setZoomAsText(ZoomManager.FIT_WIDTH); // 适应当前屏幕
 				} else {
-					zm.setZoomAsText(ZoomManager.FIT_HEIGHT);
+					if (getFitXZoomLevel(1) < 0.01)
+						return;
+					zoomManager.setZoomAsText(ZoomManager.FIT_HEIGHT);
 				}
 			}
 		});
@@ -84,10 +92,50 @@ public class FidEditorPage extends GraphicalEditor {
 	}
 
 	/**
+	 * 根据当前{@link ZoomManager}
+	 * 中的zoom的缩放比例，获取下次如果缩放要缩放的比例值，该值可以应用在判断是否该缩放值满足最小缩放比例的条件
+	 * 
+	 * @param which
+	 *            0 代表{@link ZoomManager.FIT_WIDTH} ，即横向缩放；1 代表
+	 *            {@link ZoomManager.FIT_HEIGHT}，即 纵向缩放；2 代表
+	 *            {@link ZoomManager.FIT_ALL}
+	 * @return 即将缩放值
+	 */
+	private double getFitXZoomLevel(int which) {
+		IFigure fig = zoomManager.getScalableFigure();
+		Dimension avaliable = zoomManager.getViewport().getClientArea()
+				.getSize();
+		Dimension desired;
+		if (fig instanceof FreeformFigure)
+			desired = ((FreeformFigure) fig).getFreeformExtent().getCopy()
+					.union(0, 0).getSize();
+		else
+			desired = fig.getPreferredSize().getCopy();
+		desired.width -= fig.getInsets().getWidth();
+		desired.width -= fig.getInsets().getHeight();
+		while (fig != zoomManager.getViewport()) {
+			avaliable.width -= fig.getInsets().getWidth();
+			avaliable.height -= fig.getInsets().getHeight();
+			fig = fig.getParent();
+		}
+		double scaleX = Math.min(avaliable.width * zoomManager.getZoom()
+				/ desired.width, zoomManager.getMaxZoom());
+		double scaleY = Math.min(avaliable.height * zoomManager.getZoom()
+				/ desired.height, zoomManager.getMaxZoom());
+		if (which == 0)
+			return scaleX;
+		if (which == 1)
+			return scaleY;
+		return Math.min(scaleX, scaleY);
+	}
+
+	/**
 	 * 设置model层的fid数据
 	 * 
 	 * @param rawData
+	 *            原始数据，
 	 * @param rawStepSize
+	 *            原始数据点间的原始间隔，如采样时间
 	 */
 	public void setFidData(ArrayList<Float> rawData, float rawStepSize) {
 
