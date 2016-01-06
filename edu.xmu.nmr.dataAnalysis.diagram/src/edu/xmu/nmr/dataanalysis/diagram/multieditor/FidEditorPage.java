@@ -21,6 +21,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 
 import edu.xmu.nmr.dataanalysis.diagram.editparts.NMREditPartFactory;
+import edu.xmu.nmr.dataanalysis.diagram.figures.BackgroundFigure;
 import edu.xmu.nmr.dataanalysis.diagram.figures.PointsTools;
 import edu.xmu.nmr.dataanalysis.diagram.layouts.LayoutUtils;
 import edu.xmu.nmrdataanalysis.diagram.model.Container;
@@ -50,6 +51,7 @@ public class FidEditorPage extends GraphicalEditor {
 	private Rectangle clientArea;
 	private Container container;
 	private ZoomManager zoomManager;
+	private Container background;
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
@@ -162,10 +164,18 @@ public class FidEditorPage extends GraphicalEditor {
 	private Container createContainer() {
 		Container workspace = new Container();
 		workspace.setcType(ContainerType.WORKSPACE);
+		background = new Container();
+		background.setcType(ContainerType.BACKGROUND);
+		background.setParent(workspace);
+		Rectangle backBounds = getContainerBounds();
+		background.setLayout(backBounds);
 		container = new Container();
 		container.setcType(ContainerType.FIDCONTAINER);
 		container.setParent(workspace);
-		Rectangle conBounds = getContainerBounds();
+		int backSpan = BackgroundFigure.SPAN;
+		Rectangle conBounds = new Rectangle(backBounds.x + backSpan,
+				backBounds.y + backSpan, backBounds.width - 2 * backSpan,
+				backBounds.height - 2 * backSpan);
 		container.setLayout(conBounds);
 		fidData.setParent(container);
 		int span = LayoutUtils.EIGHT;
@@ -199,7 +209,7 @@ public class FidEditorPage extends GraphicalEditor {
 		}
 		int cHeight = clientArea.height - 20;
 		int cWeight = clientArea.width - 12;
-		float cWHRatio = container.getWHRatio();
+		float cWHRatio = background.getWHRatio();
 		if (cHeight * cWHRatio > cWeight) {
 			cHeight = (int) (cWeight / cWHRatio);
 		} else {

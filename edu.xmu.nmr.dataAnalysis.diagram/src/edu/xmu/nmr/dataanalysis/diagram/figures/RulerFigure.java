@@ -33,7 +33,7 @@ public class RulerFigure extends Figure {
 
 	public RulerFigure() {
 		setForegroundColor(ColorConstants.black);
-		setOpaque(true);
+		setOpaque(false);
 		setFont(new Font(null, "Arial", 10, SWT.NORMAL));
 	}
 
