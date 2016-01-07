@@ -7,6 +7,7 @@ import org.eclipse.draw2d.IFigure;
 
 import edu.xmu.nmr.dataanalysis.diagram.figures.FidContainerFigure;
 import edu.xmu.nmrdataanalysis.diagram.model.Container;
+import edu.xmu.nmrdataanalysis.diagram.model.FElement;
 
 public class FidContainerEditPart extends NMRAbstractEditPart {
 
@@ -21,7 +22,6 @@ public class FidContainerEditPart extends NMRAbstractEditPart {
 
 	@Override
 	protected void createEditPolicies() {
-
 	}
 
 	@Override
@@ -38,7 +38,9 @@ public class FidContainerEditPart extends NMRAbstractEditPart {
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-
+		if (evt.getPropertyName().equals(FElement.NMR_PRO_LAYOUT)) {
+			refreshVisuals();
+		}
 	}
 
 }

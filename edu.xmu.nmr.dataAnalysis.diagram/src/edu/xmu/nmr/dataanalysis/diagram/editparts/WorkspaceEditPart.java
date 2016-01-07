@@ -4,19 +4,19 @@ import java.beans.PropertyChangeEvent;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.gef.EditPolicy;
 
+import edu.xmu.nmr.dataanalysis.diagram.editpolicys.EditLayoutPolicy;
 import edu.xmu.nmr.dataanalysis.diagram.figures.WorkspaceFigure;
 import edu.xmu.nmrdataanalysis.diagram.model.Container;
 
 public class WorkspaceEditPart extends NMRAbstractEditPart {
 
 	public WorkspaceEditPart() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -33,8 +33,7 @@ public class WorkspaceEditPart extends NMRAbstractEditPart {
 
 	@Override
 	protected void createEditPolicies() {
-		// TODO Auto-generated method stub
-
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new EditLayoutPolicy());
 	}
 
 }

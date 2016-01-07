@@ -65,6 +65,11 @@ public class NMRDiagEditor extends MultiPageEditorPart {
 
 	}
 
+	@Override
+	public IEditorPart getActiveEditor() {
+		return super.getActiveEditor();
+	}
+
 	/**
 	 * 初始化editorpage的一些配置
 	 * 
@@ -157,7 +162,6 @@ public class NMRDiagEditor extends MultiPageEditorPart {
 	public void setFocus() {
 		switch (getActivePage()) {
 		case 0:
-			// tViewer.getTable().setFocus();
 			if (paramsEditorPage != null)
 				paramsEditorPage.setFocus();
 			break;
@@ -166,6 +170,5 @@ public class NMRDiagEditor extends MultiPageEditorPart {
 				fidEditorPage.setFocus();
 			break;
 		}
-
 	}
 }
