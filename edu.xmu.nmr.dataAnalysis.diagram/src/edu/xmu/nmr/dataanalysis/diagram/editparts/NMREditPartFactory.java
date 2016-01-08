@@ -23,9 +23,6 @@ public class NMREditPartFactory implements EditPartFactory {
 			case FIDCONTAINER:
 				part = new FidContainerEditPart();
 				break;
-			case BACKGROUND:
-				part = new BackgroundEditPart();
-				break;
 			}
 		} else if (model instanceof FidData) {
 			part = new FidEditPart();

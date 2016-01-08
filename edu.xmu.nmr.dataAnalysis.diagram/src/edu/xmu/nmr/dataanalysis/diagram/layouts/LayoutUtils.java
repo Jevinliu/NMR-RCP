@@ -25,7 +25,8 @@ public class LayoutUtils {
 	}
 
 	/**
-	 * 获取当前工作区的bounds
+	 * 获取当前工作区的bounds,主要用于提供宽和高，进而使用{@link LayoutUtils#getContainerBounds()}
+	 * 计算fid container的较佳显示比例
 	 * 
 	 * @return
 	 */
@@ -39,9 +40,10 @@ public class LayoutUtils {
 	}
 
 	/**
-	 * 按照指定比例，获取当前client area使用的container约束
+	 * 按照指定比例，获取当前client area使用的background container的size约束，然后根据指定的workspace
+	 * container的大小计算出x，y位置
 	 * 
-	 * @return
+	 * @return backgound container的constraint
 	 */
 	public static Rectangle getContainerBounds() {
 		if (containerBounds == null) {
@@ -54,10 +56,8 @@ public class LayoutUtils {
 			} else {
 				cWeight = (int) (cHeight * cWHRatio);
 			}
-			int hSpan = (clientArea.width - cWeight) / 2;
-			int vSpan = (clientArea.height - cHeight) / 2;
-			int cX = hSpan + clientArea.x;
-			int cY = vSpan + clientArea.y;
+			int hSpan = (WORKSPACE_CONSTRAINS.width - cWeight) / 2;
+			int vSpan = (WORKSPACE_CONSTRAINS.height - cHeight) / 2;
 			containerBounds = new Rectangle(hSpan, vSpan, cWeight, cHeight);
 		}
 		return containerBounds.getCopy();

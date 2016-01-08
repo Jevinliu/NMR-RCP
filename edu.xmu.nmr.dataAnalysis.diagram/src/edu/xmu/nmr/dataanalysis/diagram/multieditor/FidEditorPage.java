@@ -24,7 +24,6 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 
 import edu.xmu.nmr.dataanalysis.diagram.editparts.NMREditPartFactory;
-import edu.xmu.nmr.dataanalysis.diagram.figures.BackgroundFigure;
 import edu.xmu.nmr.dataanalysis.diagram.figures.PointsTools;
 import edu.xmu.nmr.dataanalysis.diagram.layouts.LayoutUtils;
 import edu.xmu.nmrdataanalysis.diagram.model.Container;
@@ -50,7 +49,6 @@ public class FidEditorPage extends GraphicalEditor {
 	private FidData fidData = new FidData(); // 模型节点
 	private VerticalRuler leftRuler;
 	private HorizontalRuler bottomRuler;
-	// private GraphicalViewer viewer;
 	private Container container;
 	private ZoomManager zoomManager;
 
@@ -80,11 +78,14 @@ public class FidEditorPage extends GraphicalEditor {
 		zoomManager.setZoomLevels(new double[] { 0.01, 7 });
 		viewer.getControl().addControlListener(new ControlAdapter() {
 			public void controlResized(ControlEvent e) {
-				System.out.println("Resize");
 				FigureCanvas fc = (FigureCanvas) e.getSource();
-				double scale = getFitXZoomLevel(1);
-				System.out.println("scale:" + scale);
-				zoomManager.setZoom(getFitXZoomLevel(1));
+				double scale;
+				if (fc.getBounds().width > fc.getBounds().height) {
+					scale = getFitXZoomLevel(1);
+				} else {
+					scale = getFitXZoomLevel(0);
+				}
+				zoomManager.setZoom(scale);
 				Viewport vp = zoomManager.getViewport();
 				// 将滚动条放到中间
 				int wsWidthHalf = LayoutUtils.WORKSPACE_CONSTRAINS.width / 2;
@@ -109,9 +110,9 @@ public class FidEditorPage extends GraphicalEditor {
 	 * 中的zoom的缩放比例，获取下次如果缩放要缩放的比例值，该值可以应用在判断是否该缩放值满足最小缩放比例的条件
 	 * 
 	 * @param which
-	 *            0 代表{@link ZoomManager.FIT_WIDTH} ，即横向缩放；1 代表
-	 *            {@link ZoomManager.FIT_HEIGHT}，即 纵向缩放；2 代表
-	 *            {@link ZoomManager.FIT_ALL}
+	 *            0 代表{@link ZoomManager#FIT_WIDTH} ，即横向缩放；1 代表
+	 *            {@link ZoomManager#FIT_HEIGHT}，即 纵向缩放；2 代表
+	 *            {@link ZoomManager#FIT_ALL}
 	 * @return 即将缩放值
 	 */
 	private double getFitXZoomLevel(int which) {
@@ -178,19 +179,12 @@ public class FidEditorPage extends GraphicalEditor {
 		workspace.setcType(ContainerType.WORKSPACE);
 		workspace.setLayout(LayoutUtils.WORKSPACE_CONSTRAINS);
 		Rectangle backBounds = LayoutUtils.getContainerBounds();
-		Container background = new Container();
-		background.setcType(ContainerType.BACKGROUND);
-		background.setParent(workspace);
-		background.setLayout(backBounds);
 		container = new Container();
 		container.setcType(ContainerType.FIDCONTAINER);
 		container.setParent(workspace);
-		int backSpan = BackgroundFigure.SPAN;
-		Rectangle conBounds = new Rectangle(
-				(LayoutUtils.WORKSPACE_CONSTRAINS.width - backBounds.width) / 2
-						+ backSpan,
-				(LayoutUtils.WORKSPACE_CONSTRAINS.height - backBounds.height)
-						/ 2 + backSpan, backBounds.width - 2 * backSpan,
+		int backSpan = LayoutUtils.TEN;
+		Rectangle conBounds = new Rectangle(backBounds.x + backSpan,
+				backBounds.y + backSpan, backBounds.width - 2 * backSpan,
 				backBounds.height - 2 * backSpan);
 		container.setLayout(conBounds);
 		fidData.setParent(container);
@@ -199,7 +193,6 @@ public class FidEditorPage extends GraphicalEditor {
 		int temp = span * 2 + rulerLabL;
 		int fdWeight = conBounds.width - temp;
 		int fdHeight = conBounds.height - temp;
-
 		fidData.setLayout(new Rectangle(span + rulerLabL, span, fdWeight,
 				fdHeight));
 		leftRuler = new VerticalRuler();
