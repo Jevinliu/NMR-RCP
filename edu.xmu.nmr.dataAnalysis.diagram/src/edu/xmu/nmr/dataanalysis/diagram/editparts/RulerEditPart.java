@@ -5,6 +5,7 @@ import java.beans.PropertyChangeEvent;
 import org.eclipse.draw2d.IFigure;
 
 import edu.xmu.nmr.dataanalysis.diagram.figures.RulerFigure;
+import edu.xmu.nmrdataanalysis.diagram.model.FElement;
 import edu.xmu.nmrdataanalysis.diagram.model.Ruler;
 
 public class RulerEditPart extends NMRAbstractEditPart {
@@ -16,6 +17,9 @@ public class RulerEditPart extends NMRAbstractEditPart {
 	public void propertyChange(PropertyChangeEvent evt) {
 		if (evt.getPropertyName().equals(Ruler.PRO_RULER_STEPSIZE)
 				|| evt.getPropertyName().equals(Ruler.PRO_RULER_INTERVAL)) {
+			refreshVisuals();
+		}
+		if (evt.getPropertyName().equals(FElement.NMR_PRO_LAYOUT)) {
 			refreshVisuals();
 		}
 	}

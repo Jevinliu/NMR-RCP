@@ -5,6 +5,7 @@ import java.beans.PropertyChangeEvent;
 import org.eclipse.draw2d.IFigure;
 
 import edu.xmu.nmr.dataanalysis.diagram.figures.LineFigure;
+import edu.xmu.nmrdataanalysis.diagram.model.FElement;
 import edu.xmu.nmrdataanalysis.diagram.model.FidData;
 
 public class FidEditPart extends NMRAbstractEditPart {
@@ -42,6 +43,9 @@ public class FidEditPart extends NMRAbstractEditPart {
 		}
 		if (evt.getPropertyName().equals(FidData.PRO_LS_STEPSIZE)) {
 			System.out.println("stepsize 刷新");
+			refreshVisuals();
+		}
+		if (evt.getPropertyName().equals(FElement.NMR_PRO_LAYOUT)) {
 			refreshVisuals();
 		}
 	}

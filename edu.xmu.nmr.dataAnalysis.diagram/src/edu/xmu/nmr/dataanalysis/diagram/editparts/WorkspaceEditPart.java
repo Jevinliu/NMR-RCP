@@ -17,13 +17,19 @@ public class WorkspaceEditPart extends NMRAbstractEditPart {
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-
 	}
 
 	@Override
 	protected IFigure createFigure() {
 		IFigure wsf = new WorkspaceFigure();
 		return wsf;
+	}
+
+	@Override
+	protected void refreshVisuals() {
+		WorkspaceFigure figure = (WorkspaceFigure) getFigure();
+		Container container = (Container) getModel();
+		figure.setLayout(container.getLayout());
 	}
 
 	@Override
@@ -35,5 +41,4 @@ public class WorkspaceEditPart extends NMRAbstractEditPart {
 	protected void createEditPolicies() {
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new EditLayoutPolicy());
 	}
-
 }

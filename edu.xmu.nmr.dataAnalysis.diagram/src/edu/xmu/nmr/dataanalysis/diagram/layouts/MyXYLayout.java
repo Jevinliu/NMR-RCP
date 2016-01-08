@@ -7,7 +7,6 @@ import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Rectangle;
 
 import edu.xmu.nmr.dataanalysis.diagram.figures.BackgroundFigure;
-import edu.xmu.nmr.dataanalysis.diagram.figures.FidContainerFigure;
 
 public class MyXYLayout extends XYLayout {
 
@@ -21,8 +20,7 @@ public class MyXYLayout extends XYLayout {
 		IFigure f;
 		while (children.hasNext()) {
 			f = (IFigure) children.next();
-			if (f instanceof FidContainerFigure
-					|| f instanceof BackgroundFigure) {
+			if (f instanceof BackgroundFigure) {
 				Rectangle bounds = f.getBounds();
 				Rectangle pBounds = parent.getBounds();
 				int hSpan = (pBounds.width - bounds.width) / 2;

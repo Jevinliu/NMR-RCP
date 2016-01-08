@@ -25,12 +25,12 @@ public class BackgroundFigure extends Figure {
 	@Override
 	protected void paintFigure(Graphics graphics) {
 		super.paintFigure(graphics);
-		graphics.pushState();
+		// graphics.pushState();
 		Rectangle bounds = getBounds();
 		int span = SPAN;
 		graphics.drawRectangle(bounds.x + span, bounds.y + span, bounds.width
 				- 2 * span, bounds.height - 2 * span);
-		graphics.pushState();
+		// graphics.pushState();
 	}
 
 	public void setLayout(Rectangle rect) {

@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import org.eclipse.draw2d.AbstractPointListShape;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
@@ -45,7 +46,7 @@ public class LineFigure extends Figure {
 	private IPreferenceStore ips = Activator.getDefault().getPreferenceStore();
 
 	public LineFigure() {
-		setOpaque(true);
+		setOpaque(false);
 		getInitConfig();
 		addPreferenceListener();
 	}
@@ -63,7 +64,7 @@ public class LineFigure extends Figure {
 		RGB foreColor = DataAnalysisPrefPageUtil.getValueOfFidForeColor();
 		RGB backColor = DataAnalysisPrefPageUtil.getValueOfFidBackColor();
 		if (isBorder) {
-			setBorder(new LineBorder(1));
+			setBorder(new LineBorder(ColorConstants.lightGray, 1));
 		}
 		setForegroundColor(new Color(null, foreColor));
 		setBackgroundColor(new Color(null, backColor));

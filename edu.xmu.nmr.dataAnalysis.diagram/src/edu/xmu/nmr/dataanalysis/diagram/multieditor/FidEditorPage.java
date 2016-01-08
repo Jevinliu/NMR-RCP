@@ -4,9 +4,12 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.FreeformFigure;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Viewport;
+import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.DefaultEditDomain;
@@ -47,11 +50,9 @@ public class FidEditorPage extends GraphicalEditor {
 	private FidData fidData = new FidData(); // 模型节点
 	private VerticalRuler leftRuler;
 	private HorizontalRuler bottomRuler;
-	private GraphicalViewer viewer;
-	private Rectangle clientArea;
+	// private GraphicalViewer viewer;
 	private Container container;
 	private ZoomManager zoomManager;
-	private Container background;
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
@@ -65,32 +66,42 @@ public class FidEditorPage extends GraphicalEditor {
 
 	public FidEditorPage() {
 		setEditDomain(new DefaultEditDomain(this));
-		clientArea = LayoutUtils.getClientArea();
 	}
 
 	@Override
 	protected void configureGraphicalViewer() {
-		super.configureGraphicalViewer();
-		viewer = getGraphicalViewer();
+		GraphicalViewer viewer = getGraphicalViewer();
+		viewer.getControl().setBackground(ColorConstants.gray);
+
 		ScalableRootEditPart srep = (ScalableRootEditPart) viewer
 				.getRootEditPart();
+		srep.getContentPane().setLayoutManager(new XYLayout());
 		zoomManager = srep.getZoomManager();
+		zoomManager.setZoomLevels(new double[] { 0.01, 7 });
 		viewer.getControl().addControlListener(new ControlAdapter() {
 			public void controlResized(ControlEvent e) {
+				System.out.println("Resize");
 				FigureCanvas fc = (FigureCanvas) e.getSource();
-				org.eclipse.swt.graphics.Rectangle rect = fc.getBounds();
-				if (rect.height > rect.width) {
-					if (getFitXZoomLevel(0) < 0.01)
-						return;
-					zoomManager.setZoomAsText(ZoomManager.FIT_WIDTH); // 适应当前屏幕
-				} else {
-					if (getFitXZoomLevel(1) < 0.01)
-						return;
-					zoomManager.setZoomAsText(ZoomManager.FIT_HEIGHT);
-				}
+				double scale = getFitXZoomLevel(1);
+				System.out.println("scale:" + scale);
+				zoomManager.setZoom(getFitXZoomLevel(1));
+				Viewport vp = zoomManager.getViewport();
+				// 将滚动条放到中间
+				int wsWidthHalf = LayoutUtils.WORKSPACE_CONSTRAINS.width / 2;
+				int wsHeightHalf = LayoutUtils.WORKSPACE_CONSTRAINS.height / 2;
+				fc.getViewport().setViewLocation(
+						(int) (wsWidthHalf * zoomManager.getZoom() - vp
+								.getSize().width / 2),
+						(int) (wsHeightHalf * zoomManager.getZoom() - vp
+								.getSize().height / 2));
 			}
 		});
 		viewer.setEditPartFactory(new NMREditPartFactory()); // 添加editpart工厂，通过工厂创建editpart
+	}
+
+	@Override
+	protected void createActions() {
+		super.createActions();
 	}
 
 	/**
@@ -120,10 +131,11 @@ public class FidEditorPage extends GraphicalEditor {
 			avaliable.height -= fig.getInsets().getHeight();
 			fig = fig.getParent();
 		}
-		double scaleX = Math.min(avaliable.width * zoomManager.getZoom()
-				/ desired.width, zoomManager.getMaxZoom());
-		double scaleY = Math.min(avaliable.height * zoomManager.getZoom()
-				/ desired.height, zoomManager.getMaxZoom());
+		Rectangle r = LayoutUtils.getContainerBounds();
+		double scaleX = Math.min(((double) avaliable.width) / r.width,
+				zoomManager.getMaxZoom());
+		double scaleY = Math.min(((double) avaliable.height) / r.height,
+				zoomManager.getMaxZoom());
 		if (which == 0)
 			return scaleX;
 		if (which == 1)
@@ -154,7 +166,7 @@ public class FidEditorPage extends GraphicalEditor {
 
 	@Override
 	protected void initializeGraphicalViewer() {
-		viewer = getGraphicalViewer();
+		GraphicalViewer viewer = getGraphicalViewer();
 		viewer.setContents(createContainer()); // 设置model
 	}
 
@@ -164,17 +176,21 @@ public class FidEditorPage extends GraphicalEditor {
 	private Container createContainer() {
 		Container workspace = new Container();
 		workspace.setcType(ContainerType.WORKSPACE);
-		background = new Container();
+		workspace.setLayout(LayoutUtils.WORKSPACE_CONSTRAINS);
+		Rectangle backBounds = LayoutUtils.getContainerBounds();
+		Container background = new Container();
 		background.setcType(ContainerType.BACKGROUND);
 		background.setParent(workspace);
-		Rectangle backBounds = getContainerBounds();
 		background.setLayout(backBounds);
 		container = new Container();
 		container.setcType(ContainerType.FIDCONTAINER);
 		container.setParent(workspace);
 		int backSpan = BackgroundFigure.SPAN;
-		Rectangle conBounds = new Rectangle(backBounds.x + backSpan,
-				backBounds.y + backSpan, backBounds.width - 2 * backSpan,
+		Rectangle conBounds = new Rectangle(
+				(LayoutUtils.WORKSPACE_CONSTRAINS.width - backBounds.width) / 2
+						+ backSpan,
+				(LayoutUtils.WORKSPACE_CONSTRAINS.height - backBounds.height)
+						/ 2 + backSpan, backBounds.width - 2 * backSpan,
 				backBounds.height - 2 * backSpan);
 		container.setLayout(conBounds);
 		fidData.setParent(container);
@@ -198,37 +214,8 @@ public class FidEditorPage extends GraphicalEditor {
 		return workspace;
 	}
 
-	/**
-	 * 根据需要container的长宽比例获取需要container的bounds
-	 * 
-	 * @return
-	 */
-	private Rectangle getContainerBounds() {
-		if (clientArea == null) {
-			return null;
-		}
-		int cHeight = clientArea.height - 20;
-		int cWeight = clientArea.width - 12;
-		float cWHRatio = background.getWHRatio();
-		if (cHeight * cWHRatio > cWeight) {
-			cHeight = (int) (cWeight / cWHRatio);
-		} else {
-			cWeight = (int) (cHeight * cWHRatio);
-		}
-		int hSpan = (clientArea.width - cWeight) / 2;
-		int vSpan = (clientArea.height - cHeight) / 2;
-		int cX = hSpan + clientArea.x;
-		int cY = vSpan + clientArea.y;
-		return new Rectangle(cX, cY, cWeight, cHeight);
-	}
-
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 
-	}
-
-	@Override
-	public void setFocus() {
-		super.setFocus();
 	}
 }

@@ -14,7 +14,6 @@ public class FElement implements IAdaptable {
 	private FElement parent;
 	private PropertyChangeSupport listeners;
 	private Rectangle layout;
-	private float WHRatio = 1.25f;
 
 	public static final String NMR_PRO_LAYOUT = "nmrProLayout";
 
@@ -68,11 +67,4 @@ public class FElement implements IAdaptable {
 		this.listeners.firePropertyChange(NMR_PRO_LAYOUT, old, this.layout);
 	}
 
-	public float getWHRatio() {
-		return WHRatio;
-	}
-
-	public void setWHRaioLayout(Rectangle layout) {
-
-	}
 }
