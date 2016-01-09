@@ -99,7 +99,6 @@ public class RulerFigure extends Figure {
 	protected void paintFigure(Graphics graphics) {
 		super.paintFigure(graphics);
 		graphics.pushState();
-
 		Rectangle bounds = getBounds();
 		int rulerLabL = Ruler.AXISLL - 5;
 		int rightEndX = bounds.x + bounds.width - 1;
@@ -108,9 +107,7 @@ public class RulerFigure extends Figure {
 		int num = bounds.height / interval;
 		switch (orient) {
 		case LEFT:
-			if (stepSize == 0f) {
-				stepSize = totalSize * interval / (float) bounds.height;
-			}
+			stepSize = totalSize * interval / (float) bounds.height;
 			graphics.drawLine(rightEndX - tall, centerY, rightEndX, centerY);
 			TextLayout layout = new TextLayout(null);
 			layout.setText("0");
@@ -155,9 +152,7 @@ public class RulerFigure extends Figure {
 					rightEndX, bounds.y);
 			break;
 		case BOTTOM:
-			if (stepSize == 0) {
-				stepSize = totalSize * interval / (float) bounds.width;
-			}
+			stepSize = totalSize * interval / (float) bounds.width;
 			int j = 1;
 			while (j * interval <= bounds.width) {
 				int pX = bounds.x + interval * j;

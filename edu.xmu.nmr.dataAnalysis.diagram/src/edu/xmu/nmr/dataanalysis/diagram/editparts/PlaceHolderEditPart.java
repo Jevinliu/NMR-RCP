@@ -22,8 +22,6 @@ public class PlaceHolderEditPart extends DAAbstractEditPart {
 	protected IFigure createFigure() {
 		RectangleFigure rf = new RectangleFigure();
 		rf.setSize(Ruler.AXISLL, Ruler.AXISLL);
-		// rf.setBackgroundColor(ColorConstants.white);
-		// rf.setBorder(new LineBorder(ColorConstants.white));
 		rf.setAlpha(0);
 		return rf;
 	}
