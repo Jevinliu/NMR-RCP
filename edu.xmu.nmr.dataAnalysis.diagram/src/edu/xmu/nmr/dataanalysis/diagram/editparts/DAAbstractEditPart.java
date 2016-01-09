@@ -6,10 +6,10 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
 import edu.xmu.nmrdataanalysis.diagram.model.FElement;
 
-public abstract class NMRAbstractEditPart extends AbstractGraphicalEditPart
+public abstract class DAAbstractEditPart extends AbstractGraphicalEditPart
 		implements PropertyChangeListener {
 
-	public NMRAbstractEditPart() {
+	public DAAbstractEditPart() {
 
 	}
 

@@ -5,22 +5,22 @@ import java.beans.PropertyChangeEvent;
 import org.eclipse.draw2d.IFigure;
 
 import edu.xmu.nmr.dataanalysis.diagram.figures.RulerFigure;
-import edu.xmu.nmrdataanalysis.diagram.model.FElement;
 import edu.xmu.nmrdataanalysis.diagram.model.Ruler;
 
-public class RulerEditPart extends NMRAbstractEditPart {
+public class RulerEditPart extends DAAbstractEditPart {
 
 	public RulerEditPart() {
 	}
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if (evt.getPropertyName().equals(Ruler.PRO_RULER_STEPSIZE)
-				|| evt.getPropertyName().equals(Ruler.PRO_RULER_INTERVAL)) {
-			refreshVisuals();
-		}
-		if (evt.getPropertyName().equals(FElement.NMR_PRO_LAYOUT)) {
-			refreshVisuals();
+		String[] eventsName = new String[] { Ruler.PRO_RULER_STEPSIZE,
+				Ruler.PRO_RULER_INTERVAL, Ruler.PRO_RULER_TOTALSIZE };
+		for (String eventName : eventsName) {
+			if (evt.getPropertyName().equals(eventName)) {
+				refreshVisuals();
+				return;
+			}
 		}
 	}
 
@@ -34,10 +34,13 @@ public class RulerEditPart extends NMRAbstractEditPart {
 	protected void refreshVisuals() {
 		RulerFigure figure = (RulerFigure) getFigure();
 		Ruler ruler = (Ruler) getModel();
+		figure.setGridLayout();
 		figure.setOrient(ruler.getOrient());
 		figure.setInterval((int) ruler.getInterval());
-		figure.setStepSize(ruler.getStepSize());
-		figure.setLayout(ruler.getLayout());
+		figure.setTotalSize(ruler.getTotalSize());
+		// figure.setStepSize(ruler.getStepSize());
+		// figure.setLayout(ruler.getLayout());
+
 	}
 
 	@Override

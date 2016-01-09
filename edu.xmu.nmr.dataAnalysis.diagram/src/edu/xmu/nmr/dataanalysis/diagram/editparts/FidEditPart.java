@@ -8,7 +8,7 @@ import edu.xmu.nmr.dataanalysis.diagram.figures.LineFigure;
 import edu.xmu.nmrdataanalysis.diagram.model.FElement;
 import edu.xmu.nmrdataanalysis.diagram.model.FidData;
 
-public class FidEditPart extends NMRAbstractEditPart {
+public class FidEditPart extends DAAbstractEditPart {
 
 	public FidEditPart() {
 	}
@@ -23,10 +23,9 @@ public class FidEditPart extends NMRAbstractEditPart {
 	public void refreshVisuals() {
 		LineFigure figure = (LineFigure) getFigure();
 		FidData fidData = (FidData) getModel();
+		figure.setGridLayout();
 		figure.setRawData(fidData.getRawData()); // 模型层与view层结合，装填数据
 		figure.setAbsMax(fidData.getAbsMax());
-		figure.setCoordinatetf(fidData.getCoordinateTf());
-		figure.setLayout(fidData.getLayout()); // 初始化
 	}
 
 	@Override
@@ -36,18 +35,13 @@ public class FidEditPart extends NMRAbstractEditPart {
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-
-		if (evt.getPropertyName().equals(FidData.PRO_LS_FIDDATA)) {
-			System.out.println("fiddata 刷新");
-			refreshVisuals();
-		}
-		if (evt.getPropertyName().equals(FidData.PRO_LS_STEPSIZE)) {
-			System.out.println("stepsize 刷新");
-			refreshVisuals();
-		}
-		if (evt.getPropertyName().equals(FElement.NMR_PRO_LAYOUT)) {
-			refreshVisuals();
+		String[] eventsName = new String[] { FidData.PRO_LS_FIDDATA,
+				FidData.PRO_LS_STEPSIZE, FElement.NMR_PRO_LAYOUT };
+		for (String eventName : eventsName) {
+			if (evt.getPropertyName().equals(eventName)) {
+				refreshVisuals();
+				return;
+			}
 		}
 	}
-
 }

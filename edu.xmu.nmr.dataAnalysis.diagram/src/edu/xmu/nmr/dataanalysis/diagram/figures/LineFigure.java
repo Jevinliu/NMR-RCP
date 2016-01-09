@@ -9,6 +9,7 @@ import org.eclipse.draw2d.AbstractPointListShape;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.GridData;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.geometry.Geometry;
@@ -38,22 +39,23 @@ import edu.xmu.nmr.dataanalysis.diagram.pref.helper.DataAnalysisPrefPageUtil;
 public class LineFigure extends Figure {
 
 	private ArrayList<Float> rawData; // 原始数据，如fid数据，proc数据
-	private float max;
+	private float absMax;
 	private int tolerance = 2;
 	private CoordinateTf ctf;
 	private ArrayList<Integer> selectedIndex;
 	PointList points = new PointList();
-	private IPreferenceStore ips = Activator.getDefault().getPreferenceStore();
 
 	public LineFigure() {
 		setOpaque(false);
 		getInitConfig();
+		ctf = new CoordinateTf();
 		addPreferenceListener();
 	}
 
 	public LineFigure(ArrayList<Float> rawData) {
 		this();
 		this.rawData = rawData;
+
 	}
 
 	/**
@@ -70,10 +72,6 @@ public class LineFigure extends Figure {
 		setBackgroundColor(new Color(null, backColor));
 	}
 
-	public ArrayList<Float> getRawData() {
-		return rawData;
-	}
-
 	/**
 	 * 每次在设置完数据后，都进行数据点的筛选
 	 * 
@@ -81,30 +79,24 @@ public class LineFigure extends Figure {
 	 */
 	public void setRawData(ArrayList<Float> rawData) {
 		this.rawData = rawData;
-		selectPoints();
 	}
 
 	public void setAbsMax(float max) {
-		this.max = max;
-	}
-
-	public void setCoordinatetf(CoordinateTf ctf) {
-		this.ctf = ctf;
+		this.absMax = max;
 	}
 
 	/**
 	 * 设置坐标转换标准
 	 */
-	private void setCoordinateTf() {
-		if (ctf == null) {
-			return;
-		}
+	private void setupCoordinateTf() {
 		Rectangle rect = getBounds();
 		if (rect == null) {
 			return;
 		}
 		ctf.setxOffset(rect.x);
 		ctf.setyOffset(rect.y);
+		ctf.setxScale((float) (rect.width * 1 / (float) rawData.size()));
+		ctf.setyScale(rect.height / (2 * absMax));
 	}
 
 	public CoordinateTf getCoordinateTf() {
@@ -116,10 +108,12 @@ public class LineFigure extends Figure {
 	 */
 	private void selectPoints() {
 
+		if (selectedIndex != null && !selectedIndex.isEmpty()) {
+			return;
+		}
 		if (rawData == null || rawData.size() == 0) {
 			return;
 		}
-
 		selectedIndex = new ArrayList<Integer>();
 		ArrayList<Integer> sameXIndex = new ArrayList<Integer>(); // 记录当下一组x坐标转换后相同的数据点的索引
 		Comparator<Integer> c = new Comparator<Integer>() {
@@ -142,8 +136,8 @@ public class LineFigure extends Figure {
 			else if (Math.abs(tempX - ctf.transfromX(i)) > 0) { // 记录x相同的一系列点
 				int maxValueIndex = Collections.max(sameXIndex, c); // 记录值最大的索引
 				int minValueIndex = Collections.min(sameXIndex, c); // 记录数据值最小的索引
-				if (ctf.transformY(max - rawData.get(maxValueIndex)) == ctf
-						.transformY(minValueIndex))
+				if (ctf.transformY(absMax - rawData.get(maxValueIndex)) == ctf
+						.transformY(absMax - rawData.get(minValueIndex))) // 如果转换后纵坐标相等，只需要添加一个
 					selectedIndex.add(minValueIndex);
 				else {
 					if (maxValueIndex > minValueIndex) {
@@ -159,17 +153,17 @@ public class LineFigure extends Figure {
 			}
 			sameXIndex.add(i);
 		}
-
 	}
 
 	/**
 	 * 将选择的数据点转换为指定区域下的像素点
 	 */
 	private void transformPoints() {
-		this.setCoordinateTf(); // 主要用于设置相对位移
+		this.setupCoordinateTf(); // 主要用于设置相对位移
+		selectPoints();
 		PointList pl = new PointList();
 		for (int i : selectedIndex) {
-			Point p = ctf.transformXY(i, max - rawData.get(i)); // 将0值作为整个fidfigure的纵向中心，
+			Point p = ctf.transformXY(i, absMax - rawData.get(i)); // 将0值作为整个fidfigure的纵向中心，
 			pl.addPoint(p);
 		}
 		this.points = pl;
@@ -177,6 +171,11 @@ public class LineFigure extends Figure {
 
 	public void setLayout(Rectangle rect) {
 		getParent().setConstraint(this, rect); // 设置子figure在父figure中的位置
+	}
+
+	public void setGridLayout() {
+		getParent().setConstraint(this,
+				new GridData(GridData.FILL, GridData.FILL, true, true, 4, 4));
 	}
 
 	@Override
@@ -220,6 +219,7 @@ public class LineFigure extends Figure {
 	 * 为preference 加入监听器，当preference发生变化时，刷新页面
 	 */
 	private void addPreferenceListener() {
+		IPreferenceStore ips = Activator.getDefault().getPreferenceStore();
 		ips.addPropertyChangeListener(new IPropertyChangeListener() {
 
 			@Override
@@ -237,7 +237,7 @@ public class LineFigure extends Figure {
 				case DataAnalysisPrefConstants.FID_PREF_HAVE_BORDER:
 					boolean isBorder = (boolean) event.getNewValue();
 					if (isBorder) {
-						setBorder(new LineBorder(1));
+						setBorder(new LineBorder(ColorConstants.lightGray, 1));
 					} else {
 						setBorder(null);
 					}

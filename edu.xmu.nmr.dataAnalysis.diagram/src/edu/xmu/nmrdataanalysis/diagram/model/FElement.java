@@ -5,6 +5,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.geometry.Rectangle;
 
@@ -14,6 +15,7 @@ public class FElement implements IAdaptable {
 	private FElement parent;
 	private PropertyChangeSupport listeners;
 	private Rectangle layout;
+	protected Logger log = Logger.getLogger(this.getClass());
 
 	public static final String NMR_PRO_LAYOUT = "nmrProLayout";
 

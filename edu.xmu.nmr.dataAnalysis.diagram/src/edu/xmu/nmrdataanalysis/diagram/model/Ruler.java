@@ -21,13 +21,18 @@ public class Ruler extends FElement {
 	 */
 	private float stepSize;
 	/**
+	 * 该坐标轴所代表的值域
+	 */
+	private float totalSize;
+	/**
 	 * 缩放比例
 	 */
 	private float[] zoomScales;
 	public static final String PRO_RULER_STEPSIZE = "proRulerStepSize";
 	public static final String PRO_RULER_INTERVAL = "proRulerInterval";
+	public static final String PRO_RULER_TOTALSIZE = "proRulerTotalSize";
 	/**
-	 * 坐标轴坐标的占据像素长度
+	 * 坐标轴Figure占据的长度
 	 */
 	public static final int AXISLL = 75;
 
@@ -93,4 +98,16 @@ public class Ruler extends FElement {
 	public float getScale() {
 		return this.stepSize / (this.interval * 1.0f);
 	}
+
+	public float getTotalSize() {
+		return totalSize;
+	}
+
+	public void setTotalSize(float totalSize) {
+		float old = this.totalSize;
+		this.totalSize = totalSize;
+		getListeners().firePropertyChange(PRO_RULER_TOTALSIZE, old,
+				this.totalSize);
+	}
+
 }

@@ -10,7 +10,7 @@ import edu.xmu.nmr.dataanalysis.diagram.editpolicys.EditLayoutPolicy;
 import edu.xmu.nmr.dataanalysis.diagram.figures.WorkspaceFigure;
 import edu.xmu.nmrdataanalysis.diagram.model.Container;
 
-public class WorkspaceEditPart extends NMRAbstractEditPart {
+public class WorkspaceEditPart extends DAAbstractEditPart {
 
 	public WorkspaceEditPart() {
 	}

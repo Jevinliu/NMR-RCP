@@ -1,16 +1,18 @@
 package edu.xmu.nmr.dataanalysis.diagram.figures;
 
 import org.eclipse.draw2d.Figure;
-import org.eclipse.draw2d.XYLayout;
+import org.eclipse.draw2d.GridLayout;
 import org.eclipse.draw2d.geometry.Rectangle;
 
 public class FidContainerFigure extends Figure {
 
-	private XYLayout layout;
-
 	public FidContainerFigure() {
 
-		layout = new XYLayout();
+		GridLayout layout = new GridLayout(5, false);
+		layout.marginHeight = 8;
+		layout.marginWidth = 8;
+		layout.horizontalSpacing = 3;
+		layout.verticalSpacing = 3;
 		setLayoutManager(layout);
 		setBorder(null);
 		setOpaque(false);

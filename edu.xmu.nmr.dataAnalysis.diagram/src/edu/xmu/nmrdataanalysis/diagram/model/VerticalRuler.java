@@ -16,7 +16,7 @@ public class VerticalRuler extends Ruler {
 
 	public void setAbsMax(float absMax) {
 		this.absMax = absMax;
-		setStepSizeByHeight();
+		setTotalSize(this.absMax * 2);
 	}
 
 	/**
@@ -24,7 +24,11 @@ public class VerticalRuler extends Ruler {
 	 * 
 	 * @param height
 	 */
-	private void setStepSizeByHeight() {
+	public void setStepSizeByHeight() {
+		if (getLayout() == null || getLayout().height == 0) {
+			log.error("Ruler's layout is null or it's height is 0.");
+			return;
+		}
 		setStepSize(this.absMax * 2 * getInterval() / getLayout().height);
 	}
 

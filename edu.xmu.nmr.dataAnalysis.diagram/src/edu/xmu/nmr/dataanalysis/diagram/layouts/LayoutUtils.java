@@ -13,10 +13,16 @@ import org.eclipse.swt.widgets.Display;
  */
 public class LayoutUtils {
 
+	/**
+	 * 整个画布区的最大范围
+	 */
 	public static final Rectangle WORKSPACE_CONSTRAINS = new Rectangle(0, 0,
 			3000, 2000);
 	public static final int EIGHT = 8;
 	public static final int TEN = 10;
+	/**
+	 * 宽高比例
+	 */
 	public static final float WHRATIO = 1.25f;
 	private static Rectangle clientArea;
 	private static Rectangle containerBounds;
@@ -48,8 +54,8 @@ public class LayoutUtils {
 	public static Rectangle getContainerBounds() {
 		if (containerBounds == null) {
 			Rectangle clientArea = getClientArea();
-			int cHeight = clientArea.height - 20;
-			int cWeight = clientArea.width - 12;
+			int cHeight = clientArea.height - TEN * 2;
+			int cWeight = clientArea.width - EIGHT * 2;
 			float cWHRatio = WHRATIO;
 			if (cHeight * cWHRatio > cWeight) {
 				cHeight = (int) (cWeight / cWHRatio);

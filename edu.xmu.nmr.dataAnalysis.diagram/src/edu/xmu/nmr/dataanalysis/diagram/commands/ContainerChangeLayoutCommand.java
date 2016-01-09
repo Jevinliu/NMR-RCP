@@ -4,7 +4,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 
 import edu.xmu.nmrdataanalysis.diagram.model.Container;
 
-public class ContainerChangeLayoutCommand extends AbstractLayoutCommand {
+public class ContainerChangeLayoutCommand extends DAAbstractLayoutCommand {
 
 	private Container container;
 	private Rectangle layout;

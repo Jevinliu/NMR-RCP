@@ -3,6 +3,7 @@ package edu.xmu.nmr.dataanalysis.diagram.figures;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.GridData;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
@@ -14,6 +15,10 @@ import edu.xmu.nmrdataanalysis.diagram.model.RulerOrient;
 
 public class RulerFigure extends Figure {
 
+	/**
+	 * 该坐标轴要表示的值域，然后根据width或height以及interval来计算出stepSize
+	 */
+	private float totalSize;
 	/**
 	 * 每个interval对应的实际的坐标间隔
 	 */
@@ -48,6 +53,10 @@ public class RulerFigure extends Figure {
 		this.interval = interval;
 	}
 
+	public void setTotalSize(float totalSize) {
+		this.totalSize = totalSize;
+	}
+
 	public void setStepSize(float stepSize) {
 		this.stepSize = stepSize;
 	}
@@ -64,6 +73,28 @@ public class RulerFigure extends Figure {
 		getParent().setConstraint(this, rect); // 设置子figure在父figure中的位置
 	}
 
+	public void setGridLayout() {
+		if (this.orient == null) {
+			return;
+		}
+		switch (this.orient) {
+		case LEFT:
+			this.setSize(Ruler.AXISLL, -1);
+			getParent().setConstraint(
+					this,
+					new GridData(GridData.FILL, GridData.FILL, false, true, 1,
+							4));
+			break;
+		case BOTTOM:
+			this.setSize(-1, Ruler.AXISLL);
+			getParent().setConstraint(
+					this,
+					new GridData(GridData.FILL, GridData.FILL, true, false, 4,
+							1));
+		}
+
+	}
+
 	@Override
 	protected void paintFigure(Graphics graphics) {
 		super.paintFigure(graphics);
@@ -77,6 +108,9 @@ public class RulerFigure extends Figure {
 		int num = bounds.height / interval;
 		switch (orient) {
 		case LEFT:
+			if (stepSize == 0f) {
+				stepSize = totalSize * interval / (float) bounds.height;
+			}
 			graphics.drawLine(rightEndX - tall, centerY, rightEndX, centerY);
 			TextLayout layout = new TextLayout(null);
 			layout.setText("0");
@@ -121,6 +155,9 @@ public class RulerFigure extends Figure {
 					rightEndX, bounds.y);
 			break;
 		case BOTTOM:
+			if (stepSize == 0) {
+				stepSize = totalSize * interval / (float) bounds.width;
+			}
 			int j = 1;
 			while (j * interval <= bounds.width) {
 				int pX = bounds.x + interval * j;

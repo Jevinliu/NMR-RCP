@@ -11,10 +11,8 @@ import edu.xmu.nmr.dataanalysis.diagram.layouts.LayoutUtils;
 
 public class WorkspaceFigure extends Figure {
 
-	private XYLayout layout;
-
 	public WorkspaceFigure() {
-		layout = new XYLayout();
+		XYLayout layout = new XYLayout();
 		setLayoutManager(layout);
 		setBorder(new LineBorder(ColorConstants.gray, 2));
 		setBackgroundColor(ColorConstants.lightGray);

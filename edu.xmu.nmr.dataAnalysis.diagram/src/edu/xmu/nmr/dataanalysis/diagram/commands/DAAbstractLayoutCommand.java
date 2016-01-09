@@ -3,7 +3,7 @@ package edu.xmu.nmr.dataanalysis.diagram.commands;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.commands.Command;
 
-public abstract class AbstractLayoutCommand extends Command {
+public abstract class DAAbstractLayoutCommand extends Command {
 
 	/**
 	 * 设置figure的约束

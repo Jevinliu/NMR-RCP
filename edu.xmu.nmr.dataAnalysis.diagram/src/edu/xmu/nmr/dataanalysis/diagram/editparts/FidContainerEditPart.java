@@ -9,7 +9,7 @@ import edu.xmu.nmr.dataanalysis.diagram.figures.FidContainerFigure;
 import edu.xmu.nmrdataanalysis.diagram.model.Container;
 import edu.xmu.nmrdataanalysis.diagram.model.FElement;
 
-public class FidContainerEditPart extends NMRAbstractEditPart {
+public class FidContainerEditPart extends DAAbstractEditPart {
 
 	public FidContainerEditPart() {
 	}

@@ -23,14 +23,13 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 
-import edu.xmu.nmr.dataanalysis.diagram.editparts.NMREditPartFactory;
+import edu.xmu.nmr.dataanalysis.diagram.editparts.DAEditPartFactory;
 import edu.xmu.nmr.dataanalysis.diagram.figures.PointsTools;
 import edu.xmu.nmr.dataanalysis.diagram.layouts.LayoutUtils;
 import edu.xmu.nmrdataanalysis.diagram.model.Container;
 import edu.xmu.nmrdataanalysis.diagram.model.ContainerType;
 import edu.xmu.nmrdataanalysis.diagram.model.FidData;
 import edu.xmu.nmrdataanalysis.diagram.model.HorizontalRuler;
-import edu.xmu.nmrdataanalysis.diagram.model.Ruler;
 import edu.xmu.nmrdataanalysis.diagram.model.RulerOrient;
 import edu.xmu.nmrdataanalysis.diagram.model.VerticalRuler;
 
@@ -49,7 +48,6 @@ public class FidEditorPage extends GraphicalEditor {
 	private FidData fidData = new FidData(); // 模型节点
 	private VerticalRuler leftRuler;
 	private HorizontalRuler bottomRuler;
-	private Container container;
 	private ZoomManager zoomManager;
 
 	@Override
@@ -70,7 +68,6 @@ public class FidEditorPage extends GraphicalEditor {
 	protected void configureGraphicalViewer() {
 		GraphicalViewer viewer = getGraphicalViewer();
 		viewer.getControl().setBackground(ColorConstants.gray);
-
 		ScalableRootEditPart srep = (ScalableRootEditPart) viewer
 				.getRootEditPart();
 		srep.getContentPane().setLayoutManager(new XYLayout());
@@ -86,7 +83,7 @@ public class FidEditorPage extends GraphicalEditor {
 					scale = getFitXZoomLevel(0);
 				}
 				zoomManager.setZoom(scale);
-				Viewport vp = zoomManager.getViewport();
+				Viewport vp = zoomManager.getViewport(); // 获取可视化区域
 				// 将滚动条放到中间
 				int wsWidthHalf = LayoutUtils.WORKSPACE_CONSTRAINS.width / 2;
 				int wsHeightHalf = LayoutUtils.WORKSPACE_CONSTRAINS.height / 2;
@@ -97,7 +94,7 @@ public class FidEditorPage extends GraphicalEditor {
 								.getSize().height / 2));
 			}
 		});
-		viewer.setEditPartFactory(new NMREditPartFactory()); // 添加editpart工厂，通过工厂创建editpart
+		viewer.setEditPartFactory(new DAEditPartFactory()); // 添加editpart工厂，通过工厂创建editpart
 	}
 
 	@Override
@@ -132,7 +129,7 @@ public class FidEditorPage extends GraphicalEditor {
 			avaliable.height -= fig.getInsets().getHeight();
 			fig = fig.getParent();
 		}
-		Rectangle r = LayoutUtils.getContainerBounds();
+		Rectangle r = LayoutUtils.getClientArea();
 		double scaleX = Math.min(((double) avaliable.width) / r.width,
 				zoomManager.getMaxZoom());
 		double scaleY = Math.min(((double) avaliable.height) / r.height,
@@ -179,31 +176,24 @@ public class FidEditorPage extends GraphicalEditor {
 		workspace.setcType(ContainerType.WORKSPACE);
 		workspace.setLayout(LayoutUtils.WORKSPACE_CONSTRAINS);
 		Rectangle backBounds = LayoutUtils.getContainerBounds();
-		container = new Container();
-		container.setcType(ContainerType.FIDCONTAINER);
-		container.setParent(workspace);
+		Container fidContainer = new Container();
+		fidContainer.setcType(ContainerType.FIDCONTAINER);
+		fidContainer.setParent(workspace);
 		int backSpan = LayoutUtils.TEN;
 		Rectangle conBounds = new Rectangle(backBounds.x + backSpan,
 				backBounds.y + backSpan, backBounds.width - 2 * backSpan,
 				backBounds.height - 2 * backSpan);
-		container.setLayout(conBounds);
-		fidData.setParent(container);
-		int span = LayoutUtils.EIGHT;
-		int rulerLabL = Ruler.AXISLL;
-		int temp = span * 2 + rulerLabL;
-		int fdWeight = conBounds.width - temp;
-		int fdHeight = conBounds.height - temp;
-		fidData.setLayout(new Rectangle(span + rulerLabL, span, fdWeight,
-				fdHeight));
+		fidContainer.setLayout(conBounds);
 		leftRuler = new VerticalRuler();
 		leftRuler.setOrient(RulerOrient.LEFT);
-		leftRuler.setParent(container);
-		leftRuler.setLayout(new Rectangle(span, span, rulerLabL - 2, fdHeight));
+		leftRuler.setParent(fidContainer);
+		fidData.setParent(fidContainer);
+		Container placeholderContainer = new Container();
+		placeholderContainer.setcType(ContainerType.BACKGROUND);
+		placeholderContainer.setParent(fidContainer);
 		bottomRuler = new HorizontalRuler();
 		bottomRuler.setOrient(RulerOrient.BOTTOM);
-		bottomRuler.setParent(container);
-		bottomRuler.setLayout(new Rectangle(span + rulerLabL, conBounds.height
-				- span - rulerLabL + 2, fdWeight, rulerLabL - 2));
+		bottomRuler.setParent(fidContainer);
 		return workspace;
 	}
 

@@ -7,7 +7,7 @@ import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 
-import edu.xmu.nmr.dataanalysis.diagram.commands.AbstractLayoutCommand;
+import edu.xmu.nmr.dataanalysis.diagram.commands.DAAbstractLayoutCommand;
 import edu.xmu.nmr.dataanalysis.diagram.commands.ContainerChangeLayoutCommand;
 import edu.xmu.nmr.dataanalysis.diagram.editparts.FidContainerEditPart;
 
@@ -20,7 +20,7 @@ public class EditLayoutPolicy extends XYLayoutEditPolicy {
 	@Override
 	protected Command createChangeConstraintCommand(
 			ChangeBoundsRequest request, EditPart child, Object constraint) {
-		AbstractLayoutCommand command = null;
+		DAAbstractLayoutCommand command = null;
 		if (child instanceof FidContainerEditPart) {
 			command = new ContainerChangeLayoutCommand();
 		}

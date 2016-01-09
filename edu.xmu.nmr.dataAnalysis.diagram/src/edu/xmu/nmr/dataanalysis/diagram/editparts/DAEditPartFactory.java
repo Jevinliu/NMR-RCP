@@ -7,14 +7,14 @@ import edu.xmu.nmrdataanalysis.diagram.model.Container;
 import edu.xmu.nmrdataanalysis.diagram.model.FidData;
 import edu.xmu.nmrdataanalysis.diagram.model.Ruler;
 
-public class NMREditPartFactory implements EditPartFactory {
+public class DAEditPartFactory implements EditPartFactory {
 
-	public NMREditPartFactory() {
+	public DAEditPartFactory() {
 	}
 
 	@Override
 	public EditPart createEditPart(EditPart context, Object model) {
-		NMRAbstractEditPart part = null;
+		DAAbstractEditPart part = null;
 		if (model instanceof Container) {
 			switch (((Container) model).getcType()) {
 			case WORKSPACE:
@@ -22,6 +22,9 @@ public class NMREditPartFactory implements EditPartFactory {
 				break;
 			case FIDCONTAINER:
 				part = new FidContainerEditPart();
+				break;
+			case BACKGROUND:
+				part = new PlaceHolderEditPart();
 				break;
 			}
 		} else if (model instanceof FidData) {
