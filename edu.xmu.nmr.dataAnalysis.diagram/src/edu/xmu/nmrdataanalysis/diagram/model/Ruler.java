@@ -1,5 +1,7 @@
 package edu.xmu.nmrdataanalysis.diagram.model;
 
+import edu.xmu.nmr.dataanalysis.diagram.actions.DAZoomManager;
+
 /**
  * 坐标轴模型层
  * 
@@ -8,6 +10,7 @@ package edu.xmu.nmrdataanalysis.diagram.model;
  */
 public class Ruler extends FElement {
 
+	public static final int DEFAULT_INTERVAL = 40;
 	/**
 	 * 坐标轴位于的方向，
 	 */
@@ -24,10 +27,12 @@ public class Ruler extends FElement {
 	 * 该坐标轴所代表的值域
 	 */
 	private float totalSize;
+
 	/**
-	 * 缩放比例
+	 * 坐标数值的倍数，初始时为1，之后根据{@link DAZoomManager}的MaxZoomLevel计算相应的幂次
 	 */
-	private float[] zoomScales;
+	private double totalScale = 1;
+
 	public static final String PRO_RULER_STEPSIZE = "proRulerStepSize";
 	public static final String PRO_RULER_INTERVAL = "proRulerInterval";
 	public static final String PRO_RULER_TOTALSIZE = "proRulerTotalSize";
@@ -37,8 +42,7 @@ public class Ruler extends FElement {
 	public static final int AXISLL = 75;
 
 	public Ruler() {
-		interval = 40;
-		zoomScales = new float[] { 0.125f, 0.25f, 0.5f, 1f, 1.25f, 1.5f, 2f, 4f };
+		interval = DEFAULT_INTERVAL;
 	}
 
 	public RulerOrient getOrient() {
@@ -49,30 +53,25 @@ public class Ruler extends FElement {
 		this.orient = orient;
 	}
 
-	/**
-	 * 获取最小的像素间隔
-	 * 
-	 * @return
-	 */
-	public float getMinInterval() {
-		return zoomScales[0] * interval;
-	}
-
-	/**
-	 * 获取最大的像素间隔
-	 * 
-	 * @return
-	 */
-	public float getMaxInterval() {
-		return zoomScales[7] * interval;
-	}
-
 	public int getInterval() {
 		return interval;
 	}
 
+	public double getTotalScale() {
+		return totalScale;
+	}
+
+	public void setTotalScale(double totalScale) {
+		this.totalScale = totalScale;
+	}
+
+	public void setIntervalScale(double totalScale, double factor) {
+		setTotalScale(totalScale);
+		setInterval((int) Math.floor(factor * this.interval));
+	}
+
 	public void setInterval(int interval) {
-		float old = this.interval;
+		int old = this.interval;
 		this.interval = interval;
 		getListeners().firePropertyChange(PRO_RULER_INTERVAL, old,
 				this.interval);
@@ -89,14 +88,14 @@ public class Ruler extends FElement {
 				this.stepSize);
 	}
 
-	/**
-	 * 获取当前像素间隔对应的真实间隔下所表示的比例
-	 * 
-	 * @return
-	 */
-	public float getScale() {
-		return this.stepSize / (this.interval * 1.0f);
-	}
+	// /**
+	// * 获取当前像素间隔对应的真实间隔下所表示的比例
+	// *
+	// * @return
+	// */
+	// public float getScale() {
+	// return this.stepSize / (this.interval * 1.0f);
+	// }
 
 	public float getTotalSize() {
 		return totalSize;

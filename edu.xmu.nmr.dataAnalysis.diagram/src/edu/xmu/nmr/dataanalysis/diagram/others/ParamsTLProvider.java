@@ -46,7 +46,7 @@ public class ParamsTLProvider implements ITableLabelProvider {
 			if (obj instanceof ParameterObject) {
 				return ((ParameterObject) obj).getCurrentValuesTrim();
 			} else if (obj instanceof ArrayList) {
-				return Utils.getArrayListToStringTrim((ArrayList) obj);
+				return StringArrayUtils.getArrayListToStringTrim((ArrayList) obj);
 			} else {
 				return obj.toString();
 			}

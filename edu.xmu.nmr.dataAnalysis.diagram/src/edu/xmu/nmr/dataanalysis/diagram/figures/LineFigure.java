@@ -56,6 +56,11 @@ public class LineFigure extends Figure {
 	 */
 	private int vInterval;
 
+	/**
+	 * 竖直方向上维持的缩放总比例
+	 */
+	private float vScale;
+
 	public LineFigure() {
 		setOpaque(false);
 		getInitConfig();
@@ -104,6 +109,10 @@ public class LineFigure extends Figure {
 		this.vInterval = vInterval;
 	}
 
+	public void setVScale(float vScale) {
+		this.vScale = vScale;
+	}
+
 	/**
 	 * 设置坐标转换标准
 	 */
@@ -113,9 +122,10 @@ public class LineFigure extends Figure {
 			return;
 		}
 		ctf.setxOffset(rect.x);
-		ctf.setyOffset(rect.y);
+		ctf.setyOffset(rect.y
+				- (rect.height * this.vScale / 2 - rect.height / 2));
 		ctf.setxScale((float) (rect.width * 1 / (float) rawData.size()));
-		ctf.setyScale(rect.height / (2 * absMax));
+		ctf.setyScale(rect.height * this.vScale / (2 * absMax));
 	}
 
 	public CoordinateTf getCoordinateTf() {

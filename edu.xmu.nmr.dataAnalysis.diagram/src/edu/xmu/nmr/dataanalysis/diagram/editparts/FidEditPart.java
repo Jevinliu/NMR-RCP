@@ -28,6 +28,7 @@ public class FidEditPart extends DAAbstractEditPart {
 		figure.setAbsMax(fidData.getAbsMax());
 		figure.setVInterval(fidData.getVInterval());
 		figure.setHInterval(fidData.getHInterval());
+		figure.setVScale(fidData.getVScale());
 		figure.repaint();
 	}
 

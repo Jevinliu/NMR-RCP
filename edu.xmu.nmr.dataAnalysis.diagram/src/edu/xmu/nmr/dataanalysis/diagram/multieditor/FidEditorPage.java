@@ -70,7 +70,8 @@ public class FidEditorPage extends GraphicalEditor {
 	public FidEditorPage() {
 		setEditDomain(new DefaultEditDomain(this));
 		fidData = new FidData();
-		daZoomMgr = new DAZoomManager(fidData);
+		leftRuler = new VerticalRuler();
+		daZoomMgr = new DAZoomManager(fidData, leftRuler);
 	}
 
 	@Override
@@ -206,7 +207,6 @@ public class FidEditorPage extends GraphicalEditor {
 				backBounds.y + backSpan, backBounds.width - 2 * backSpan,
 				backBounds.height - 2 * backSpan);
 		fidContainer.setLayout(conBounds);
-		leftRuler = new VerticalRuler();
 		leftRuler.setOrient(RulerOrient.LEFT);
 		leftRuler.setParent(fidContainer);
 		fidData.setParent(fidContainer);

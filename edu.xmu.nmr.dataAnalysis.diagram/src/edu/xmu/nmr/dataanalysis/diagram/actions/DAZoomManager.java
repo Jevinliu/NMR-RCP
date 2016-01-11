@@ -6,7 +6,9 @@ import java.util.List;
 
 import org.eclipse.gef.editparts.ZoomListener;
 
+import edu.xmu.nmr.dataanalysis.diagram.others.MathUtils;
 import edu.xmu.nmrdataanalysis.diagram.model.FidData;
+import edu.xmu.nmrdataanalysis.diagram.model.Ruler;
 
 /**
  * 缩放管理器，通过操作模型interval的缩放比例，来影响figure的变化
@@ -20,12 +22,19 @@ public class DAZoomManager {
 	 * 记录当前缩放比例，
 	 */
 	private double zoom = 1.0;
-	private double[] zoomLevels = { 0.5, 0.75, 1.0, 1.5, 2.0, 4.0 };
+	private double[] zoomLevels = { 1.0, 1.25, 1.5, 1.75, 2.0, 3.0, 4.0 };
 	private FidData fidData;
+	private Ruler ruler;
 	private List<ZoomListener> listeners = new ArrayList<ZoomListener>();
 
-	public DAZoomManager(FidData fidData) {
+	/**
+	 * 总的缩放比例
+	 */
+	private double totalScale = 1.0;
+
+	public DAZoomManager(FidData fidData, Ruler ruler) {
 		this.fidData = fidData;
+		this.ruler = ruler;
 	}
 
 	public void addZoomListener(ZoomListener listener) {
@@ -85,7 +94,37 @@ public class DAZoomManager {
 		double prevZoom = this.zoom;
 		this.zoom = zoom;
 		fireZoomChanged();
-		fidData.setVIntervalScale(zoom / prevZoom);
+		// 根据zoom值自行判断是zoom in还是zoom out，方便以后使用setZoom()
+		// zoom in时计算总的totalScale，用于fid的显示,此处边界值极为重要
+		double factor = zoom / prevZoom;
+		if ((zoom == getMinZoom() && prevZoom == getMaxZoom())
+				|| (zoom != getMaxZoom() && zoom > prevZoom)
+				|| (zoom == getMaxZoom() && prevZoom != getMinZoom())) {
+			if (zoom != getMinZoom()) {
+				totalScale = totalScale * factor;
+			}
+		} else {// zoom out 时计算totalScale，用于fid显示
+			double preTemp = prevZoom / getMaxZoom();
+			double temp = zoom / getMaxZoom();
+			if (temp != 1) {
+				totalScale = totalScale * temp / preTemp;
+			}
+		}
+		System.out.println("prevZoom: " + prevZoom + ", zoom: " + zoom);
+		System.out.println("totalScale: " + totalScale);
+		fidData.setVIntervalScale(totalScale, factor);
+		if (ruler != null) {
+			int power = MathUtils.getPowerInteger(getMaxZoom(), totalScale);
+			System.out.println("power: " + power);
+			double scaleByPower;
+			if (totalScale > 1) {
+				scaleByPower = Math.pow(getMaxZoom(), power);
+			} else {
+				scaleByPower = Math.pow(1 / getMaxZoom(), power);
+			}
+			System.out.println("scaleByPower: " + scaleByPower);
+			ruler.setIntervalScale(scaleByPower, factor);
+		}
 	}
 
 	protected void fireZoomChanged() {
@@ -119,7 +158,6 @@ public class DAZoomManager {
 	 * 放大
 	 */
 	public void zoomIn() {
-		System.out.println("zoom in");
 		setZoom(getNextZoomLevel());
 	}
 
@@ -127,7 +165,6 @@ public class DAZoomManager {
 	 * 缩小
 	 */
 	public void zoomOut() {
-		System.out.println("zoom out");
 		setZoom(getPreviousZoomLevel());
 	}
 }

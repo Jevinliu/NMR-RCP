@@ -20,6 +20,11 @@ public class FidData extends FElement {
 	private int hInterval;
 
 	/**
+	 * 当前竖直方向上维持的一个缩放总比例
+	 */
+	private float vScale = 1.0f;
+
+	/**
 	 * 竖直方向网格间隔，和竖直ruler保持一致
 	 */
 	private int vInterval;
@@ -70,10 +75,16 @@ public class FidData extends FElement {
 	 * @param factor
 	 * @return
 	 */
-	public void setVIntervalScale(double factor) {
+	public void setVIntervalScale(double totalScale, double factor) {
+		this.vScale = (float) totalScale;
 		int old = this.vInterval;
 		this.vInterval = (int) Math.floor(factor * vInterval);
 		System.out.println("old: " + old + ", new :" + this.vInterval);
 		getListeners().firePropertyChange(PRO_LS_INTERVAL, old, this.vInterval);
 	}
+
+	public float getVScale() {
+		return vScale;
+	}
+
 }

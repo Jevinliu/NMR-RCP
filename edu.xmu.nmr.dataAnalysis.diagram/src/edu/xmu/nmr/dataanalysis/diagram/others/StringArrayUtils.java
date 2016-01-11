@@ -2,7 +2,7 @@ package edu.xmu.nmr.dataanalysis.diagram.others;
 
 import java.util.ArrayList;
 
-public class Utils {
+public class StringArrayUtils {
 
 	public static String getArrayListToStringTrim(ArrayList input) {
 		if (input != null) {

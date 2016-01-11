@@ -72,7 +72,7 @@ public class ParamsValueEditingSupport extends EditingSupport {
 			if (value instanceof ParameterObject) {
 				return ((ParameterObject) value).getCurrentValuesTrim();
 			} else if (value instanceof ArrayList) {
-				return Utils.getArrayListToStringTrim((ArrayList) value);
+				return StringArrayUtils.getArrayListToStringTrim((ArrayList) value);
 			} else {
 				return value.toString();
 			}
@@ -95,15 +95,15 @@ public class ParamsValueEditingSupport extends EditingSupport {
 		try {
 			if (oldObject instanceof ParamsString) {
 				newObject = ((ParamsString) oldObject).clone();
-				((ParamsString) newObject).setCurrentValues(Utils
+				((ParamsString) newObject).setCurrentValues(StringArrayUtils
 						.setStringTrimToArrayList(value.toString()));
 			} else if (oldObject instanceof ParamsReal) {
 				newObject = ((ParamsReal) oldObject).clone();
 
-				((ParamsReal) newObject).setCurrentValues(Utils
+				((ParamsReal) newObject).setCurrentValues(StringArrayUtils
 						.setStringTrimToArrayListDouble(value.toString()));
 			} else if (oldObject instanceof ArrayList) {
-				newObject = Utils.setStringTrimToArrayList(value.toString());
+				newObject = StringArrayUtils.setStringTrimToArrayList(value.toString());
 			} else {
 				newObject = value;
 			}

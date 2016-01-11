@@ -36,6 +36,11 @@ public class RulerFigure extends Figure {
 	 */
 	private int interval;
 
+	/**
+	 * 坐标值得倍数因子
+	 */
+	private double scale;
+
 	public RulerFigure() {
 		setForegroundColor(ColorConstants.black);
 		setOpaque(false);
@@ -63,6 +68,10 @@ public class RulerFigure extends Figure {
 
 	public void setOrient(RulerOrient orient) {
 		this.orient = orient;
+	}
+
+	public void setScale(double scale) {
+		this.scale = scale;
 	}
 
 	public RulerOrient getOrient() {
@@ -107,7 +116,7 @@ public class RulerFigure extends Figure {
 		int num = bounds.height / interval;
 		switch (orient) {
 		case LEFT:
-			stepSize = totalSize * interval / (float) bounds.height;
+			stepSize = (float) (totalSize * Ruler.DEFAULT_INTERVAL * scale / (float) bounds.height);
 			graphics.drawLine(rightEndX - tall, centerY, rightEndX, centerY);
 			TextLayout layout = new TextLayout(null);
 			layout.setText("0");

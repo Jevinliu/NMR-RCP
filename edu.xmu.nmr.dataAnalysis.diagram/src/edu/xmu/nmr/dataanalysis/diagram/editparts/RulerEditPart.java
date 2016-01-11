@@ -38,6 +38,7 @@ public class RulerEditPart extends DAAbstractEditPart {
 		figure.setOrient(ruler.getOrient());
 		figure.setInterval((int) ruler.getInterval());
 		figure.setTotalSize(ruler.getTotalSize());
+		figure.setScale(ruler.getTotalScale());
 	}
 
 	@Override
