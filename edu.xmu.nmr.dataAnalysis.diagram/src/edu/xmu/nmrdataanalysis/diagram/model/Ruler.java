@@ -15,7 +15,7 @@ public class Ruler extends FElement {
 	/**
 	 * 当前坐标节点间像素间隔
 	 */
-	private float interval;
+	private int interval;
 	/**
 	 * 当前像素间隔下所代表的实际间隔值，即坐标节点对应数值的差值
 	 */
@@ -38,8 +38,7 @@ public class Ruler extends FElement {
 
 	public Ruler() {
 		interval = 40;
-		zoomScales = new float[] { 0.125f, 0.25f, 0.5f, 1f, 1.25f, 1.5f, 1.75f,
-				2f };
+		zoomScales = new float[] { 0.125f, 0.25f, 0.5f, 1f, 1.25f, 1.5f, 2f, 4f };
 	}
 
 	public RulerOrient getOrient() {
@@ -68,11 +67,11 @@ public class Ruler extends FElement {
 		return zoomScales[7] * interval;
 	}
 
-	public float getInterval() {
+	public int getInterval() {
 		return interval;
 	}
 
-	public void setInterval(float interval) {
+	public void setInterval(int interval) {
 		float old = this.interval;
 		this.interval = interval;
 		getListeners().firePropertyChange(PRO_RULER_INTERVAL, old,

@@ -7,14 +7,13 @@ import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 
-import edu.xmu.nmr.dataanalysis.diagram.commands.DAAbstractLayoutCommand;
 import edu.xmu.nmr.dataanalysis.diagram.commands.ContainerChangeLayoutCommand;
+import edu.xmu.nmr.dataanalysis.diagram.commands.DAAbstractLayoutCommand;
 import edu.xmu.nmr.dataanalysis.diagram.editparts.FidContainerEditPart;
 
 public class EditLayoutPolicy extends XYLayoutEditPolicy {
 
 	public EditLayoutPolicy() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

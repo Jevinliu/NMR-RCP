@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
 import org.eclipse.draw2d.AbstractPointListShape;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
@@ -38,12 +39,22 @@ import edu.xmu.nmr.dataanalysis.diagram.pref.helper.DataAnalysisPrefPageUtil;
  */
 public class LineFigure extends Figure {
 
+	private Logger log = Logger.getLogger(this.getClass());
 	private ArrayList<Float> rawData; // 原始数据，如fid数据，proc数据
 	private float absMax;
 	private int tolerance = 2;
 	private CoordinateTf ctf;
 	private ArrayList<Integer> selectedIndex;
 	PointList points = new PointList();
+	/**
+	 * 水平方向网格间隔，和ruler的interval保持一致
+	 */
+	private int hInterval;
+
+	/**
+	 * 竖直方向网格间隔，和ruler的interval保持一致
+	 */
+	private int vInterval;
 
 	public LineFigure() {
 		setOpaque(false);
@@ -83,6 +94,14 @@ public class LineFigure extends Figure {
 
 	public void setAbsMax(float max) {
 		this.absMax = max;
+	}
+
+	public void setHInterval(int hInterval) {
+		this.hInterval = hInterval;
+	}
+
+	public void setVInterval(int vInterval) {
+		this.vInterval = vInterval;
 	}
 
 	/**
@@ -186,9 +205,41 @@ public class LineFigure extends Figure {
 		boolean isAdvanced = graphics.getAdvanced();
 		graphics.setAdvanced(true);
 		graphics.setAntialias(SWT.ON);
+		drawGrid(graphics);
 		graphics.drawPolyline(points);
 		graphics.setAdvanced(isAdvanced);
 		graphics.popState();
+	}
+
+	/**
+	 * 绘制网格
+	 * 
+	 * @param graphics
+	 */
+	private void drawGrid(Graphics graphics) {
+		if (vInterval == 0) {
+			return;
+		}
+		Rectangle bounds = getBounds();
+		graphics.setForegroundColor(ColorConstants.lightGray);
+		int centerY = bounds.y + bounds.height / 2;
+		int vNum = bounds.height / vInterval;
+		int endX = bounds.x + bounds.width;
+		for (int i = 0; i < vNum / 2 + 1; i++) {
+			int aboveY = centerY - vInterval * i;
+			int belowY = centerY + vInterval * i;
+			graphics.drawLine(bounds.x, aboveY, endX, aboveY);
+			if (i != 0) {
+				graphics.drawLine(bounds.x, belowY, endX, belowY);
+			}
+		}
+
+		int endY = bounds.y + bounds.height;
+		for (int j = 1; j * hInterval < bounds.width; j++) {
+			int x = bounds.x + j * hInterval;
+			graphics.drawLine(x, bounds.y, x, endY);
+		}
+		graphics.setForegroundColor(getForegroundColor());
 	}
 
 	@Override

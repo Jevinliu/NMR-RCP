@@ -14,17 +14,23 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.MouseWheelHandler;
 import org.eclipse.gef.editparts.ScalableRootEditPart;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 
+import edu.xmu.nmr.dataanalysis.diagram.actions.DAZoomInAction;
+import edu.xmu.nmr.dataanalysis.diagram.actions.DAZoomManager;
+import edu.xmu.nmr.dataanalysis.diagram.actions.DAZoomOutAction;
 import edu.xmu.nmr.dataanalysis.diagram.editparts.DAEditPartFactory;
 import edu.xmu.nmr.dataanalysis.diagram.figures.PointsTools;
+import edu.xmu.nmr.dataanalysis.diagram.handlers.DAMouseWheelZoomHandler;
 import edu.xmu.nmr.dataanalysis.diagram.layouts.LayoutUtils;
 import edu.xmu.nmrdataanalysis.diagram.model.Container;
 import edu.xmu.nmrdataanalysis.diagram.model.ContainerType;
@@ -45,10 +51,11 @@ public class FidEditorPage extends GraphicalEditor {
 
 	private Logger log = Logger.getLogger(this.getClass());
 	public static final String ID = "edu.xmu.nmr.dataAnalysis.diagram.editorparts.fidEditorPage";
-	private FidData fidData = new FidData(); // 模型节点
+	private FidData fidData; // 模型节点
 	private VerticalRuler leftRuler;
 	private HorizontalRuler bottomRuler;
 	private ZoomManager zoomManager;
+	private DAZoomManager daZoomMgr;
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
@@ -62,6 +69,8 @@ public class FidEditorPage extends GraphicalEditor {
 
 	public FidEditorPage() {
 		setEditDomain(new DefaultEditDomain(this));
+		fidData = new FidData();
+		daZoomMgr = new DAZoomManager(fidData);
 	}
 
 	@Override
@@ -95,6 +104,19 @@ public class FidEditorPage extends GraphicalEditor {
 			}
 		});
 		viewer.setEditPartFactory(new DAEditPartFactory()); // 添加editpart工厂，通过工厂创建editpart
+		viewer.setProperty(DAZoomManager.class.toString(), daZoomMgr); // 注册DAZoomManager
+		setupDAZoomAction();
+	}
+
+	/**
+	 * 设置DAZoomAction
+	 */
+	private void setupDAZoomAction() {
+		getActionRegistry().registerAction(new DAZoomInAction(daZoomMgr));
+		getActionRegistry().registerAction(new DAZoomOutAction(daZoomMgr));
+		getGraphicalViewer().setProperty(
+				MouseWheelHandler.KeyGenerator.getKey(SWT.NONE),
+				DAMouseWheelZoomHandler.SINGLETON);
 	}
 
 	@Override
@@ -188,12 +210,14 @@ public class FidEditorPage extends GraphicalEditor {
 		leftRuler.setOrient(RulerOrient.LEFT);
 		leftRuler.setParent(fidContainer);
 		fidData.setParent(fidContainer);
+		fidData.setVInterval(leftRuler.getInterval());
 		Container placeholderContainer = new Container();
 		placeholderContainer.setcType(ContainerType.BACKGROUND);
 		placeholderContainer.setParent(fidContainer);
 		bottomRuler = new HorizontalRuler();
 		bottomRuler.setOrient(RulerOrient.BOTTOM);
 		bottomRuler.setParent(fidContainer);
+		fidData.setHInterval(bottomRuler.getInterval());
 		return workspace;
 	}
 
