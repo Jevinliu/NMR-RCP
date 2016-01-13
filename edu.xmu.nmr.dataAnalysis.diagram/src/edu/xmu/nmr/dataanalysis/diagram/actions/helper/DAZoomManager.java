@@ -1,4 +1,4 @@
-package edu.xmu.nmr.dataanalysis.diagram.actions;
+package edu.xmu.nmr.dataanalysis.diagram.actions.helper;
 
 import java.util.ArrayList;
 import java.util.Iterator;

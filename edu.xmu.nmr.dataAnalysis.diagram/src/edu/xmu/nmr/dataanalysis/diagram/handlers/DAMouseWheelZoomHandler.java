@@ -4,7 +4,7 @@ import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.MouseWheelHandler;
 import org.eclipse.swt.widgets.Event;
 
-import edu.xmu.nmr.dataanalysis.diagram.actions.DAZoomManager;
+import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAZoomManager;
 
 public class DAMouseWheelZoomHandler implements MouseWheelHandler {
 

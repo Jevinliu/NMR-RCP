@@ -1,6 +1,6 @@
 package edu.xmu.nmrdataanalysis.diagram.model;
 
-import edu.xmu.nmr.dataanalysis.diagram.actions.DAZoomManager;
+import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAZoomManager;
 
 /**
  * 坐标轴模型层

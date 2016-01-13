@@ -5,6 +5,8 @@ import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 
+import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAZoomManager;
+
 public abstract class DAZoomAction extends Action implements ZoomListener,
 		Disposable {
 

@@ -33,6 +33,10 @@
             id="edu.xmu.nmr.dataAnalysis.diagram.commands.opennmreditor"
             name="Open NMR Editor">
       </command>
+      <command
+            id="edu.xmu.nmr.dataanalysis.da_move_img"
+            name="Move">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">

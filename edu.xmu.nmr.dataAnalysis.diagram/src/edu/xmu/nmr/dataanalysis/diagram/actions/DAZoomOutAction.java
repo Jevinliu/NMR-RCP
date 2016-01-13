@@ -4,6 +4,8 @@ import org.eclipse.gef.internal.GEFMessages;
 import org.eclipse.gef.internal.InternalImages;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
 
+import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAZoomManager;
+
 public class DAZoomOutAction extends DAZoomAction {
 
 	public DAZoomOutAction(DAZoomManager zoomManager) {
