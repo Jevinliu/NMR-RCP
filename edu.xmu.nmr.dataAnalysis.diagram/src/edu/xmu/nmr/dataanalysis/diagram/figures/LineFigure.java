@@ -235,19 +235,23 @@ public class LineFigure extends Figure {
         }
         Rectangle bounds = getBounds();
         graphics.setForegroundColor(ColorConstants.lightGray);
-        int centerY = bounds.y + bounds.height / 2;
-        int vNum = bounds.height / vInterval;
+        int centerY = bounds.y + bounds.height / 2 + offsetY; // 以中点为基准
         int endX = bounds.x + bounds.width;
-        for (int i = 0; i < vNum / 2 + 1; i++) {
-            int aboveY = centerY - vInterval * i;
-            int belowY = centerY + vInterval * i;
-            graphics.drawLine(bounds.x, aboveY, endX, aboveY);
-            if (i != 0) {
+        int endY = bounds.y + bounds.height;
+        // 绘制y轴 记录当前的状态
+        int aboveY = centerY;
+        int belowY = centerY;
+        for (int i = 0; aboveY >= bounds.y || belowY <= endY; i++) {
+            aboveY = centerY - vInterval * i;
+            belowY = centerY + vInterval * i;
+            if (aboveY >= bounds.y) {
+                graphics.drawLine(bounds.x, aboveY, endX, aboveY);
+            }
+            if (i != 0 && belowY <= endY) {
                 graphics.drawLine(bounds.x, belowY, endX, belowY);
             }
         }
-        
-        int endY = bounds.y + bounds.height;
+        // 绘制x轴
         for (int j = 1; j * hInterval < bounds.width; j++) {
             int x = bounds.x + j * hInterval;
             graphics.drawLine(x, bounds.y, x, endY);

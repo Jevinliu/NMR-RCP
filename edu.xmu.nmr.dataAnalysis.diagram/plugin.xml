@@ -37,6 +37,14 @@
             id="edu.xmu.nmr.dataanalysis.da_move_img"
             name="Move">
       </command>
+      <command
+            id="edu.xmu.nmr.dataanalysis.zoom_in"
+            name="Zoom_In">
+      </command>
+      <command
+            id="edu.xmu.nmr.dataanalysis.zoom_out"
+            name="Zoom_Out">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">

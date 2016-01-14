@@ -8,42 +8,40 @@ import edu.xmu.nmr.dataanalysis.diagram.figures.RulerFigure;
 import edu.xmu.nmrdataanalysis.diagram.model.Ruler;
 
 public class RulerEditPart extends DAAbstractEditPart {
-
-	public RulerEditPart() {
-	}
-
-	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-		String[] eventsName = new String[] { Ruler.PRO_RULER_STEPSIZE,
-				Ruler.PRO_RULER_INTERVAL, Ruler.PRO_RULER_TOTALSIZE };
-		for (String eventName : eventsName) {
-			if (evt.getPropertyName().equals(eventName)) {
-				refreshVisuals();
-				return;
-			}
-		}
-	}
-
-	@Override
-	protected IFigure createFigure() {
-		IFigure rulerFigure = new RulerFigure();
-		return rulerFigure;
-	}
-
-	@Override
-	protected void refreshVisuals() {
-		RulerFigure figure = (RulerFigure) getFigure();
-		Ruler ruler = (Ruler) getModel();
-		figure.setGridLayout();
-		figure.setOrient(ruler.getOrient());
-		figure.setInterval((int) ruler.getInterval());
-		figure.setTotalSize(ruler.getTotalSize());
-		figure.setScale(ruler.getTotalScale());
-	}
-
-	@Override
-	protected void createEditPolicies() {
-
-	}
-
+    
+    public RulerEditPart() {
+    }
+    
+    @Override public void propertyChange(PropertyChangeEvent evt) {
+        String[] eventsName = new String[] { Ruler.PRO_RULER_STEPSIZE,
+                Ruler.PRO_RULER_INTERVAL, Ruler.PRO_RULER_TOTALSIZE,
+                Ruler.PRO_RULER_OFFSET };
+        for (String eventName : eventsName) {
+            if (evt.getPropertyName().equals(eventName)) {
+                refreshVisuals();
+                return;
+            }
+        }
+    }
+    
+    @Override protected IFigure createFigure() {
+        IFigure rulerFigure = new RulerFigure();
+        return rulerFigure;
+    }
+    
+    @Override protected void refreshVisuals() {
+        RulerFigure figure = (RulerFigure) getFigure();
+        Ruler ruler = (Ruler) getModel();
+        figure.setGridLayout();
+        figure.setOrient(ruler.getOrient());
+        figure.setInterval((int) ruler.getInterval());
+        figure.setTotalSize(ruler.getTotalSize());
+        figure.setScale(ruler.getTotalScale());
+        figure.setOffsetY(ruler.getOffset());
+    }
+    
+    @Override protected void createEditPolicies() {
+        
+    }
+    
 }

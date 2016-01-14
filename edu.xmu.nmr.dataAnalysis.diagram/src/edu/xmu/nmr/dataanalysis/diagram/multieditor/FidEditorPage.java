@@ -252,6 +252,7 @@ public class FidEditorPage extends GraphicalEditor {
         leftRuler.setParent(fidContainer);
         fidData.setParent(fidContainer);
         fidData.setVInterval(leftRuler.getInterval());
+        fidData.addPropertyChangeListener(leftRuler);
         Container placeholderContainer = new Container();
         placeholderContainer.setcType(ContainerType.BACKGROUND);
         placeholderContainer.setParent(fidContainer);
@@ -260,6 +261,13 @@ public class FidEditorPage extends GraphicalEditor {
         bottomRuler.setParent(fidContainer);
         fidData.setHInterval(bottomRuler.getInterval());
         return workspace;
+    }
+    
+    @Override public void dispose() {
+        if (fidData != null && leftRuler != null) {
+            fidData.removePropertyChangeListener(leftRuler);
+        }
+        super.dispose();
     }
     
     @Override public void doSave(IProgressMonitor monitor) {
