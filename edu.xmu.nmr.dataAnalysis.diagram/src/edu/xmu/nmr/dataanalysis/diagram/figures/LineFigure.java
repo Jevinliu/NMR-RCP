@@ -59,13 +59,13 @@ public class LineFigure extends Figure {
     /**
      * 竖直方向上维持的缩放总比例
      */
-    private float vScale;
+    private double vScale;
     
     private int offsetY;
     
-    private int partZoomStartX;
+    private double hScale;
     
-    private int partZoomEndX;
+    private int offsetX;
     
     public LineFigure() {
         setOpaque(false);
@@ -114,7 +114,7 @@ public class LineFigure extends Figure {
         this.vInterval = vInterval;
     }
     
-    public void setVScale(float vScale) {
+    public void setVScale(double vScale) {
         this.vScale = vScale;
     }
     
@@ -122,12 +122,12 @@ public class LineFigure extends Figure {
         this.offsetY = offsetY;
     }
     
-    public void setPartZoomStartX(int partZoomStartX) {
-        this.partZoomStartX = partZoomStartX;
+    public void setHScale(double hScale) {
+        this.hScale = hScale;
     }
     
-    public void setPartZoomEndX(int partZoomEndX) {
-        this.partZoomEndX = partZoomEndX;
+    public void setOffsetX(int offsetX) {
+        this.offsetX = offsetX;
     }
     
     /**
@@ -138,10 +138,11 @@ public class LineFigure extends Figure {
         if (rect == null) {
             return;
         }
-        ctf.setxOffset(rect.x);
-        ctf.setyOffset(offsetY + rect.y
-                - (rect.height * this.vScale / 2 - rect.height / 2));
-        ctf.setxScale((float) (rect.width * 1 / (float) rawData.size()));
+        ctf.setxOffset(rect.x + offsetX);
+        ctf.setyOffset((float) (offsetY + rect.y
+                - (rect.height * this.vScale / 2 - rect.height / 2)));
+        ctf.setxScale(
+                (float) (rect.width * 1 / (float) rawData.size()) * hScale);
         ctf.setyScale(rect.height * this.vScale / (2 * absMax));
     }
     
@@ -231,24 +232,9 @@ public class LineFigure extends Figure {
         graphics.setAdvanced(true);
         graphics.setAntialias(SWT.ON);
         this.drawGrid(graphics);
-        
         graphics.drawPolyline(points);
-        this.drawPartSelection(graphics);
         graphics.setAdvanced(isAdvanced);
         graphics.popState();
-    }
-    
-    private void drawPartSelection(Graphics graphics) {
-        if (partZoomStartX == -1 || partZoomEndX == -1) {
-            return;
-        }
-        // Rectangle bounds = new Rectangle(partZoomStartX, 0,
-        // partZoomEndX - partZoomStartX, 0);
-        // translateToRelative(bounds);
-        // bounds.y = getBounds().y + 5;
-        // bounds.height = getBounds().height - 10;
-        // System.out.println("partZoomstartX: " + partZoomStartX
-        // + ", partZoomEndX: " + partZoomEndX);
     }
     
     /**

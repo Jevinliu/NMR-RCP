@@ -37,10 +37,10 @@ public class DAPartZoomPolicy extends AbstractEditPolicy {
         List<FElement> children = ((Container) parent).getChildren();
         for (FElement child : children) {
             if (child instanceof FidData) {
-                cmd.setModel(child);
+                cmd.setModel((FidData) child);
                 DAPartZoomRequest req = (DAPartZoomRequest) request;
-                cmd.setStartX(req.getStartX());
-                cmd.setEndX(req.getEndX());
+                cmd.setOffsetX(req.getOffsetX());
+                cmd.setHScale(req.getHScale());
                 return cmd;
             }
         }

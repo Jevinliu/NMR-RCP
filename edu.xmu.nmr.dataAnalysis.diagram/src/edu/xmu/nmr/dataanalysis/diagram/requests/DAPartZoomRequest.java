@@ -5,31 +5,31 @@ import org.eclipse.gef.Request;
 public class DAPartZoomRequest extends Request {
     
     /**
-     * 起始横坐标
+     * 追加的偏移量
      */
-    private int startX;
+    private int offsetX;
     /**
-     * 终点横坐标
+     * 追加的水平缩放比例
      */
-    private int endX;
+    private double hScale;
     
     public DAPartZoomRequest() {
         setType(DARequestConstants.DA_REQ_PART_ZOOM);
     }
     
-    public int getStartX() {
-        return startX;
+    public int getOffsetX() {
+        return offsetX;
     }
     
-    public void setStartX(int startX) {
-        this.startX = startX;
+    public void setOffsetX(int offsetX) {
+        this.offsetX = offsetX;
     }
     
-    public int getEndX() {
-        return endX;
+    public double getHScale() {
+        return hScale;
     }
     
-    public void setEndX(int endX) {
-        this.endX = endX;
+    public void setHScale(double hScale) {
+        this.hScale = hScale;
     }
 }

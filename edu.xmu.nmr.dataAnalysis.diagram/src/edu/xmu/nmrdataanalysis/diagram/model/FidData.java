@@ -22,7 +22,7 @@ public class FidData extends FElement {
     /**
      * 当前竖直方向上维持的一个缩放总比例
      */
-    private float vScale;
+    private double vScale;
     
     /**
      * 绘图时，图像向上偏移量
@@ -35,11 +35,14 @@ public class FidData extends FElement {
     private int vInterval;
     
     /**
-     * 部分缩放起始点
+     * 在当前水平方向的缩放比例下，当前x轴方向偏移量，
      */
-    private int zoomStartX;
+    private int offsetX;
     
-    private int zoomEndX;
+    /**
+     * 水平方向总的缩放比例
+     */
+    private double hScale;
     
     public static final String PRO_LS_FIDDATA = "pro_ls_fiddata";
     public static final String PRO_LS_STEPSIZE = "pro_ls_stepsize";
@@ -98,7 +101,7 @@ public class FidData extends FElement {
         getListeners().firePropertyChange(PRO_LS_INTERVAL, old, this.vInterval);
     }
     
-    public float getVScale() {
+    public double getVScale() {
         return vScale;
     }
     
@@ -129,33 +132,44 @@ public class FidData extends FElement {
     public void reset() {
         this.vScale = 1.0f;
         this.offsetY = 0;
-        this.zoomStartX = -1;
-        this.zoomEndX = -1;
+        this.offsetX = 0;
+        this.hScale = 1;
     }
     
-    public int getZoomStartX() {
-        return zoomStartX;
+    public int getOffsetX() {
+        return offsetX;
     }
     
-    public int getZoomEndX() {
-        return zoomEndX;
+    public void setOffsetX(int offsetX) {
+        this.offsetX = offsetX;
     }
     
     /**
-     * 设置部分缩放时的起点和终点
+     * 追加x轴偏移
      * 
-     * @param startX
-     * @param endX
+     * @param appendOffsetX
      */
-    public void setZoomStartAndEndX(int startX, int endX) {
-        this.zoomStartX = startX;
-        int oldEndX = this.zoomEndX;
-        this.zoomEndX = endX;
-        getListeners().firePropertyChange(PRO_LS_PART_ZOOM, oldEndX,
-                this.zoomEndX);
+    public void appendOffsetX(int appendOffsetX) {
+        setOffsetX(this.offsetX + appendOffsetX);
     }
     
-    public void resetPartZoom() {
-        this.setZoomStartAndEndX(-1, -1);
+    public double getHScale() {
+        return hScale;
+    }
+    
+    public void setHScale(double hScale) {
+        double old = this.hScale;
+        this.hScale = hScale;
+        getListeners().firePropertyChange(PRO_LS_PART_ZOOM, old,
+                this.hInterval);
+    }
+    
+    public void appendHScale(double appendHScale) {
+        setHScale(this.hScale * appendHScale);
+    }
+    
+    public void setHScaleAndOffset(int appendOffsetX, double appendHScale) {
+        this.setOffsetX((int) ((this.offsetX + appendOffsetX) * appendHScale));
+        this.appendHScale(appendHScale);
     }
 }

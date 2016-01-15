@@ -28,8 +28,8 @@ public class FidEditPart extends DAAbstractEditPart {
         figure.setHInterval(fidData.getHInterval());
         figure.setVScale(fidData.getVScale());
         figure.setOffsetY(fidData.getOffsetY());
-        figure.setPartZoomStartX(fidData.getZoomStartX());
-        figure.setPartZoomEndX(fidData.getZoomEndX());
+        figure.setOffsetX(fidData.getOffsetX());
+        figure.setHScale(fidData.getHScale());
         figure.repaint();
     }
     

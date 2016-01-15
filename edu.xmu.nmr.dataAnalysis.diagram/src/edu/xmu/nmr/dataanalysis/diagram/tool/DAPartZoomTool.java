@@ -51,8 +51,12 @@ public class DAPartZoomTool extends SelectionTool {
     
     @Override protected void updateTargetRequest() {
         DAPartZoomRequest request = (DAPartZoomRequest) getTargetRequest();
-        request.setStartX(getStartLocation().x);
-        request.setEndX(getLocation().x);
+        if (selectionFigure != null) {
+            request.setOffsetX(
+                    fidFigure.getBounds().x - selectionFigure.getBounds().x);
+            request.setHScale(fidFigure.getBounds().width
+                    / (double) selectionFigure.getBounds().width);
+        }
     }
     
     @Override protected boolean handleButtonDown(int button) {
@@ -190,9 +194,9 @@ public class DAPartZoomTool extends SelectionTool {
     protected boolean handleButtonUp(int button) {
         if (stateTransition(STATE_DRAG | STATE_DRAG_IN_PROGRESS,
                 STATE_TERMINAL)) {
+            updateTargetRequest();
             unlockTargetEditPart();
             eraseSelectionFeedback();
-            updateTargetRequest();
             setCurrentCommand(getCommand());
             performSelect();
         }
@@ -207,6 +211,11 @@ public class DAPartZoomTool extends SelectionTool {
     
     @Override protected void handleFinished() {
         reactivate();
+    }
+    
+    @Override public void deactivate() {
+        fidFigure = null;
+        super.deactivate();
     }
     
     protected void refreshCursor() {
