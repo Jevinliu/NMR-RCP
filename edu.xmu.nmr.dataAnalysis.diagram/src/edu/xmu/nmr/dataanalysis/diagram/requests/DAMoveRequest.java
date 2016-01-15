@@ -16,6 +16,9 @@ import edu.xmu.nmr.dataanalysis.diagram.tool.DAMoveTool;
  */
 public class DAMoveRequest extends Request {
     
+    /**
+     * 鼠标按下时的点
+     */
     private Point defaultLocation;
     private Point startLocation;
     private Point currentLocation;

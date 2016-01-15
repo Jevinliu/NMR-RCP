@@ -7,9 +7,9 @@ import org.eclipse.ui.actions.ActionFactory;
 
 import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAActionConstants;
 
-public class DAMultiEditorActionBarContributor extends
-        AbstractMultiActionBarContributor {
-    
+public class DAMultiEditorActionBarContributor
+        extends AbstractMultiActionBarContributor {
+        
     public DAMultiEditorActionBarContributor() {
     }
     
@@ -19,10 +19,11 @@ public class DAMultiEditorActionBarContributor extends
         addRetargetAction(new DAZoomInRetargetAction());
         addRetargetAction(new DAZoomOutRetargetAction());
         addRetargetAction(new DAMoveRetargetAction());
+        addRetargetAction(new DAPartZoomRetargetAction());
     }
     
     @Override public void declareGlobalActionKeys() {
-        
+    
     }
     
     @Override public void contributeToToolBar(IToolBarManager toolBarManager) {
@@ -31,5 +32,6 @@ public class DAMultiEditorActionBarContributor extends
         toolBarManager.add(getAction(DAActionConstants.ZOOM_IN));
         toolBarManager.add(getAction(DAActionConstants.ZOOM_OUT));
         toolBarManager.add(getAction(DAActionConstants.DA_MOVE_IMG));
+        toolBarManager.add(getAction(DAActionConstants.DA_PART_ZOOM));
     }
 }

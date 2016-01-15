@@ -63,6 +63,10 @@ public class LineFigure extends Figure {
     
     private int offsetY;
     
+    private int partZoomStartX;
+    
+    private int partZoomEndX;
+    
     public LineFigure() {
         setOpaque(false);
         getInitConfig();
@@ -116,6 +120,14 @@ public class LineFigure extends Figure {
     
     public void setOffsetY(int offsetY) {
         this.offsetY = offsetY;
+    }
+    
+    public void setPartZoomStartX(int partZoomStartX) {
+        this.partZoomStartX = partZoomStartX;
+    }
+    
+    public void setPartZoomEndX(int partZoomEndX) {
+        this.partZoomEndX = partZoomEndX;
     }
     
     /**
@@ -193,7 +205,7 @@ public class LineFigure extends Figure {
      */
     private void transformPoints() {
         this.setupCoordinateTf(); // 主要用于设置相对位移
-        selectPoints();
+        this.selectPoints();
         PointList pl = new PointList();
         for (int i : selectedIndex) {
             Point p = ctf.transformXY(i, absMax - rawData.get(i)); // 将0值作为整个fidfigure的纵向中心，
@@ -218,10 +230,25 @@ public class LineFigure extends Figure {
         boolean isAdvanced = graphics.getAdvanced();
         graphics.setAdvanced(true);
         graphics.setAntialias(SWT.ON);
-        drawGrid(graphics);
+        this.drawGrid(graphics);
+        
         graphics.drawPolyline(points);
+        this.drawPartSelection(graphics);
         graphics.setAdvanced(isAdvanced);
         graphics.popState();
+    }
+    
+    private void drawPartSelection(Graphics graphics) {
+        if (partZoomStartX == -1 || partZoomEndX == -1) {
+            return;
+        }
+        // Rectangle bounds = new Rectangle(partZoomStartX, 0,
+        // partZoomEndX - partZoomStartX, 0);
+        // translateToRelative(bounds);
+        // bounds.y = getBounds().y + 5;
+        // bounds.height = getBounds().height - 10;
+        // System.out.println("partZoomstartX: " + partZoomStartX
+        // + ", partZoomEndX: " + partZoomEndX);
     }
     
     /**
@@ -268,8 +295,8 @@ public class LineFigure extends Figure {
     
     protected boolean shapeContainsPoint(int x, int y) {
         Point location = getLocation();
-        return Geometry.polylineContainsPoint(points, x - location.x, y
-                - location.y, tolerance);
+        return Geometry.polylineContainsPoint(points, x - location.x,
+                y - location.y, tolerance);
     }
     
     protected boolean childrenContainsPoint(int x, int y) {
@@ -293,12 +320,12 @@ public class LineFigure extends Figure {
                 
                 switch (event.getProperty()) {
                 case DataAnalysisPrefConstants.FID_PREF_FOREGROUND_COLOR:
-                    setForegroundColor(new Color(null, (RGB) event
-                            .getNewValue()));
+                    setForegroundColor(
+                            new Color(null, (RGB) event.getNewValue()));
                     break;
                 case DataAnalysisPrefConstants.FID_PREF_BACHGROUND_COLOR:
-                    setBackgroundColor(new Color(null, (RGB) event
-                            .getNewValue()));
+                    setBackgroundColor(
+                            new Color(null, (RGB) event.getNewValue()));
                     break;
                 case DataAnalysisPrefConstants.FID_PREF_HAVE_BORDER:
                     boolean isBorder = (boolean) event.getNewValue();

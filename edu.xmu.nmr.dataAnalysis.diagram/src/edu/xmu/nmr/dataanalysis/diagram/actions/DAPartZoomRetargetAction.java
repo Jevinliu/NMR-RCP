@@ -6,13 +6,14 @@ import org.eclipse.ui.actions.RetargetAction;
 import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAActionConstants;
 import edu.xmu.nmr.dataanalysis.diagram.others.DASharedImages;
 
-public class DAMoveRetargetAction extends RetargetAction {
+public class DAPartZoomRetargetAction extends RetargetAction {
     
-    public DAMoveRetargetAction() {
+    public DAPartZoomRetargetAction() {
         super(null, null, IAction.AS_CHECK_BOX);
-        setId(DAActionConstants.DA_MOVE_IMG);
-        setText("Move");
-        setActionDefinitionId(DAActionConstants.DA_MOVE_IMG);
-        setImageDescriptor(DASharedImages.MOVE);
+        setId(DAActionConstants.DA_PART_ZOOM);
+        setActionDefinitionId(DAActionConstants.DA_PART_ZOOM);
+        setText("PartZoom");
+        setToolTipText("Part Zoom");
+        setImageDescriptor(DASharedImages.PART_ZOOM_IN);
     }
 }

@@ -7,17 +7,17 @@ import org.eclipse.ui.IWorkbenchPart;
 import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAActionConstants;
 import edu.xmu.nmr.dataanalysis.diagram.multieditor.FidEditorPage;
 import edu.xmu.nmr.dataanalysis.diagram.others.DASharedImages;
-import edu.xmu.nmr.dataanalysis.diagram.tool.DAMoveTool;
+import edu.xmu.nmr.dataanalysis.diagram.tool.DAPartZoomTool;
 
-public class DAMoveAction extends SelectionAction {
+public class DAPartZoomAction extends SelectionAction {
     
     private boolean checked = false;
     
-    public DAMoveAction(IWorkbenchPart part) {
+    public DAPartZoomAction(IWorkbenchPart part) {
         super(part);
-        setId(DAActionConstants.DA_MOVE_IMG);
-        setText("Move");
-        setImageDescriptor(DASharedImages.MOVE);
+        setId(DAActionConstants.DA_PART_ZOOM);
+        setText("PartZoom");
+        setImageDescriptor(DASharedImages.PART_ZOOM_IN);
     }
     
     @Override protected boolean calculateEnabled() {
@@ -40,8 +40,8 @@ public class DAMoveAction extends SelectionAction {
         FidEditorPage editorPage = (FidEditorPage) getWorkbenchPart();
         EditDomain editDomain = editorPage.getGraphicalViewer().getEditDomain();
         if (isChecked()) {
-            DAMoveTool mvTool = new DAMoveTool();
-            editDomain.setActiveTool(mvTool);
+            DAPartZoomTool zoomTool = new DAPartZoomTool();
+            editDomain.setActiveTool(zoomTool);
         } else {
             editDomain.setActiveTool(editDomain.getDefaultTool());
         }

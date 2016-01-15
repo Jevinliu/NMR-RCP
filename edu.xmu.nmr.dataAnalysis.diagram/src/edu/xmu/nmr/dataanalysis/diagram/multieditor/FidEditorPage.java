@@ -32,6 +32,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory;
 
 import edu.xmu.nmr.dataanalysis.diagram.actions.DAMoveAction;
+import edu.xmu.nmr.dataanalysis.diagram.actions.DAPartZoomAction;
 import edu.xmu.nmr.dataanalysis.diagram.actions.DAZoomInAction;
 import edu.xmu.nmr.dataanalysis.diagram.actions.DAZoomOutAction;
 import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAZoomManager;
@@ -52,7 +53,7 @@ import edu.xmu.nmrdataanalysis.diagram.model.VerticalRuler;
  * </p>
  * 
  * @author Jevin
- *
+ *         
  */
 public class FidEditorPage extends GraphicalEditor {
     
@@ -111,10 +112,10 @@ public class FidEditorPage extends GraphicalEditor {
                 int wsWidthHalf = LayoutUtils.WORKSPACE_CONSTRAINS.width / 2;
                 int wsHeightHalf = LayoutUtils.WORKSPACE_CONSTRAINS.height / 2;
                 fc.getViewport().setViewLocation(
-                        (int) (wsWidthHalf * zoomManager.getZoom() - vp
-                                .getSize().width / 2),
-                        (int) (wsHeightHalf * zoomManager.getZoom() - vp
-                                .getSize().height / 2));
+                        (int) (wsWidthHalf * zoomManager.getZoom()
+                                - vp.getSize().width / 2),
+                        (int) (wsHeightHalf * zoomManager.getZoom()
+                                - vp.getSize().height / 2));
             }
         });
         viewer.setEditPartFactory(new DAEditPartFactory()); // 添加editpart工厂，通过工厂创建editpart
@@ -140,10 +141,10 @@ public class FidEditorPage extends GraphicalEditor {
      */
     private void setupKeyHandler() {
         KeyHandler keyHandler = new KeyHandler();
-        keyHandler.put(KeyStroke.getPressed(SWT.F3, 0), getActionRegistry()
-                .getAction(GEFActionConstants.ZOOM_IN));
-        keyHandler.put(KeyStroke.getPressed(SWT.F4, 0), getActionRegistry()
-                .getAction(GEFActionConstants.ZOOM_OUT));
+        keyHandler.put(KeyStroke.getPressed(SWT.F3, 0),
+                getActionRegistry().getAction(GEFActionConstants.ZOOM_IN));
+        keyHandler.put(KeyStroke.getPressed(SWT.F4, 0),
+                getActionRegistry().getAction(GEFActionConstants.ZOOM_OUT));
         keyHandler.put(KeyStroke.getPressed((char) 0x19, 0x79, SWT.CTRL),
                 getActionRegistry().getAction(ActionFactory.REDO.getId()));
         keyHandler.put(KeyStroke.getPressed((char) 0x1a, 0x7a, SWT.CTRL),
@@ -165,6 +166,10 @@ public class FidEditorPage extends GraphicalEditor {
         IAction moveAction = new DAMoveAction(this);
         registry.registerAction(moveAction);
         getSelectionActions().add(moveAction.getId());
+        
+        IAction partZoomAction = new DAPartZoomAction(this);
+        registry.registerAction(partZoomAction);
+        getSelectionActions().add(partZoomAction.getId());
     }
     
     /**
@@ -271,6 +276,6 @@ public class FidEditorPage extends GraphicalEditor {
     }
     
     @Override public void doSave(IProgressMonitor monitor) {
-        
+    
     }
 }

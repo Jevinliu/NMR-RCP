@@ -10,5 +10,13 @@ package edu.xmu.nmr.dataanalysis.diagram.requests;
  * @see
  */
 public interface DARequestConstants {
-    String DA_REQ_MOVE_IMG = "Move image";
+    /**
+     * 图像上下移动
+     */
+    String DA_REQ_MOVE_IMG = "Move_image";
+    
+    /**
+     * 图像部分缩放
+     */
+    String DA_REQ_PART_ZOOM = "part_zoom";
 }

@@ -33,10 +33,19 @@ public class FidData extends FElement {
      * 竖直方向网格间隔，和竖直ruler保持一致
      */
     private int vInterval;
+    
+    /**
+     * 部分缩放起始点
+     */
+    private int zoomStartX;
+    
+    private int zoomEndX;
+    
     public static final String PRO_LS_FIDDATA = "pro_ls_fiddata";
     public static final String PRO_LS_STEPSIZE = "pro_ls_stepsize";
     public static final String PRO_LS_INTERVAL = "pro_ls_interval";
     public static final String PRO_LS_OFFSETY = "pro_ls_offsety";
+    public static final String PRO_LS_PART_ZOOM = "pro_ls_part_zoom";
     
     public FidData() {
         reset();
@@ -120,5 +129,33 @@ public class FidData extends FElement {
     public void reset() {
         this.vScale = 1.0f;
         this.offsetY = 0;
+        this.zoomStartX = -1;
+        this.zoomEndX = -1;
+    }
+    
+    public int getZoomStartX() {
+        return zoomStartX;
+    }
+    
+    public int getZoomEndX() {
+        return zoomEndX;
+    }
+    
+    /**
+     * 设置部分缩放时的起点和终点
+     * 
+     * @param startX
+     * @param endX
+     */
+    public void setZoomStartAndEndX(int startX, int endX) {
+        this.zoomStartX = startX;
+        int oldEndX = this.zoomEndX;
+        this.zoomEndX = endX;
+        getListeners().firePropertyChange(PRO_LS_PART_ZOOM, oldEndX,
+                this.zoomEndX);
+    }
+    
+    public void resetPartZoom() {
+        this.setZoomStartAndEndX(-1, -1);
     }
 }

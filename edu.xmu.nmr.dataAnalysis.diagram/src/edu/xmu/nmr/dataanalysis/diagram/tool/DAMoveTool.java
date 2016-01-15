@@ -51,7 +51,7 @@ public class DAMoveTool extends SelectionTool {
         ((DAMoveRequest) getTargetRequest()).setDefaultLocation(p);
         if (getDragTracker() != null)
             getDragTracker().deactivate();
-        
+            
         if (viewer instanceof GraphicalViewer) {
             Handle handle = ((GraphicalViewer) viewer).findHandleAt(p);
             if (handle != null) {
@@ -107,12 +107,13 @@ public class DAMoveTool extends SelectionTool {
     }
     
     boolean isInDragInProgress() {
-        return isInState(STATE_DRAG_IN_PROGRESS
-                | STATE_ACCESSIBLE_DRAG_IN_PROGRESS);
+        return isInState(
+                STATE_DRAG_IN_PROGRESS | STATE_ACCESSIBLE_DRAG_IN_PROGRESS);
     }
     
     protected boolean handleButtonUp(int button) {
-        if (stateTransition(STATE_DRAG | STATE_DRAG_IN_PROGRESS, STATE_TERMINAL)) {
+        if (stateTransition(STATE_DRAG | STATE_DRAG_IN_PROGRESS,
+                STATE_TERMINAL)) {
             unlockTargetEditPart();
             executeCurrentCommand();
         }
@@ -133,7 +134,8 @@ public class DAMoveTool extends SelectionTool {
     }
     
     protected void performMove() {
-        getCurrentCommand().execute();
+        if (getCurrentCommand() != null)
+            getCurrentCommand().execute();
     }
     
     @Override protected void eraseTargetFeedback() {
