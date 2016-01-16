@@ -6,7 +6,7 @@ import java.util.List;
 import org.eclipse.draw2d.IFigure;
 
 import edu.xmu.nmr.dataanalysis.diagram.editpolicys.DAMovePolicy;
-import edu.xmu.nmr.dataanalysis.diagram.editpolicys.DAPartZoomPolicy;
+import edu.xmu.nmr.dataanalysis.diagram.editpolicys.DAPartZoomInPolicy;
 import edu.xmu.nmr.dataanalysis.diagram.figures.FidContainerFigure;
 import edu.xmu.nmrdataanalysis.diagram.model.Container;
 import edu.xmu.nmrdataanalysis.diagram.model.FElement;
@@ -23,7 +23,7 @@ public class FidContainerEditPart extends DAAbstractEditPart {
     
     @Override protected void createEditPolicies() {
         installEditPolicy(DAMovePolicy.ROLE, new DAMovePolicy());
-        installEditPolicy(DAPartZoomPolicy.ROLE, new DAPartZoomPolicy());
+        installEditPolicy(DAPartZoomInPolicy.ROLE, new DAPartZoomInPolicy());
     }
     
     @Override protected void refreshVisuals() {
@@ -37,7 +37,7 @@ public class FidContainerEditPart extends DAAbstractEditPart {
     }
     
     @Override public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals(FElement.NMR_PRO_LAYOUT)) {
+        if (evt.getPropertyName().equals(FElement.PRO_FE_LAYOUT)) {
             refreshVisuals();
         }
     }

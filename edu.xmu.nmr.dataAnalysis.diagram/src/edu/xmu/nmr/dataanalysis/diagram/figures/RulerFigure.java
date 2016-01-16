@@ -37,14 +37,14 @@ public class RulerFigure extends Figure {
     private int interval;
     
     /**
-     * 坐标值得倍数因子
+     * 坐标图总的缩放比例
      */
     private double scale;
     
     /**
-     * y轴方向上的偏移
+     * y或x轴方向上的偏移
      */
-    private int offsetY;
+    private int offset;
     
     public RulerFigure() {
         setForegroundColor(ColorConstants.black);
@@ -79,8 +79,8 @@ public class RulerFigure extends Figure {
         this.scale = scale;
     }
     
-    public void setOffsetY(int offsetY) {
-        this.offsetY = offsetY;
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
     
     public RulerOrient getOrient() {
@@ -98,17 +98,13 @@ public class RulerFigure extends Figure {
         switch (this.orient) {
         case LEFT:
             this.setSize(Ruler.AXISLL, -1);
-            getParent().setConstraint(
-                    this,
-                    new GridData(GridData.FILL, GridData.FILL, false, true, 1,
-                            4));
+            getParent().setConstraint(this, new GridData(GridData.FILL,
+                    GridData.FILL, false, true, 1, 4));
             break;
         case BOTTOM:
             this.setSize(-1, Ruler.AXISLL);
-            getParent().setConstraint(
-                    this,
-                    new GridData(GridData.FILL, GridData.FILL, true, false, 4,
-                            1));
+            getParent().setConstraint(this, new GridData(GridData.FILL,
+                    GridData.FILL, true, false, 4, 1));
         }
         
     }
@@ -120,7 +116,7 @@ public class RulerFigure extends Figure {
         int rulerWidth = Ruler.AXISLL - 5;
         int endX = bounds.x + bounds.width - 1;
         int endY = bounds.y + bounds.height;
-        int centerY = bounds.y + bounds.height() / 2 + offsetY;
+        int centerY = bounds.y + bounds.height() / 2 + offset;
         switch (orient) {
         case LEFT:
             stepSize = (float) (totalSize * interval / (bounds.height * scale));
@@ -155,11 +151,11 @@ public class RulerFigure extends Figure {
             graphics.drawLine(endX, bounds.y, endX, endY);
             break;
         case BOTTOM:
-            stepSize = totalSize * interval / (float) bounds.width;
-            for (int j = 1; j * interval <= bounds.width; j++) {
-                int pX = bounds.x + interval * j;
-                graphics.drawLine(bounds.x + interval * j, bounds.y, pX,
-                        bounds.y + tall);
+            stepSize = totalSize * interval / (float) (bounds.width * scale);
+            for (int j = 1 + Math.abs(offset) / interval; j
+                    * interval <= (bounds.width + Math.abs(offset)); j++) {
+                int pX = bounds.x + interval * j + offset;
+                graphics.drawLine(pX, bounds.y, pX, bounds.y + tall);
                 float b = j * stepSize;
                 String sb = String.valueOf(b);
                 if (sb.length() > 7) {

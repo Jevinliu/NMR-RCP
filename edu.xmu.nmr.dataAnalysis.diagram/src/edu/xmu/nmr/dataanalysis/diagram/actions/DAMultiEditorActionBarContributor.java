@@ -19,7 +19,7 @@ public class DAMultiEditorActionBarContributor
         addRetargetAction(new DAZoomInRetargetAction());
         addRetargetAction(new DAZoomOutRetargetAction());
         addRetargetAction(new DAMoveRetargetAction());
-        addRetargetAction(new DAPartZoomRetargetAction());
+        addRetargetAction(new DAPartZoomInRetargetAction());
     }
     
     @Override public void declareGlobalActionKeys() {

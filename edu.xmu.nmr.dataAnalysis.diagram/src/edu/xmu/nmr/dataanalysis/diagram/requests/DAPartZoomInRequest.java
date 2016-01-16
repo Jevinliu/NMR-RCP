@@ -2,7 +2,7 @@ package edu.xmu.nmr.dataanalysis.diagram.requests;
 
 import org.eclipse.gef.Request;
 
-public class DAPartZoomRequest extends Request {
+public class DAPartZoomInRequest extends Request {
     
     /**
      * 追加的偏移量
@@ -13,7 +13,7 @@ public class DAPartZoomRequest extends Request {
      */
     private double hScale;
     
-    public DAPartZoomRequest() {
+    public DAPartZoomInRequest() {
         setType(DARequestConstants.DA_REQ_PART_ZOOM);
     }
     

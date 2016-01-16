@@ -8,13 +8,13 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 
 import edu.xmu.nmr.dataanalysis.diagram.commands.DAPartZoomInCommand;
-import edu.xmu.nmr.dataanalysis.diagram.requests.DAPartZoomRequest;
+import edu.xmu.nmr.dataanalysis.diagram.requests.DAPartZoomInRequest;
 import edu.xmu.nmr.dataanalysis.diagram.requests.DARequestConstants;
 import edu.xmu.nmrdataanalysis.diagram.model.Container;
 import edu.xmu.nmrdataanalysis.diagram.model.FElement;
 import edu.xmu.nmrdataanalysis.diagram.model.FidData;
 
-public class DAPartZoomPolicy extends AbstractEditPolicy {
+public class DAPartZoomInPolicy extends AbstractEditPolicy {
     
     public static final String ROLE = "DAPartZoomPolicy_Role";
     
@@ -38,10 +38,12 @@ public class DAPartZoomPolicy extends AbstractEditPolicy {
         for (FElement child : children) {
             if (child instanceof FidData) {
                 cmd.setModel((FidData) child);
-                DAPartZoomRequest req = (DAPartZoomRequest) request;
-                cmd.setOffsetX(req.getOffsetX());
-                cmd.setHScale(req.getHScale());
-                return cmd;
+                DAPartZoomInRequest req = (DAPartZoomInRequest) request;
+                if (req.getHScale() != 0) { // 防止鼠标只是点击等事件，传入的比例为0
+                    cmd.setOffsetX(req.getOffsetX());
+                    cmd.setHScale(req.getHScale());
+                    return cmd;
+                }
             }
         }
         return null;

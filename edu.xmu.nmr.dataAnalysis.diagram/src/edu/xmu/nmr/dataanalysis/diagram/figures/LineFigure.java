@@ -215,6 +215,12 @@ public class LineFigure extends Figure {
         this.points = pl;
     }
     
+    private void drawPolyline(Graphics graphics) {
+        for (int i = 1; i < points.size(); i++) {
+            graphics.drawLine(points.getPoint(i - 1), points.getPoint(i));
+        }
+    }
+    
     public void setLayout(Rectangle rect) {
         getParent().setConstraint(this, rect); // 设置子figure在父figure中的位置
     }
@@ -232,7 +238,7 @@ public class LineFigure extends Figure {
         graphics.setAdvanced(true);
         graphics.setAntialias(SWT.ON);
         this.drawGrid(graphics);
-        graphics.drawPolyline(points);
+        this.drawPolyline(graphics);
         graphics.setAdvanced(isAdvanced);
         graphics.popState();
     }

@@ -7,13 +7,13 @@ import org.eclipse.ui.IWorkbenchPart;
 import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAActionConstants;
 import edu.xmu.nmr.dataanalysis.diagram.multieditor.FidEditorPage;
 import edu.xmu.nmr.dataanalysis.diagram.others.DASharedImages;
-import edu.xmu.nmr.dataanalysis.diagram.tool.DAPartZoomTool;
+import edu.xmu.nmr.dataanalysis.diagram.tool.DAPartZoomInTool;
 
-public class DAPartZoomAction extends SelectionAction {
+public class DAPartZoomInAction extends SelectionAction {
     
     private boolean checked = false;
     
-    public DAPartZoomAction(IWorkbenchPart part) {
+    public DAPartZoomInAction(IWorkbenchPart part) {
         super(part);
         setId(DAActionConstants.DA_PART_ZOOM);
         setText("PartZoom");
@@ -40,7 +40,7 @@ public class DAPartZoomAction extends SelectionAction {
         FidEditorPage editorPage = (FidEditorPage) getWorkbenchPart();
         EditDomain editDomain = editorPage.getGraphicalViewer().getEditDomain();
         if (isChecked()) {
-            DAPartZoomTool zoomTool = new DAPartZoomTool();
+            DAPartZoomInTool zoomTool = new DAPartZoomInTool();
             editDomain.setActiveTool(zoomTool);
         } else {
             editDomain.setActiveTool(editDomain.getDefaultTool());

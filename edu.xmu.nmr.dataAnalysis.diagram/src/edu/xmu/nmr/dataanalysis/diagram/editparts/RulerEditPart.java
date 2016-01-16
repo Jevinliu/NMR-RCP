@@ -15,7 +15,7 @@ public class RulerEditPart extends DAAbstractEditPart {
     @Override public void propertyChange(PropertyChangeEvent evt) {
         String[] eventsName = new String[] { Ruler.PRO_RULER_STEPSIZE,
                 Ruler.PRO_RULER_INTERVAL, Ruler.PRO_RULER_TOTALSIZE,
-                Ruler.PRO_RULER_OFFSET };
+                Ruler.PRO_RULER_OFFSET, Ruler.PRO_RULER_TOTALSCALE };
         for (String eventName : eventsName) {
             if (evt.getPropertyName().equals(eventName)) {
                 refreshVisuals();
@@ -37,11 +37,11 @@ public class RulerEditPart extends DAAbstractEditPart {
         figure.setInterval((int) ruler.getInterval());
         figure.setTotalSize(ruler.getTotalSize());
         figure.setScale(ruler.getTotalScale());
-        figure.setOffsetY(ruler.getOffset());
+        figure.setOffset(ruler.getOffset());
     }
     
     @Override protected void createEditPolicies() {
-        
+    
     }
     
 }

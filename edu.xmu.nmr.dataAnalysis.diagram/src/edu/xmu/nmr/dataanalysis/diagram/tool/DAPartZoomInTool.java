@@ -19,10 +19,10 @@ import org.eclipse.swt.graphics.Cursor;
 
 import edu.xmu.nmr.dataanalysis.diagram.editparts.FidContainerEditPart;
 import edu.xmu.nmr.dataanalysis.diagram.figures.LineFigure;
-import edu.xmu.nmr.dataanalysis.diagram.requests.DAPartZoomRequest;
+import edu.xmu.nmr.dataanalysis.diagram.requests.DAPartZoomInRequest;
 import edu.xmu.nmr.dataanalysis.diagram.requests.DARequestConstants;
 
-public class DAPartZoomTool extends SelectionTool {
+public class DAPartZoomInTool extends SelectionTool {
     
     /**
      * 选择框figure
@@ -34,7 +34,7 @@ public class DAPartZoomTool extends SelectionTool {
      */
     private Figure fidFigure;
     
-    public DAPartZoomTool() {
+    public DAPartZoomInTool() {
         setDefaultCursor(Cursors.HAND);
         setDisabledCursor(Cursors.ARROW);
     }
@@ -44,13 +44,13 @@ public class DAPartZoomTool extends SelectionTool {
     }
     
     @Override protected Request createTargetRequest() {
-        Request request = new DAPartZoomRequest();
+        Request request = new DAPartZoomInRequest();
         request.setType(getCommandName());
         return request;
     }
     
     @Override protected void updateTargetRequest() {
-        DAPartZoomRequest request = (DAPartZoomRequest) getTargetRequest();
+        DAPartZoomInRequest request = (DAPartZoomInRequest) getTargetRequest();
         if (selectionFigure != null) {
             request.setOffsetX(
                     fidFigure.getBounds().x - selectionFigure.getBounds().x);
@@ -138,6 +138,9 @@ public class DAPartZoomTool extends SelectionTool {
         return selectionFigure;
     }
     
+    /**
+     * 显示选择的回显
+     */
     private void showSelectionFeedback() {
         fidFigure = getFidFigure();
         if (fidFigure == null) {
@@ -151,6 +154,9 @@ public class DAPartZoomTool extends SelectionTool {
         int maxX = fidFigure.getBounds().x + fidFigure.getBounds().width;
         if (rect.x + rect.width > maxX)
             rect.width = maxX - rect.x - 1;
+        if (rect.x < fidFigure.getBounds().x) {
+            rect = new Rectangle(0, 0, 0, 0);
+        }
         selectionFigure.setBounds(rect);
         selectionFigure.validate();
     }
@@ -188,6 +194,9 @@ public class DAPartZoomTool extends SelectionTool {
     }
     
     private Rectangle getSelectionRectangle() {
+        if (getStartLocation().x > getLocation().x) {
+            return new Rectangle(getLocation(), getStartLocation());
+        }
         return new Rectangle(getStartLocation(), getLocation());
     }
     

@@ -17,7 +17,7 @@ public class FElement implements IAdaptable {
     private Rectangle layout;
     protected Logger log = Logger.getLogger(this.getClass());
     
-    public static final String NMR_PRO_LAYOUT = "nmrProLayout";
+    public static final String PRO_FE_LAYOUT = "pro_fe_layout";
     
     public FElement() {
         this.parent = null;
@@ -71,7 +71,7 @@ public class FElement implements IAdaptable {
     public void setLayout(Rectangle layout) {
         Rectangle old = this.layout;
         this.layout = layout;
-        this.listeners.firePropertyChange(NMR_PRO_LAYOUT, old, this.layout);
+        this.listeners.firePropertyChange(PRO_FE_LAYOUT, old, this.layout);
     }
     
 }

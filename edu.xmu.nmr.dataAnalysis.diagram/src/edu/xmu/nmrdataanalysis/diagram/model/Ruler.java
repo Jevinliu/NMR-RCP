@@ -1,15 +1,14 @@
 package edu.xmu.nmrdataanalysis.diagram.model;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 /**
  * 坐标轴模型层
  * 
  * @author Jevin
- *
+ *         
  */
-public class Ruler extends FElement implements PropertyChangeListener {
+public abstract class Ruler extends FElement implements PropertyChangeListener {
     
     /**
      * 坐标轴位于的方向，
@@ -42,6 +41,7 @@ public class Ruler extends FElement implements PropertyChangeListener {
     public static final String PRO_RULER_INTERVAL = "pro_ruler_interval";
     public static final String PRO_RULER_TOTALSIZE = "pro_ruler_totalSize";
     public static final String PRO_RULER_OFFSET = "pro_ruler_offset";
+    public static final String PRO_RULER_TOTALSCALE = "pro_ruler_totalscale";
     /**
      * 坐标轴Figure占据的长度
      */
@@ -69,7 +69,10 @@ public class Ruler extends FElement implements PropertyChangeListener {
     }
     
     public void setTotalScale(double totalScale) {
+        double old = this.totalScale;
         this.totalScale = totalScale;
+        getListeners().firePropertyChange(PRO_RULER_TOTALSCALE, old,
+                this.totalScale);
     }
     
     /**
@@ -130,11 +133,5 @@ public class Ruler extends FElement implements PropertyChangeListener {
         this.offset = 0;
         this.interval = DEFAULT_INTERVAL;
         this.totalScale = 1;
-    }
-    
-    @Override public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals(FidData.PRO_LS_OFFSETY)) {
-            setOffset((int) evt.getNewValue());
-        }
     }
 }

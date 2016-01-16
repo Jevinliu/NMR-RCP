@@ -32,7 +32,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory;
 
 import edu.xmu.nmr.dataanalysis.diagram.actions.DAMoveAction;
-import edu.xmu.nmr.dataanalysis.diagram.actions.DAPartZoomAction;
+import edu.xmu.nmr.dataanalysis.diagram.actions.DAPartZoomInAction;
 import edu.xmu.nmr.dataanalysis.diagram.actions.DAZoomInAction;
 import edu.xmu.nmr.dataanalysis.diagram.actions.DAZoomOutAction;
 import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAZoomManager;
@@ -167,7 +167,7 @@ public class FidEditorPage extends GraphicalEditor {
         registry.registerAction(moveAction);
         getSelectionActions().add(moveAction.getId());
         
-        IAction partZoomAction = new DAPartZoomAction(this);
+        IAction partZoomAction = new DAPartZoomInAction(this);
         registry.registerAction(partZoomAction);
         getSelectionActions().add(partZoomAction.getId());
     }
@@ -265,6 +265,7 @@ public class FidEditorPage extends GraphicalEditor {
         bottomRuler.setOrient(RulerOrient.BOTTOM);
         bottomRuler.setParent(fidContainer);
         fidData.setHInterval(bottomRuler.getInterval());
+        fidData.addPropertyChangeListener(bottomRuler);
         return workspace;
     }
     

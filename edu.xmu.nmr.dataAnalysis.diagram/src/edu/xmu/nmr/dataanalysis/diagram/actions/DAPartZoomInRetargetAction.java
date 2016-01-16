@@ -6,9 +6,9 @@ import org.eclipse.ui.actions.RetargetAction;
 import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAActionConstants;
 import edu.xmu.nmr.dataanalysis.diagram.others.DASharedImages;
 
-public class DAPartZoomRetargetAction extends RetargetAction {
+public class DAPartZoomInRetargetAction extends RetargetAction {
     
-    public DAPartZoomRetargetAction() {
+    public DAPartZoomInRetargetAction() {
         super(null, null, IAction.AS_CHECK_BOX);
         setId(DAActionConstants.DA_PART_ZOOM);
         setActionDefinitionId(DAActionConstants.DA_PART_ZOOM);
