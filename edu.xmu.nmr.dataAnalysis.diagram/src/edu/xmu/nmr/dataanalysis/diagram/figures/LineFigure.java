@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import org.apache.log4j.Logger;
 import org.eclipse.draw2d.AbstractPointListShape;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
@@ -39,7 +38,6 @@ import edu.xmu.nmr.dataanalysis.diagram.pref.helper.DataAnalysisPrefPageUtil;
  */
 public class LineFigure extends Figure {
     
-    private Logger log = Logger.getLogger(this.getClass());
     private ArrayList<Float> rawData; // 原始数据，如fid数据，proc数据
     private float absMax;
     private int tolerance = 2;

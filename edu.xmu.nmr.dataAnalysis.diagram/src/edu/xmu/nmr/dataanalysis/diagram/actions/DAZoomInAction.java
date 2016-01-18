@@ -14,7 +14,7 @@ public class DAZoomInAction extends DAZoomAction {
                 zoomManager);
         setToolTipText(GEFMessages.ZoomIn_Tooltip);
         setId(GEFActionConstants.ZOOM_IN);
-        setActionDefinitionId(DAActionConstants.ZOOM_IN);
+        setActionDefinitionId(DAActionConstants.DA_ZOOM_IN);
     }
     
     @Override public void run() {

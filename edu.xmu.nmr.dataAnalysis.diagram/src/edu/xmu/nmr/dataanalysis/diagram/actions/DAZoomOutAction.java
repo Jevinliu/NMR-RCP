@@ -14,7 +14,7 @@ public class DAZoomOutAction extends DAZoomAction {
                 zoomManager);
         setId(GEFActionConstants.ZOOM_OUT);
         setToolTipText(GEFMessages.ZoomOut_Tooltip);
-        setActionDefinitionId(DAActionConstants.ZOOM_OUT);
+        setActionDefinitionId(DAActionConstants.DA_ZOOM_OUT);
     }
     
     public void run() {

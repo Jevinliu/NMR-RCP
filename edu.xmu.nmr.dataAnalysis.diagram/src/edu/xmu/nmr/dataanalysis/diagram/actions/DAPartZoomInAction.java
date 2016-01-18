@@ -15,7 +15,7 @@ public class DAPartZoomInAction extends SelectionAction {
     
     public DAPartZoomInAction(IWorkbenchPart part) {
         super(part);
-        setId(DAActionConstants.DA_PART_ZOOM);
+        setId(DAActionConstants.DA_PART_ZOOM_IN);
         setText("PartZoom");
         setImageDescriptor(DASharedImages.PART_ZOOM_IN);
     }

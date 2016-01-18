@@ -29,9 +29,9 @@ public class DAMultiEditorActionBarContributor
     @Override public void contributeToToolBar(IToolBarManager toolBarManager) {
         toolBarManager.add(getAction(ActionFactory.UNDO.getId()));
         toolBarManager.add(getAction(ActionFactory.REDO.getId()));
-        toolBarManager.add(getAction(DAActionConstants.ZOOM_IN));
-        toolBarManager.add(getAction(DAActionConstants.ZOOM_OUT));
+        toolBarManager.add(getAction(DAActionConstants.DA_ZOOM_IN));
+        toolBarManager.add(getAction(DAActionConstants.DA_ZOOM_OUT));
         toolBarManager.add(getAction(DAActionConstants.DA_MOVE_IMG));
-        toolBarManager.add(getAction(DAActionConstants.DA_PART_ZOOM));
+        toolBarManager.add(getAction(DAActionConstants.DA_PART_ZOOM_IN));
     }
 }

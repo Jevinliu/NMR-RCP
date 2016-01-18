@@ -11,9 +11,9 @@ public class DAZoomInRetargetAction extends RetargetAction {
     public DAZoomInRetargetAction() {
         super(null, null);
         setText(GEFMessages.ZoomIn_Label);
-        setId(DAActionConstants.ZOOM_IN);
+        setId(DAActionConstants.DA_ZOOM_IN);
         setToolTipText(GEFMessages.ZoomIn_Tooltip);
         setImageDescriptor(InternalImages.DESC_ZOOM_IN);
-        setActionDefinitionId(DAActionConstants.ZOOM_IN);
+        setActionDefinitionId(DAActionConstants.DA_ZOOM_IN);
     }
 }

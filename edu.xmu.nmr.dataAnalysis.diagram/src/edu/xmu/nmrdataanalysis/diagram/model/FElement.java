@@ -15,6 +15,7 @@ public class FElement implements IAdaptable {
     private FElement parent;
     private PropertyChangeSupport listeners;
     private Rectangle layout;
+    
     protected Logger log = Logger.getLogger(this.getClass());
     
     public static final String PRO_FE_LAYOUT = "pro_fe_layout";

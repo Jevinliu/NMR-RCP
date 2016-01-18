@@ -10,8 +10,8 @@ public class DAPartZoomInRetargetAction extends RetargetAction {
     
     public DAPartZoomInRetargetAction() {
         super(null, null, IAction.AS_CHECK_BOX);
-        setId(DAActionConstants.DA_PART_ZOOM);
-        setActionDefinitionId(DAActionConstants.DA_PART_ZOOM);
+        setId(DAActionConstants.DA_PART_ZOOM_IN);
+        setActionDefinitionId(DAActionConstants.DA_PART_ZOOM_IN);
         setText("PartZoom");
         setToolTipText("Part Zoom");
         setImageDescriptor(DASharedImages.PART_ZOOM_IN);

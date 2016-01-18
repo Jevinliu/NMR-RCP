@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureCanvas;
-import org.eclipse.draw2d.FreeformFigure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.XYLayout;
@@ -101,7 +100,8 @@ public class FidEditorPage extends GraphicalEditor {
             public void controlResized(ControlEvent e) {
                 FigureCanvas fc = (FigureCanvas) e.getSource();
                 double scale;
-                if (fc.getBounds().width > fc.getBounds().height) {
+                if (fc.getBounds().width > fc.getBounds().height
+                        * LayoutUtils.WHRATIO) {
                     scale = getFitXZoomLevel(1);
                 } else {
                     scale = getFitXZoomLevel(0);
@@ -167,9 +167,9 @@ public class FidEditorPage extends GraphicalEditor {
         registry.registerAction(moveAction);
         getSelectionActions().add(moveAction.getId());
         
-        IAction partZoomAction = new DAPartZoomInAction(this);
-        registry.registerAction(partZoomAction);
-        getSelectionActions().add(partZoomAction.getId());
+        IAction partZoominAction = new DAPartZoomInAction(this);
+        registry.registerAction(partZoominAction);
+        getSelectionActions().add(partZoominAction.getId());
     }
     
     /**
@@ -186,20 +186,22 @@ public class FidEditorPage extends GraphicalEditor {
         IFigure fig = zoomManager.getScalableFigure();
         Dimension avaliable = zoomManager.getViewport().getClientArea()
                 .getSize();
-        Dimension desired;
-        if (fig instanceof FreeformFigure)
-            desired = ((FreeformFigure) fig).getFreeformExtent().getCopy()
-                    .union(0, 0).getSize();
-        else
-            desired = fig.getPreferredSize().getCopy();
-        desired.width -= fig.getInsets().getWidth();
-        desired.width -= fig.getInsets().getHeight();
+        // Dimension desired;
+        // if (fig instanceof FreeformFigure)
+        // desired = ((FreeformFigure) fig).getFreeformExtent().getCopy()
+        // .union(0, 0).getSize();
+        // else
+        // desired = fig.getPreferredSize().getCopy();
+        // desired.width -= fig.getInsets().getWidth();
+        // desired.height -= fig.getInsets().getHeight();
+        
         while (fig != zoomManager.getViewport()) {
             avaliable.width -= fig.getInsets().getWidth();
             avaliable.height -= fig.getInsets().getHeight();
             fig = fig.getParent();
         }
         Rectangle r = LayoutUtils.getClientArea();
+        System.out.println("clientArea: " + r);
         double scaleX = Math.min(((double) avaliable.width) / r.width,
                 zoomManager.getMaxZoom());
         double scaleY = Math.min(((double) avaliable.height) / r.height,

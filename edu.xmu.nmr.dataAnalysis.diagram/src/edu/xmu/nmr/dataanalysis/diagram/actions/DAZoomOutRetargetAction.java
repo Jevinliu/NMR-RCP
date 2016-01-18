@@ -11,9 +11,9 @@ public class DAZoomOutRetargetAction extends RetargetAction {
     public DAZoomOutRetargetAction() {
         super(null, null);
         setText(GEFMessages.ZoomOut_Label);
-        setId(DAActionConstants.ZOOM_OUT);
+        setId(DAActionConstants.DA_ZOOM_OUT);
         setToolTipText(GEFMessages.ZoomOut_Tooltip);
         setImageDescriptor(InternalImages.DESC_ZOOM_OUT);
-        setActionDefinitionId(DAActionConstants.ZOOM_OUT);
+        setActionDefinitionId(DAActionConstants.DA_ZOOM_OUT);
     }
 }
