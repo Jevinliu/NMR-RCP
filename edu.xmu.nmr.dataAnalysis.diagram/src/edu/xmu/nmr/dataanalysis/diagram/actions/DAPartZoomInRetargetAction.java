@@ -9,7 +9,7 @@ import edu.xmu.nmr.dataanalysis.diagram.others.DASharedImages;
 public class DAPartZoomInRetargetAction extends RetargetAction {
     
     public DAPartZoomInRetargetAction() {
-        super(null, null, IAction.AS_CHECK_BOX);
+        super(null, null, IAction.AS_RADIO_BUTTON);
         setId(DAActionConstants.DA_PART_ZOOM_IN);
         setActionDefinitionId(DAActionConstants.DA_PART_ZOOM_IN);
         setText("PartZoom");

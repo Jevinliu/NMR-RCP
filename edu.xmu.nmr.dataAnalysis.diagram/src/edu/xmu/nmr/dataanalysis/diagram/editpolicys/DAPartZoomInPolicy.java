@@ -2,6 +2,7 @@ package edu.xmu.nmr.dataanalysis.diagram.editpolicys;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
@@ -15,6 +16,8 @@ import edu.xmu.nmrdataanalysis.diagram.model.FElement;
 import edu.xmu.nmrdataanalysis.diagram.model.FidData;
 
 public class DAPartZoomInPolicy extends AbstractEditPolicy {
+    
+    protected Logger log = Logger.getLogger(this.getClass());
     
     public static final String ROLE = "DAPartZoomPolicy_Role";
     
@@ -37,9 +40,15 @@ public class DAPartZoomInPolicy extends AbstractEditPolicy {
         List<FElement> children = ((Container) parent).getChildren();
         for (FElement child : children) {
             if (child instanceof FidData) {
-                cmd.setModel((FidData) child);
+                FidData model = (FidData) child;
+                cmd.setModel(model);
                 DAPartZoomInRequest req = (DAPartZoomInRequest) request;
                 if (req.getHScale() != 0) { // 防止鼠标只是点击等事件，传入的比例为0
+                    if (model.getHScale() * req.getHScale()
+                            * 2000 > Integer.MAX_VALUE) {
+                        log.warn("Zoom scale is over threshold.");
+                        return null;
+                    }
                     cmd.setOffsetX(req.getOffsetX());
                     cmd.setHScale(req.getHScale());
                     return cmd;
