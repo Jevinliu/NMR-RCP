@@ -4,20 +4,14 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureCanvas;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.XYLayout;
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.KeyHandler;
 import org.eclipse.gef.KeyStroke;
 import org.eclipse.gef.MouseWheelHandler;
 import org.eclipse.gef.editparts.ScalableRootEditPart;
-import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
@@ -61,8 +55,8 @@ public class FidEditorPage extends GraphicalEditor {
     private FidData fidData; // 模型节点
     private VerticalRuler leftRuler;
     private HorizontalRuler bottomRuler;
-    private ZoomManager zoomManager;
     private DAZoomManager daZoomMgr;
+    private Container fidContainer;
     
     @Override public void init(IEditorSite site, IEditorInput input)
             throws PartInitException {
@@ -90,32 +84,14 @@ public class FidEditorPage extends GraphicalEditor {
     
     @Override protected void configureGraphicalViewer() {
         GraphicalViewer viewer = getGraphicalViewer();
-        viewer.getControl().setBackground(ColorConstants.gray);
-        ScalableRootEditPart srep = (ScalableRootEditPart) viewer
+        ScalableRootEditPart rootPart = (ScalableRootEditPart) viewer
                 .getRootEditPart();
-        srep.getContentPane().setLayoutManager(new XYLayout());
-        zoomManager = srep.getZoomManager();
-        zoomManager.setZoomLevels(new double[] { 0.01, 7 });
+        rootPart.getContentPane().setLayoutManager(new XYLayout());
+        rootPart.getZoomManager().getViewport().setIgnoreScroll(true);
         viewer.getControl().addControlListener(new ControlAdapter() {
             public void controlResized(ControlEvent e) {
                 FigureCanvas fc = (FigureCanvas) e.getSource();
-                double scale;
-                if (fc.getBounds().width > fc.getBounds().height
-                        * LayoutUtils.WHRATIO) {
-                    scale = getFitXZoomLevel(1);
-                } else {
-                    scale = getFitXZoomLevel(0);
-                }
-                zoomManager.setZoom(scale);
-                Viewport vp = zoomManager.getViewport(); // 获取可视化区域
-                // 将滚动条放到中间
-                int wsWidthHalf = LayoutUtils.WORKSPACE_CONSTRAINS.width / 2;
-                int wsHeightHalf = LayoutUtils.WORKSPACE_CONSTRAINS.height / 2;
-                fc.getViewport().setViewLocation(
-                        (int) (wsWidthHalf * zoomManager.getZoom()
-                                - vp.getSize().width / 2),
-                        (int) (wsHeightHalf * zoomManager.getZoom()
-                                - vp.getSize().height / 2));
+                fidContainer.setLayout(fc.getViewport().getBounds().getCopy());
             }
         });
         viewer.setEditPartFactory(new DAEditPartFactory()); // 添加editpart工厂，通过工厂创建editpart
@@ -173,47 +149,6 @@ public class FidEditorPage extends GraphicalEditor {
     }
     
     /**
-     * 根据当前{@link ZoomManager}
-     * 中的zoom的缩放比例，获取下次如果缩放要缩放的比例值，该值可以应用在判断是否该缩放值满足最小缩放比例的条件
-     * 
-     * @param which
-     *            0 代表{@link ZoomManager#FIT_WIDTH} ，即横向缩放；1 代表
-     *            {@link ZoomManager#FIT_HEIGHT}，即 纵向缩放；2 代表
-     *            {@link ZoomManager#FIT_ALL}
-     * @return 即将缩放值
-     */
-    private double getFitXZoomLevel(int which) {
-        IFigure fig = zoomManager.getScalableFigure();
-        Dimension avaliable = zoomManager.getViewport().getClientArea()
-                .getSize();
-        // Dimension desired;
-        // if (fig instanceof FreeformFigure)
-        // desired = ((FreeformFigure) fig).getFreeformExtent().getCopy()
-        // .union(0, 0).getSize();
-        // else
-        // desired = fig.getPreferredSize().getCopy();
-        // desired.width -= fig.getInsets().getWidth();
-        // desired.height -= fig.getInsets().getHeight();
-        
-        while (fig != zoomManager.getViewport()) {
-            avaliable.width -= fig.getInsets().getWidth();
-            avaliable.height -= fig.getInsets().getHeight();
-            fig = fig.getParent();
-        }
-        Rectangle r = LayoutUtils.getClientArea();
-        System.out.println("clientArea: " + r);
-        double scaleX = Math.min(((double) avaliable.width) / r.width,
-                zoomManager.getMaxZoom());
-        double scaleY = Math.min(((double) avaliable.height) / r.height,
-                zoomManager.getMaxZoom());
-        if (which == 0)
-            return scaleX;
-        if (which == 1)
-            return scaleY;
-        return Math.min(scaleX, scaleY);
-    }
-    
-    /**
      * 设置model层的fid数据
      * 
      * @param rawData
@@ -243,32 +178,24 @@ public class FidEditorPage extends GraphicalEditor {
      * 创建绘图所需要的model层
      */
     private Container createContainer() {
-        Container workspace = new Container();
-        workspace.setcType(ContainerType.WORKSPACE);
-        workspace.setLayout(LayoutUtils.WORKSPACE_CONSTRAINS);
-        Rectangle backBounds = LayoutUtils.getContainerBounds();
-        Container fidContainer = new Container();
-        fidContainer.setcType(ContainerType.FIDCONTAINER);
-        fidContainer.setParent(workspace);
-        int backSpan = LayoutUtils.TEN;
-        Rectangle conBounds = new Rectangle(backBounds.x + backSpan,
-                backBounds.y + backSpan, backBounds.width - 2 * backSpan,
-                backBounds.height - 2 * backSpan);
-        fidContainer.setLayout(conBounds);
+        
+        fidContainer = new Container();
+        fidContainer.setCType(ContainerType.FIDCONTAINER);
+        fidContainer.setLayout(LayoutUtils.getClientArea());
         leftRuler.setOrient(RulerOrient.LEFT);
         leftRuler.setParent(fidContainer);
         fidData.setParent(fidContainer);
         fidData.setVInterval(leftRuler.getInterval());
         fidData.addPropertyChangeListener(leftRuler);
         Container placeholderContainer = new Container();
-        placeholderContainer.setcType(ContainerType.BACKGROUND);
+        placeholderContainer.setCType(ContainerType.BACKGROUND);
         placeholderContainer.setParent(fidContainer);
         bottomRuler = new HorizontalRuler();
         bottomRuler.setOrient(RulerOrient.BOTTOM);
         bottomRuler.setParent(fidContainer);
         fidData.setHInterval(bottomRuler.getInterval());
         fidData.addPropertyChangeListener(bottomRuler);
-        return workspace;
+        return fidContainer;
     }
     
     @Override public void dispose() {

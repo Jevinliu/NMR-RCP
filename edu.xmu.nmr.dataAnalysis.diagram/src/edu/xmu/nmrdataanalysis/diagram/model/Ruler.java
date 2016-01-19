@@ -45,7 +45,7 @@ public abstract class Ruler extends FElement implements PropertyChangeListener {
     /**
      * 坐标轴Figure占据的长度
      */
-    public static final int AXISLL = 75;
+    public static final int AXISLL = 65;
     public static final int DEFAULT_INTERVAL = 40;
     
     public Ruler() {

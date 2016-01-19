@@ -42,6 +42,7 @@ public class LineFigure extends Figure {
     private float absMax;
     private int tolerance = 2;
     private CoordinateTf ctf;
+    private Rectangle oldBounds;
     private ArrayList<Integer> selectedIndex;
     PointList points = new PointList();
     /**
@@ -152,13 +153,20 @@ public class LineFigure extends Figure {
      * 在x值相同时，取出当前位置的原始数据的最大值，最小值，其他该位置上的值舍弃
      */
     private void selectPoints() {
-        
-        if (selectedIndex != null && !selectedIndex.isEmpty()) {
+        if (selectedIndex != null && !selectedIndex.isEmpty()
+                && oldBounds.equals(getBounds())) {
             return;
         }
         if (rawData == null || rawData.size() == 0) {
             return;
         }
+        // 选择点所需要的坐标转换器
+        oldBounds = getBounds().getCopy();
+        CoordinateTf contf = new CoordinateTf();
+        contf.setxOffset(oldBounds.x);
+        contf.setyOffset(oldBounds.y);
+        contf.setxScale(oldBounds.width / (float) rawData.size());
+        contf.setyScale(oldBounds.height / (2 * absMax));
         selectedIndex = new ArrayList<Integer>();
         ArrayList<Integer> sameXIndex = new ArrayList<Integer>(); // 记录当下一组x坐标转换后相同的数据点的索引
         Comparator<Integer> c = new Comparator<Integer>() {
@@ -176,12 +184,14 @@ public class LineFigure extends Figure {
         int tempX = 0;
         for (int i = 0; i < rawData.size(); i++) {
             if (sameXIndex.size() == 0)
-                tempX = ctf.transfromX(i);
-            else if (Math.abs(tempX - ctf.transfromX(i)) > 0) { // 记录x相同的一系列点
+                tempX = contf.transfromX(i);
+            else if (Math.abs(tempX - contf.transfromX(i)) > 0) { // 记录x相同的一系列点
                 int maxValueIndex = Collections.max(sameXIndex, c); // 记录值最大的索引
                 int minValueIndex = Collections.min(sameXIndex, c); // 记录数据值最小的索引
-                if (ctf.transformY(absMax - rawData.get(maxValueIndex)) == ctf
-                        .transformY(absMax - rawData.get(minValueIndex))) // 如果转换后纵坐标相等，只需要添加一个
+                if (contf.transformY(
+                        absMax - rawData.get(maxValueIndex)) == contf
+                                .transformY(
+                                        absMax - rawData.get(minValueIndex))) // 如果转换后纵坐标相等，只需要添加一个
                     selectedIndex.add(minValueIndex);
                 else {
                     if (maxValueIndex > minValueIndex) {
@@ -193,7 +203,7 @@ public class LineFigure extends Figure {
                     }
                 }
                 sameXIndex.clear();
-                tempX = ctf.transfromX(i);
+                tempX = contf.transfromX(i);
             }
             sameXIndex.add(i);
         }
@@ -251,7 +261,9 @@ public class LineFigure extends Figure {
             return;
         }
         Rectangle bounds = getBounds();
+        graphics.getLineStyle();
         graphics.setForegroundColor(ColorConstants.lightGray);
+        graphics.setLineStyle(SWT.LINE_DOT);
         int centerY = bounds.y + bounds.height / 2 + offsetY; // 以中点为基准
         int endX = bounds.x + bounds.width;
         int endY = bounds.y + bounds.height;
@@ -268,11 +280,13 @@ public class LineFigure extends Figure {
                 graphics.drawLine(bounds.x, belowY, endX, belowY);
             }
         }
+        int ox = hInterval - Math.abs(offsetX) % hInterval;
         // 绘制x轴
-        for (int j = 1; j * hInterval < bounds.width; j++) {
-            int x = bounds.x + j * hInterval;
+        for (int j = 0; j * hInterval < bounds.width; j++) {
+            int x = bounds.x + ox + j * hInterval;
             graphics.drawLine(x, bounds.y, x, endY);
         }
+        graphics.setLineStyle(SWT.LINE_SOLID);
         graphics.setForegroundColor(getForegroundColor());
     }
     

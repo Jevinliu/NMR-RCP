@@ -71,10 +71,7 @@ public class CoordinateTf {
     }
     
     public Point tranformPoint(Point sourPoint) {
-        Point p = new Point();
-        p.x = transfromX(sourPoint.x);
-        p.y = transformY(sourPoint.y);
-        return p;
+        return transformXY(sourPoint.x, sourPoint.y);
     }
     
     public double getxScale() {

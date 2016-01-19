@@ -7,11 +7,11 @@ public class Container extends FElement {
 	public Container() {
 	}
 
-	public ContainerType getcType() {
+	public ContainerType getCType() {
 		return cType;
 	}
 
-	public void setcType(ContainerType cType) {
+	public void setCType(ContainerType cType) {
 		this.cType = cType;
 	}
 

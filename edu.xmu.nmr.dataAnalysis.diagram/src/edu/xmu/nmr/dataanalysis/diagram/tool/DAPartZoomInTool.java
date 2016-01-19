@@ -6,23 +6,16 @@ import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.RectangleFigure;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
-import org.eclipse.gef.EditPartViewer;
-import org.eclipse.gef.GraphicalViewer;
-import org.eclipse.gef.Handle;
 import org.eclipse.gef.Request;
-import org.eclipse.gef.tools.SelectionTool;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.graphics.Cursor;
 
 import edu.xmu.nmr.dataanalysis.diagram.editparts.FidContainerEditPart;
 import edu.xmu.nmr.dataanalysis.diagram.figures.LineFigure;
 import edu.xmu.nmr.dataanalysis.diagram.requests.DAPartZoomInRequest;
 import edu.xmu.nmr.dataanalysis.diagram.requests.DARequestConstants;
 
-public class DAPartZoomInTool extends SelectionTool {
+public class DAPartZoomInTool extends DAAbstractDragTool {
     
     /**
      * 选择框figure
@@ -51,7 +44,7 @@ public class DAPartZoomInTool extends SelectionTool {
     
     @Override protected void updateTargetRequest() {
         DAPartZoomInRequest request = (DAPartZoomInRequest) getTargetRequest();
-        if (selectionFigure != null) {
+        if (selectionFigure != null && selectionFigure.getBounds().width != 0) {
             request.setOffsetX(
                     fidFigure.getBounds().x - selectionFigure.getBounds().x);
             request.setHScale(fidFigure.getBounds().width
@@ -59,71 +52,8 @@ public class DAPartZoomInTool extends SelectionTool {
         }
     }
     
-    @Override protected boolean handleButtonDown(int button) {
-        if (button != 1) {
-            setState(STATE_INVALID);
-            handleInvalidInput();
-        }
-        if (!stateTransition(STATE_INITIAL, STATE_DRAG)) {
-            resetHover();
-            return true;
-        }
-        
-        resetHover();
-        EditPartViewer viewer = getCurrentViewer();
-        Point p = getLocation();
-        if (getDragTracker() != null)
-            getDragTracker().deactivate();
-            
-        if (viewer instanceof GraphicalViewer) {
-            Handle handle = ((GraphicalViewer) viewer).findHandleAt(p);
-            if (handle != null) {
-                setDragTracker(handle.getDragTracker());
-                return true;
-            }
-        }
-        updateTargetUnderMouse();
-        EditPart editpart = getTargetEditPart();
-        if (editpart != null) {
-            setDragTracker(editpart.getDragTracker(getTargetRequest()));
-            lockTargetEditPart(editpart);
-            return true;
-        }
-        return false;
-    }
-    
-    @Override public void mouseDrag(MouseEvent me, EditPartViewer viewer) {
-        if (!isViewerImportant(viewer))
-            return;
-        setViewer(viewer);
-        boolean wasDragging = movedPastThreshold();
-        getCurrentInput().setInput(me);
-        handleDrag();
-        if (movedPastThreshold()) {
-            if (!wasDragging)
-                handleDragStarted();
-            handleDragInProgress();
-        }
-    }
-    
     @Override protected boolean handleInvalidInput() {
         eraseSelectionFeedback();
-        return true;
-    }
-    
-    @Override protected boolean handleDragStarted() {
-        return stateTransition(STATE_DRAG, STATE_DRAG_IN_PROGRESS);
-    }
-    
-    boolean isInDragInProgress() {
-        return isInState(
-                STATE_DRAG_IN_PROGRESS | STATE_ACCESSIBLE_DRAG_IN_PROGRESS);
-    }
-    
-    protected boolean handleDragInProgress() {
-        if (isInDragInProgress()) {
-            showSelectionFeedback();
-        }
         return true;
     }
     
@@ -200,70 +130,26 @@ public class DAPartZoomInTool extends SelectionTool {
         return new Rectangle(getStartLocation(), getLocation());
     }
     
-    protected boolean handleButtonUp(int button) {
-        if (stateTransition(STATE_DRAG | STATE_DRAG_IN_PROGRESS,
-                STATE_TERMINAL)) {
-            updateTargetRequest();
-            unlockTargetEditPart();
-            eraseSelectionFeedback();
-            setCurrentCommand(getCommand());
-            performSelect();
-        }
-        setState(STATE_TERMINAL);
-        handleFinished();
-        return true;
-    }
-    
-    private void performSelect() {
-        executeCurrentCommand();
-    }
-    
-    @Override protected void handleFinished() {
-        reactivate();
-    }
-    
     @Override public void deactivate() {
         fidFigure = null;
         super.deactivate();
     }
     
-    protected void refreshCursor() {
-        if (isActive())
-            setCursor(calculateCursor());
+    @Override public void performHandleDown() {
+    
     }
     
-    protected boolean handleMove() {
-        refreshCursor();
-        if (stateTransition(STATE_ACCESSIBLE_DRAG, STATE_INITIAL))
-            setDragTracker(null);
-        if (isInState(STATE_INITIAL)) {
-            updateTargetRequest();
-            updateTargetUnderMouse();
-            return true;
-        } else if (isInState(STATE_TRAVERSE_HANDLE)) {
-            EditPartViewer viewer = getCurrentViewer();
-            if (viewer instanceof GraphicalViewer) {
-                Handle handle = ((GraphicalViewer) viewer)
-                        .findHandleAt(getLocation());
-                if (handle != null) {
-                    setState(STATE_ACCESSIBLE_DRAG);
-                    setStartLocation(getLocation());
-                    setDragTracker(handle.getDragTracker());
-                    return true;
-                } else {
-                    setState(STATE_INITIAL);
-                }
-            }
-        }
-        return false;
+    @Override public void performDragInProgress() {
+        showSelectionFeedback();
     }
     
-    protected Cursor calculateCursor() {
-        updateTargetUnderMouse();
-        EditPart tarEditPart = getTargetEditPart();
-        if (tarEditPart instanceof FidContainerEditPart) {
-            return getDefaultCursor();
-        }
-        return getDisabledCursor();
+    @Override public void performHandleUp() {
+        updateTargetRequest();
+        unlockTargetEditPart();
+        eraseSelectionFeedback();
+        setCurrentCommand(getCommand());
+        executeCurrentCommand();
+        
     }
+    
 }

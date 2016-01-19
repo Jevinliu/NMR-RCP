@@ -8,34 +8,30 @@ import edu.xmu.nmrdataanalysis.diagram.model.FidData;
 import edu.xmu.nmrdataanalysis.diagram.model.Ruler;
 
 public class DAEditPartFactory implements EditPartFactory {
-
-	public DAEditPartFactory() {
-	}
-
-	@Override
-	public EditPart createEditPart(EditPart context, Object model) {
-		DAAbstractEditPart part = null;
-		if (model instanceof Container) {
-			switch (((Container) model).getcType()) {
-			case WORKSPACE:
-				part = new WorkspaceEditPart();
-				break;
-			case FIDCONTAINER:
-				part = new FidContainerEditPart();
-				break;
-			case BACKGROUND:
-				part = new PlaceHolderEditPart();
-				break;
-			}
-		} else if (model instanceof FidData) {
-			part = new FidEditPart();
-		} else if (model instanceof Ruler) {
-			part = new RulerEditPart();
-		}
-		if (part != null) {
-			part.setModel(model);
-		}
-		return part;
-	}
-
+    
+    public DAEditPartFactory() {
+    }
+    
+    @Override public EditPart createEditPart(EditPart context, Object model) {
+        DAAbstractEditPart part = null;
+        if (model instanceof Container) {
+            switch (((Container) model).getCType()) {
+            case FIDCONTAINER:
+                part = new FidContainerEditPart();
+                break;
+            case BACKGROUND:
+                part = new PlaceHolderEditPart();
+                break;
+            }
+        } else if (model instanceof FidData) {
+            part = new FidEditPart();
+        } else if (model instanceof Ruler) {
+            part = new RulerEditPart();
+        }
+        if (part != null) {
+            part.setModel(model);
+        }
+        return part;
+    }
+    
 }
