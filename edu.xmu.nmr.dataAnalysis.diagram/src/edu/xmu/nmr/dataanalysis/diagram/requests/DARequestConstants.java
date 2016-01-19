@@ -19,4 +19,6 @@ public interface DARequestConstants {
      * 图像部分缩放
      */
     String DA_REQ_PART_ZOOM = "part_zoom";
+    
+    String DA_REQ_ZOOM_IN = "req_zoom_in";
 }

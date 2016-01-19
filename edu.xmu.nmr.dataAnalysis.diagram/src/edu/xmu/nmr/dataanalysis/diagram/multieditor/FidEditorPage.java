@@ -6,14 +6,11 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.XYLayout;
-import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.KeyHandler;
 import org.eclipse.gef.KeyStroke;
-import org.eclipse.gef.MouseWheelHandler;
 import org.eclipse.gef.editparts.ScalableRootEditPart;
 import org.eclipse.gef.ui.actions.ActionRegistry;
-import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.SWT;
@@ -28,11 +25,13 @@ import edu.xmu.nmr.dataanalysis.diagram.actions.DAMoveAction;
 import edu.xmu.nmr.dataanalysis.diagram.actions.DAPartZoomInAction;
 import edu.xmu.nmr.dataanalysis.diagram.actions.DAZoomInAction;
 import edu.xmu.nmr.dataanalysis.diagram.actions.DAZoomOutAction;
+import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAActionConstants;
+import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DADefaultEditDomain;
 import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAZoomManager;
 import edu.xmu.nmr.dataanalysis.diagram.editparts.DAEditPartFactory;
 import edu.xmu.nmr.dataanalysis.diagram.figures.PointsTools;
-import edu.xmu.nmr.dataanalysis.diagram.handlers.DAMouseWheelZoomHandler;
 import edu.xmu.nmr.dataanalysis.diagram.layouts.LayoutUtils;
+import edu.xmu.nmr.dataanalysis.diagram.tool.ZoomTool;
 import edu.xmu.nmrdataanalysis.diagram.model.Container;
 import edu.xmu.nmrdataanalysis.diagram.model.ContainerType;
 import edu.xmu.nmrdataanalysis.diagram.model.FidData;
@@ -55,7 +54,6 @@ public class FidEditorPage extends GraphicalEditor {
     private FidData fidData; // 模型节点
     private VerticalRuler leftRuler;
     private HorizontalRuler bottomRuler;
-    private DAZoomManager daZoomMgr;
     private Container fidContainer;
     
     @Override public void init(IEditorSite site, IEditorInput input)
@@ -68,14 +66,13 @@ public class FidEditorPage extends GraphicalEditor {
     }
     
     public FidEditorPage() {
-        setEditDomain(new DefaultEditDomain(this));
+        setEditDomain(new DADefaultEditDomain(this));
+        ZoomTool zoomTool = new ZoomTool();
+        getEditDomain().setDefaultTool(zoomTool);
+        getEditDomain().setActiveTool(zoomTool);
+        
         fidData = new FidData();
         leftRuler = new VerticalRuler();
-        daZoomMgr = new DAZoomManager(fidData, leftRuler);
-    }
-    
-    public DAZoomManager getDAZoomManager() {
-        return daZoomMgr;
     }
     
     @Override public GraphicalViewer getGraphicalViewer() {
@@ -95,21 +92,8 @@ public class FidEditorPage extends GraphicalEditor {
             }
         });
         viewer.setEditPartFactory(new DAEditPartFactory()); // 添加editpart工厂，通过工厂创建editpart
-        viewer.setProperty(DAZoomManager.class.toString(), daZoomMgr); // 注册DAZoomManager
-        setupDAZoomAction();
+        viewer.setProperty(DAZoomManager.class.toString(), new DAZoomManager()); // 注册DAZoomManager
         setupKeyHandler();
-    }
-    
-    /**
-     * 设置DAZoomAction,添加缩放
-     */
-    private void setupDAZoomAction() {
-        
-        getActionRegistry().registerAction(new DAZoomInAction(daZoomMgr));
-        getActionRegistry().registerAction(new DAZoomOutAction(daZoomMgr));
-        getGraphicalViewer().setProperty(
-                MouseWheelHandler.KeyGenerator.getKey(SWT.NONE),
-                DAMouseWheelZoomHandler.SINGLETON);
     }
     
     /**
@@ -118,9 +102,9 @@ public class FidEditorPage extends GraphicalEditor {
     private void setupKeyHandler() {
         KeyHandler keyHandler = new KeyHandler();
         keyHandler.put(KeyStroke.getPressed(SWT.F3, 0),
-                getActionRegistry().getAction(GEFActionConstants.ZOOM_IN));
+                getActionRegistry().getAction(DAActionConstants.DA_ZOOM_IN));
         keyHandler.put(KeyStroke.getPressed(SWT.F4, 0),
-                getActionRegistry().getAction(GEFActionConstants.ZOOM_OUT));
+                getActionRegistry().getAction(DAActionConstants.DA_ZOOM_OUT));
         keyHandler.put(KeyStroke.getPressed((char) 0x19, 0x79, SWT.CTRL),
                 getActionRegistry().getAction(ActionFactory.REDO.getId()));
         keyHandler.put(KeyStroke.getPressed((char) 0x1a, 0x7a, SWT.CTRL),
@@ -130,9 +114,6 @@ public class FidEditorPage extends GraphicalEditor {
     
     @Override public Object getAdapter(Class type) {
         
-        if (type == DAZoomManager.class) {
-            return getDAZoomManager();
-        }
         return super.getAdapter(type);
     }
     
@@ -146,6 +127,15 @@ public class FidEditorPage extends GraphicalEditor {
         IAction partZoominAction = new DAPartZoomInAction(this);
         registry.registerAction(partZoominAction);
         getSelectionActions().add(partZoominAction.getId());
+        
+        IAction zoomInAction = new DAZoomInAction(this);
+        registry.registerAction(zoomInAction);
+        getSelectionActions().add(zoomInAction.getId());
+        
+        IAction zoomOutAction = new DAZoomOutAction(this);
+        registry.registerAction(zoomOutAction);
+        getSelectionActions().add(zoomOutAction.getId());
+        
     }
     
     /**

@@ -1,28 +1,40 @@
 package edu.xmu.nmr.dataanalysis.diagram.actions;
 
+import org.eclipse.gef.EditDomain;
 import org.eclipse.gef.internal.GEFMessages;
 import org.eclipse.gef.internal.InternalImages;
-import org.eclipse.gef.ui.actions.GEFActionConstants;
+import org.eclipse.gef.ui.actions.SelectionAction;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.IWorkbenchPart;
 
 import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAActionConstants;
-import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAZoomManager;
+import edu.xmu.nmr.dataanalysis.diagram.multieditor.FidEditorPage;
 
-public class DAZoomOutAction extends DAZoomAction {
+public class DAZoomOutAction extends SelectionAction {
     
-    public DAZoomOutAction(DAZoomManager zoomManager) {
-        super(GEFMessages.ZoomOut_Label, InternalImages.DESC_ZOOM_OUT,
-                zoomManager);
-        setId(GEFActionConstants.ZOOM_OUT);
+    public DAZoomOutAction(IWorkbenchPart part) {
+        super(part);
+        setText(GEFMessages.ZoomOut_Label);
+        setId(DAActionConstants.DA_ZOOM_OUT);
         setToolTipText(GEFMessages.ZoomOut_Tooltip);
+        setImageDescriptor(InternalImages.DESC_ZOOM_OUT);
         setActionDefinitionId(DAActionConstants.DA_ZOOM_OUT);
     }
     
-    public void run() {
-        zoomManager.zoomOut();
+    @Override protected boolean calculateEnabled() {
+        IWorkbenchPart part = getWorkbenchPart();
+        if (!(part instanceof FidEditorPage)) {
+            return false;
+        }
+        return true;
     }
     
-    @Override public void zoomChanged(double zoom) {
-        setEnabled(true);
+    @Override public void run() {
+        FidEditorPage editorPage = (FidEditorPage) getWorkbenchPart();
+        EditDomain editDomain = editorPage.getGraphicalViewer().getEditDomain();
+        Event e = new Event();
+        e.count = -1;
+        editDomain.getDefaultTool().mouseWheelScrolled(e,
+                editorPage.getGraphicalViewer());
     }
-    
 }

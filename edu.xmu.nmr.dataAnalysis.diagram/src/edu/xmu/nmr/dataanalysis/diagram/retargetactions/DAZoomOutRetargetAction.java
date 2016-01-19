@@ -1,4 +1,4 @@
-package edu.xmu.nmr.dataanalysis.diagram.actions;
+package edu.xmu.nmr.dataanalysis.diagram.retargetactions;
 
 import org.eclipse.gef.internal.GEFMessages;
 import org.eclipse.gef.internal.InternalImages;

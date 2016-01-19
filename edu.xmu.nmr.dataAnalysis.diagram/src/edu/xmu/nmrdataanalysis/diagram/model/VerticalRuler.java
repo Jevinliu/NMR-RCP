@@ -35,8 +35,16 @@ public class VerticalRuler extends Ruler {
     }
     
     @Override public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals(FidData.PRO_FD_OFFSETY)) {
+        switch (evt.getPropertyName()) {
+        case FidData.PRO_FD_OFFSETY:
             setOffset((int) evt.getNewValue());
+            break;
+        case FidData.PRO_FD_VINTERVAL:
+            setInterval((int) evt.getNewValue());
+            break;
+        case FidData.PRO_FD_VSCALE:
+            setTotalScale((double) evt.getNewValue());
+            break;
         }
     }
     

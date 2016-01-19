@@ -1,11 +1,14 @@
-package edu.xmu.nmr.dataanalysis.diagram.actions;
+package edu.xmu.nmr.dataanalysis.diagram.actions.helper;
 
 import org.eclipse.gef.ui.actions.RedoRetargetAction;
 import org.eclipse.gef.ui.actions.UndoRetargetAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.ui.actions.ActionFactory;
 
-import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAActionConstants;
+import edu.xmu.nmr.dataanalysis.diagram.retargetactions.DAMoveRetargetAction;
+import edu.xmu.nmr.dataanalysis.diagram.retargetactions.DAPartZoomInRetargetAction;
+import edu.xmu.nmr.dataanalysis.diagram.retargetactions.DAZoomInRetargetAction;
+import edu.xmu.nmr.dataanalysis.diagram.retargetactions.DAZoomOutRetargetAction;
 
 public class DAMultiEditorActionBarContributor
         extends AbstractMultiActionBarContributor {
@@ -18,8 +21,12 @@ public class DAMultiEditorActionBarContributor
         addRetargetAction(new RedoRetargetAction());
         addRetargetAction(new DAZoomInRetargetAction());
         addRetargetAction(new DAZoomOutRetargetAction());
-        addRetargetAction(new DAMoveRetargetAction());
-        addRetargetAction(new DAPartZoomInRetargetAction());
+        DAMoveRetargetAction moveAction = new DAMoveRetargetAction();
+        addRetargetAction(moveAction);
+        DAPartZoomInRetargetAction partAction = new DAPartZoomInRetargetAction();
+        partAction.addListener(moveAction);
+        moveAction.addListener(partAction);
+        addRetargetAction(partAction);
     }
     
     @Override public void declareGlobalActionKeys() {

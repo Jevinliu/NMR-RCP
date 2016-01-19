@@ -1,19 +1,10 @@
 package edu.xmu.nmr.dataanalysis.diagram.actions.helper;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.eclipse.gef.editparts.ZoomListener;
-
-import edu.xmu.nmrdataanalysis.diagram.model.FidData;
-import edu.xmu.nmrdataanalysis.diagram.model.Ruler;
-
 /**
  * 缩放管理器，通过操作模型interval的缩放比例，来影响figure的变化
  * 
  * @author software
- *
+ *         
  */
 public class DAZoomManager {
     
@@ -22,26 +13,19 @@ public class DAZoomManager {
      */
     private double zoom = 1.0;
     private double[] zoomLevels = { 1.0, 1.25, 1.5, 1.75, 2.0, 3.0, 4.0 };
-    private FidData fidData;
-    private Ruler ruler;
-    private List<ZoomListener> listeners = new ArrayList<ZoomListener>();
     
     /**
      * 总的缩放比例
      */
     private double totalScale = 1.0;
+    private double factor = 1;
+    /**
+     * 标志totalScale 当前zoom下是否被相乘factor
+     */
+    private boolean isMultiFactor = false;
     
-    public DAZoomManager(FidData fidData, Ruler ruler) {
-        this.fidData = fidData;
-        this.ruler = ruler;
-    }
+    public DAZoomManager() {
     
-    public void addZoomListener(ZoomListener listener) {
-        listeners.add(listener);
-    }
-    
-    public void removeZoomListener(ZoomListener listener) {
-        listeners.remove(listener);
     }
     
     public double getMaxZoom() {
@@ -92,37 +76,28 @@ public class DAZoomManager {
     protected void primSetZoom(double zoom) {
         double prevZoom = this.zoom;
         this.zoom = zoom;
-        fireZoomChanged();
         // 根据zoom值自行判断是zoom in还是zoom out，方便以后使用setZoom()
         // zoom in时计算总的totalScale，用于fid的显示,此处边界值极为重要
-        double factor = zoom / prevZoom;
+        factor = zoom / prevZoom;
         if ((zoom == getMinZoom() && prevZoom == getMaxZoom())
                 || (zoom != getMaxZoom() && zoom > prevZoom)
                 || (zoom == getMaxZoom() && prevZoom != getMinZoom())) {
             if (zoom != getMinZoom()) {
                 totalScale = totalScale * factor;
+                isMultiFactor = true;
+            } else {
+                isMultiFactor = false;
             }
         } else {// zoom out 时计算totalScale，用于fid显示
             double preTemp = prevZoom / getMaxZoom();
             double temp = zoom / getMaxZoom();
             if (temp != 1) {
                 totalScale = totalScale * temp / preTemp;
+                isMultiFactor = true;
+            } else {
+                isMultiFactor = false;
             }
         }
-        fidData.setVIntervalScale(totalScale, factor);
-        if (ruler != null) {
-            ruler.setIntervalScale(totalScale, factor);
-        }
-    }
-    
-    protected void fireZoomChanged() {
-        Iterator<ZoomListener> iter = listeners.iterator();
-        while (iter.hasNext())
-            ((ZoomListener) iter.next()).zoomChanged(zoom);
-    }
-    
-    public FidData getFidData() {
-        return fidData;
     }
     
     /**
@@ -142,6 +117,14 @@ public class DAZoomManager {
         this.zoomLevels = zoomLevels;
     }
     
+    public boolean canZoomIn() {
+        return getZoom() <= getMaxZoom();
+    }
+    
+    public boolean canZoomOut() {
+        return getZoom() >= getMinZoom();
+    }
+    
     /**
      * 放大
      */
@@ -155,4 +138,17 @@ public class DAZoomManager {
     public void zoomOut() {
         setZoom(getPreviousZoomLevel());
     }
+    
+    public double getTotalScale() {
+        return totalScale;
+    }
+    
+    public double getFactor() {
+        return factor;
+    }
+    
+    public boolean isMultiFactor() {
+        return isMultiFactor;
+    }
+    
 }

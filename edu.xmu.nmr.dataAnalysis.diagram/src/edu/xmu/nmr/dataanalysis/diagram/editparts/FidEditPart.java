@@ -40,7 +40,7 @@ public class FidEditPart extends DAAbstractEditPart {
     @Override public void propertyChange(PropertyChangeEvent evt) {
         String[] eventsName = new String[] { FidData.PRO_FD_FIDDATA,
                 FidData.PRO_FD_STEPSIZE, FElement.PRO_FE_LAYOUT,
-                FidData.PRO_FD_INTERVAL, FidData.PRO_FD_OFFSETY,
+                FidData.PRO_FD_VINTERVAL, FidData.PRO_FD_OFFSETY,
                 FidData.PRO_FD_PART_ZOOM };
         for (String eventName : eventsName) {
             if (evt.getPropertyName().equals(eventName)) {

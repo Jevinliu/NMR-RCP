@@ -46,10 +46,11 @@ public class FidData extends FElement {
     
     public static final String PRO_FD_FIDDATA = "pro_fd_fiddata";
     public static final String PRO_FD_STEPSIZE = "pro_fd_stepsize";
-    public static final String PRO_FD_INTERVAL = "pro_fd_interval";
+    public static final String PRO_FD_VINTERVAL = "pro_fd_interval";
     public static final String PRO_FD_OFFSETY = "pro_fd_offsety";
     public static final String PRO_FD_PART_ZOOM = "pro_fd_part_zoom";
     public static final String PRO_FD_OFFSETX = "pro_fd_offsetx";
+    public static final String PRO_FD_VSCALE = "pro_fd_vscal";
     
     public FidData() {
         reset();
@@ -86,7 +87,9 @@ public class FidData extends FElement {
     }
     
     public void setVInterval(int vInterval) {
+        int old = this.vInterval;
         this.vInterval = vInterval;
+        getListeners().firePropertyChange(PRO_FD_VINTERVAL, old, this.vInterval);
     }
     
     /**
@@ -96,14 +99,18 @@ public class FidData extends FElement {
      * @return
      */
     public void setVIntervalScale(double totalScale, double factor) {
-        this.vScale = (float) totalScale;
-        int old = this.vInterval;
-        this.vInterval = (int) Math.floor(factor * vInterval);
-        getListeners().firePropertyChange(PRO_FD_INTERVAL, old, this.vInterval);
+        setVScale(totalScale);
+        setVInterval((int) Math.floor(factor * vInterval));
     }
     
     public double getVScale() {
         return vScale;
+    }
+    
+    public void setVScale(double vScale) {
+        double old = this.vScale;
+        this.vScale = vScale;
+        getListeners().firePropertyChange(PRO_FD_VSCALE, old, this.vScale);
     }
     
     public int getOffsetY() {

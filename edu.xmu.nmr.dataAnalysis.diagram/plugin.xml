@@ -20,7 +20,7 @@
          point="org.eclipse.ui.editors">
       <editor
             class="edu.xmu.nmr.dataanalysis.diagram.multieditor.NMRDiagEditor"
-            contributorClass="edu.xmu.nmr.dataanalysis.diagram.actions.DAMultiEditorActionBarContributor"
+            contributorClass="edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAMultiEditorActionBarContributor"
             default="true"
             id="edu.xmu.nmr.dataAnalysis.diagram.nmreditor"
             name="NMR Diagram Editor">
@@ -48,6 +48,10 @@
       <command
             id="edu.xmu.nmr.dataanalysis.da_part_zoom"
             name="Part Zoom">
+      </command>
+      <command
+            id="edu.xmu.nmr.dataanalysis.zoom_in_1"
+            name="Zoom">
       </command>
    </extension>
    <extension

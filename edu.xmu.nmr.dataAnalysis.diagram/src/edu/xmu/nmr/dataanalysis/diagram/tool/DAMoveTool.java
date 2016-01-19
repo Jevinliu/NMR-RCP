@@ -61,5 +61,4 @@ public class DAMoveTool extends DAAbstractDragTool {
         unlockTargetEditPart();
         executeCurrentCommand();
     }
-    
 }
