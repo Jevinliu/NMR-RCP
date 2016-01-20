@@ -16,10 +16,10 @@ public class DAEditPartFactory implements EditPartFactory {
         DAAbstractEditPart part = null;
         if (model instanceof Container) {
             switch (((Container) model).getCType()) {
-            case FIDCONTAINER:
+            case DIAGCONTAINER:
                 part = new FidContainerEditPart();
                 break;
-            case BACKGROUND:
+            case PLACEHOLDER:
                 part = new PlaceHolderEditPart();
                 break;
             }

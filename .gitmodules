@@ -1,0 +1,3 @@
+[submodule "./JNMRToolKit"]
+	path = ./JNMRToolKit
+	url = https://git.oschina.net/drkaka/JNMRToolKit.git

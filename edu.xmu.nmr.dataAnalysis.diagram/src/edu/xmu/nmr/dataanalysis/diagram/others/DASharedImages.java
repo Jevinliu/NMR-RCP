@@ -22,6 +22,8 @@ public final class DASharedImages {
     public static final ImageDescriptor PART_ZOOM_OUT = get(
             "/resources/images/part_zoom_out.png");
             
+    public static final ImageDescriptor FFT = get("/resources/images/fft.png");
+    
     private static final ImageDescriptor get(String path) {
         return ImageDescriptor.createFromFile(Activator.class, path);
     }

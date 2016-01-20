@@ -240,6 +240,9 @@ public class LineFigure extends Figure {
     
     @Override protected void paintFigure(Graphics graphics) {
         super.paintFigure(graphics);
+        if (rawData == null || rawData.size() == 0) {
+            return;
+        }
         transformPoints();
         graphics.pushState();
         boolean isAdvanced = graphics.getAdvanced();

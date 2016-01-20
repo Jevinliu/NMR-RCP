@@ -133,5 +133,6 @@ public abstract class Ruler extends FElement implements PropertyChangeListener {
         this.offset = 0;
         this.interval = DEFAULT_INTERVAL;
         this.totalScale = 1;
+        this.totalSize = 0;
     }
 }

@@ -111,6 +111,9 @@ public class RulerFigure extends Figure {
     
     @Override protected void paintFigure(Graphics graphics) {
         super.paintFigure(graphics);
+        if (totalSize == 0) {
+            return;
+        }
         graphics.pushState();
         Rectangle bounds = getBounds();
         int rulerWidth = Ruler.AXISLL - 5;

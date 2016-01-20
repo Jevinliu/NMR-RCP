@@ -84,10 +84,10 @@ public class FidEditorPage extends GraphicalEditor {
         ScalableRootEditPart rootPart = (ScalableRootEditPart) viewer
                 .getRootEditPart();
         rootPart.getContentPane().setLayoutManager(new XYLayout());
-        rootPart.getZoomManager().getViewport().setIgnoreScroll(true);
         viewer.getControl().addControlListener(new ControlAdapter() {
             public void controlResized(ControlEvent e) {
                 FigureCanvas fc = (FigureCanvas) e.getSource();
+                fc.setScrollBarVisibility(FigureCanvas.NEVER);
                 fidContainer.setLayout(fc.getViewport().getBounds().getCopy());
             }
         });
@@ -170,7 +170,7 @@ public class FidEditorPage extends GraphicalEditor {
     private Container createContainer() {
         
         fidContainer = new Container();
-        fidContainer.setCType(ContainerType.FIDCONTAINER);
+        fidContainer.setCType(ContainerType.DIAGCONTAINER);
         fidContainer.setLayout(LayoutUtils.getClientArea());
         leftRuler.setOrient(RulerOrient.LEFT);
         leftRuler.setParent(fidContainer);
@@ -178,7 +178,7 @@ public class FidEditorPage extends GraphicalEditor {
         fidData.setVInterval(leftRuler.getInterval());
         fidData.addPropertyChangeListener(leftRuler);
         Container placeholderContainer = new Container();
-        placeholderContainer.setCType(ContainerType.BACKGROUND);
+        placeholderContainer.setCType(ContainerType.PLACEHOLDER);
         placeholderContainer.setParent(fidContainer);
         bottomRuler = new HorizontalRuler();
         bottomRuler.setOrient(RulerOrient.BOTTOM);

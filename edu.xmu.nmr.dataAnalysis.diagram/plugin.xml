@@ -50,14 +50,14 @@
             name="Part Zoom">
       </command>
       <command
-            id="edu.xmu.nmr.dataanalysis.zoom_in_1"
-            name="Zoom">
+            id="edu.xmu.nmr.dataanalysis.da_fft"
+            name="FFT">
       </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="edu.xmu.nmr.dataanalysis.diagram.handlers.OpenNMREditorHandler"
+            class="edu.xmu.nmr.dataanalysis.diagram.handlers.OpenEditorHandler"
             commandId="edu.xmu.nmr.dataAnalysis.diagram.commands.opennmreditor">
          <enabledWhen>
             <reference
@@ -79,6 +79,12 @@
             editorinput="edu.xmu.nmr.dataanalysis.diagram.multieditor.FidEditorInput"
             id="edu.xmu.nmr.dataAnalysis.diagram.editorparts.fidEditorPage"
             name="Fid">
+      </editorpage>
+      <editorpage
+            class="edu.xmu.nmr.dataanalysis.diagram.multieditor.SpecEditorPage"
+            editorinput="edu.xmu.nmr.dataanalysis.diagram.multieditor.SpecEditorInput"
+            id="edu.xmu.nmr.dataAnalysis.diagram.editorparts.specEditorPage"
+            name="Spectrum">
       </editorpage>
    </extension>
    <extension

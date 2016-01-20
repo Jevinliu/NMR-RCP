@@ -9,6 +9,7 @@ import edu.xmu.nmr.dataanalysis.diagram.retargetactions.DAMoveRetargetAction;
 import edu.xmu.nmr.dataanalysis.diagram.retargetactions.DAPartZoomInRetargetAction;
 import edu.xmu.nmr.dataanalysis.diagram.retargetactions.DAZoomInRetargetAction;
 import edu.xmu.nmr.dataanalysis.diagram.retargetactions.DAZoomOutRetargetAction;
+import edu.xmu.nmr.dataanalysis.diagram.retargetactions.FFTRetargetAction;
 
 public class DAMultiEditorActionBarContributor
         extends AbstractMultiActionBarContributor {
@@ -27,6 +28,7 @@ public class DAMultiEditorActionBarContributor
         partAction.addListener(moveAction);
         moveAction.addListener(partAction);
         addRetargetAction(partAction);
+        addRetargetAction(new FFTRetargetAction());
     }
     
     @Override public void declareGlobalActionKeys() {
@@ -40,5 +42,6 @@ public class DAMultiEditorActionBarContributor
         toolBarManager.add(getAction(DAActionConstants.DA_ZOOM_OUT));
         toolBarManager.add(getAction(DAActionConstants.DA_MOVE_IMG));
         toolBarManager.add(getAction(DAActionConstants.DA_PART_ZOOM_IN));
+        toolBarManager.add(getAction(DAActionConstants.DA_FFT));
     }
 }
