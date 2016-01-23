@@ -16,7 +16,7 @@ public class ZoomTool extends TargetingTool {
     private DAZoomManager zoomMgr;
     
     @Override protected String getCommandName() {
-        return DARequestConstants.DA_REQ_ZOOM_IN;
+        return DARequestConstants.DA_REQ_ZOOM;
     }
     
     @Override public void mouseWheelScrolled(Event event,

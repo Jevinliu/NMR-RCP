@@ -9,7 +9,7 @@ public class ZoomRequst extends Request {
     private boolean isMultiFactor;
     
     public ZoomRequst() {
-        setType(DARequestConstants.DA_REQ_ZOOM_IN);
+        setType(DARequestConstants.DA_REQ_ZOOM);
     }
     
     public double getTotalScale() {

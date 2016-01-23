@@ -53,6 +53,10 @@
             id="edu.xmu.nmr.dataanalysis.da_fft"
             name="FFT">
       </command>
+      <command
+            id="edu.xmu.nmr.dataanalysis.da_show_full"
+            name="Full">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">

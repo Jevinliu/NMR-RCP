@@ -20,5 +20,13 @@ public interface DARequestConstants {
      */
     String DA_REQ_PART_ZOOM = "part_zoom";
     
-    String DA_REQ_ZOOM_IN = "req_zoom_in";
+    /**
+     * 缩放
+     */
+    String DA_REQ_ZOOM = "req_zoom";
+    
+    /**
+     * 显示全谱
+     */
+    String DA_REQ_SHOW_FULL = "req_show_full";
 }

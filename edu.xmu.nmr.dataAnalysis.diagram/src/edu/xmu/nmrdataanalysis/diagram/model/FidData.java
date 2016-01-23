@@ -197,10 +197,22 @@ public class FidData extends FElement {
      * 恢复初始设置
      */
     public void reset() {
-        this.vScale = 1.0f;
-        this.offsetY = 0;
-        this.offsetX = 0;
-        this.hScale = 1;
+        setOffsetX(0);
+        setOffsetY(0);
+        setVScale(1);
+        setHScale(1);
+    }
+    
+    /**
+     * 检查是否需要重新设置，
+     * 
+     * @return
+     */
+    public boolean checkNeedReset() {
+        if (this.offsetX == 0 && this.offsetY == 0 && this.vScale == 1
+                && this.hScale == 1)
+            return false;
+        return true;
     }
     
     public int getOffsetX() {

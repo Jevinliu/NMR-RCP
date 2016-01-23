@@ -19,7 +19,7 @@ public class DAMoveAction extends SelectionAction {
         super(part);
         setId(DAActionConstants.DA_MOVE_IMG);
         setText("Move");
-        setImageDescriptor(DASharedImages.MOVE);
+        setImageDescriptor(DASharedImages.MOVE_V);
     }
     
     @Override protected boolean calculateEnabled() {

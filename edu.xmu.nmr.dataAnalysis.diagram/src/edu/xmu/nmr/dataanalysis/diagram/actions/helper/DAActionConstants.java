@@ -12,4 +12,6 @@ public final class DAActionConstants {
     
     public static final String DA_FFT = "edu.xmu.nmr.dataanalysis.da_fft";
     
+    public static final String DA_SHOW_FULL = "edu.xmu.nmr.dataanalysis.da_show_full";
+    
 }

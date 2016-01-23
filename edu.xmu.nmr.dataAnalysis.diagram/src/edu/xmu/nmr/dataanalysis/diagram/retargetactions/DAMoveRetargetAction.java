@@ -12,7 +12,7 @@ public class DAMoveRetargetAction extends DAAbstractRetargetAction {
         setId(DAActionConstants.DA_MOVE_IMG);
         setText("Move");
         setActionDefinitionId(DAActionConstants.DA_MOVE_IMG);
-        setImageDescriptor(DASharedImages.MOVE);
+        setImageDescriptor(DASharedImages.MOVE_V);
     }
     
 }

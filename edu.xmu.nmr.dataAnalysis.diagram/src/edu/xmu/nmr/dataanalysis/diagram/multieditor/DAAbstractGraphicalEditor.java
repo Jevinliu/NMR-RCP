@@ -25,6 +25,7 @@ import edu.xmu.nmr.dataanalysis.diagram.actions.DAMoveAction;
 import edu.xmu.nmr.dataanalysis.diagram.actions.DAPartZoomInAction;
 import edu.xmu.nmr.dataanalysis.diagram.actions.DAZoomInAction;
 import edu.xmu.nmr.dataanalysis.diagram.actions.DAZoomOutAction;
+import edu.xmu.nmr.dataanalysis.diagram.actions.ShowFullAction;
 import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAActionConstants;
 import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DADefaultEditDomain;
 import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAZoomManager;
@@ -94,6 +95,10 @@ public abstract class DAAbstractGraphicalEditor extends GraphicalEditor {
         IAction zoomOutAction = new DAZoomOutAction(this);
         registry.registerAction(zoomOutAction);
         getSelectionActions().add(zoomOutAction.getId());
+        
+        IAction showFullAction = new ShowFullAction(this);
+        registry.registerAction(showFullAction);
+        getSelectionActions().add(showFullAction.getId());
     }
     
 }
