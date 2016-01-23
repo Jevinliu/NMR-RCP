@@ -25,7 +25,7 @@ public class ZoomPolicy extends AbstractEditPolicy {
         return null;
     }
     
-    protected Command createMoveCommand(Request moveRequest) {
+    protected Command createMoveCommand(Request request) {
         ZoomCommand cmd = new ZoomCommand();
         Object parent = getHost().getModel();
         if (!(parent instanceof Container)) {
@@ -38,7 +38,7 @@ public class ZoomPolicy extends AbstractEditPolicy {
         for (FElement child : children) {
             if (child instanceof FidData) {
                 cmd.setModel((FidData) child);
-                ZoomRequst req = (ZoomRequst) moveRequest;
+                ZoomRequst req = (ZoomRequst) request;
                 cmd.setTotalScale(req.getTotalScale());
                 cmd.setFactor(req.getFactor());
                 cmd.setMultiFactor(req.isMultiFactor());

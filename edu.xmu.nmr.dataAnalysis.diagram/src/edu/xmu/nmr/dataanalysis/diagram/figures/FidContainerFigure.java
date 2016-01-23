@@ -11,8 +11,8 @@ public class FidContainerFigure extends Figure {
     public FidContainerFigure() {
         
         GridLayout layout = new GridLayout(5, false);
-        layout.marginHeight = 8;
-        layout.marginWidth = 8;
+        layout.marginHeight = 5;
+        layout.marginWidth = 5;
         layout.horizontalSpacing = 3;
         layout.verticalSpacing = 3;
         setLayoutManager(layout);

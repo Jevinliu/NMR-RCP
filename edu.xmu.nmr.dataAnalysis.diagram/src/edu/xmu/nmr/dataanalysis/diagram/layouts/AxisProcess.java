@@ -113,7 +113,7 @@ public class AxisProcess {
             int count = 1;
             factor = 2.0;
             
-            while (checkOK(min, max, width, unit * factor)) {
+            while (!checkOK(min, max, width, unit * factor)) {
                 count++;
                 double scale = 1;
                 if (count % 3 == 1) {

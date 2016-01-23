@@ -18,11 +18,10 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.XYLayout;
-import org.eclipse.gef.DefaultEditDomain;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.editparts.ScalableRootEditPart;
 import org.eclipse.gef.ui.actions.ActionRegistry;
-import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -31,7 +30,6 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 
 import edu.xmu.nmr.dataanalysis.diagram.actions.FFTAction;
-import edu.xmu.nmr.dataanalysis.diagram.editparts.DAEditPartFactory;
 import edu.xmu.nmr.dataanalysis.diagram.layouts.LayoutUtils;
 import edu.xmu.nmrdataanalysis.diagram.model.Container;
 import edu.xmu.nmrdataanalysis.diagram.model.ContainerType;
@@ -49,15 +47,16 @@ import edu.xmu.nmrdataanalysis.diagram.model.VerticalRuler;
  * 
  * @see
  */
-public class SpecEditorPage extends GraphicalEditor {
+public class SpecEditorPage extends DAAbstractGraphicalEditor {
     
     private Logger log = Logger.getLogger(this.getClass());
     private Container specContainer;
     private ArrayList<Float> fidDataSets;
     private FidData specNode;
+    private boolean fidIsComplex = false;
     
     public SpecEditorPage() {
-        setEditDomain(new DefaultEditDomain(this));
+        super();
         specContainer = new Container();
     }
     
@@ -71,10 +70,6 @@ public class SpecEditorPage extends GraphicalEditor {
         
     }
     
-    @Override public GraphicalViewer getGraphicalViewer() {
-        return super.getGraphicalViewer();
-    }
-    
     public ArrayList<Float> getFidDataSets() {
         return fidDataSets;
     }
@@ -84,7 +79,7 @@ public class SpecEditorPage extends GraphicalEditor {
     }
     
     @Override protected void configureGraphicalViewer() {
-        
+        super.configureGraphicalViewer();
         GraphicalViewer viewer = getGraphicalViewer();
         ScalableRootEditPart rootPart = (ScalableRootEditPart) viewer
                 .getRootEditPart();
@@ -94,9 +89,11 @@ public class SpecEditorPage extends GraphicalEditor {
                 FigureCanvas fc = (FigureCanvas) e.getSource();
                 fc.setScrollBarVisibility(FigureCanvas.NEVER);
                 specContainer.setLayout(fc.getViewport().getBounds().getCopy());
+                specNode.setSize(new Dimension(
+                        fc.getViewport().getBounds().width - 4 - 13 - 40,
+                        fc.getViewport().getBounds().height - 4 - 13 - 40));
             }
         });
-        viewer.setEditPartFactory(new DAEditPartFactory());
     }
     
     /**
@@ -118,7 +115,6 @@ public class SpecEditorPage extends GraphicalEditor {
     
     @Override protected void createActions() {
         super.createActions();
-        
         ActionRegistry registry = getActionRegistry();
         IAction fftAction = new FFTAction(this);
         registry.registerAction(fftAction);
@@ -129,16 +125,18 @@ public class SpecEditorPage extends GraphicalEditor {
         specContainer.setCType(ContainerType.DIAGCONTAINER);
         specContainer.setLayout(LayoutUtils.getClientArea());
         Ruler leftRuler = new VerticalRuler();
-        leftRuler.setParent(leftRuler);
+        leftRuler.setParent(specContainer);
         leftRuler.setOrient(RulerOrient.LEFT);
         specNode = new FidData();
         specNode.setParent(specContainer);
+        specNode.addPropertyChangeListener(leftRuler);
         Container placeholder = new Container();
         placeholder.setCType(ContainerType.PLACEHOLDER);
         placeholder.setParent(specContainer);
         Ruler bottomRuler = new HorizontalRuler();
         bottomRuler.setOrient(RulerOrient.BOTTOM);
         bottomRuler.setParent(specContainer);
+        specNode.addPropertyChangeListener(bottomRuler);
         return specContainer;
     }
     
@@ -148,5 +146,13 @@ public class SpecEditorPage extends GraphicalEditor {
     
     public FidData getSpecNode() {
         return specNode;
+    }
+    
+    public boolean isFidIsComplex() {
+        return fidIsComplex;
+    }
+    
+    public void setFidIsComplex(boolean fidIsComplex) {
+        this.fidIsComplex = fidIsComplex;
     }
 }

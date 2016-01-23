@@ -30,11 +30,9 @@ public class OpenEditorHandler extends AbstractHandler
             throws ExecutionException {
         IWorkbenchPage page = HandlerUtil.getActiveWorkbenchWindow(event)
                 .getActivePage();
-        // get the selection
         ISelection selection = HandlerUtil.getCurrentSelection(event);
         if (selection != null && selection instanceof IStructuredSelection) {
             Object sel = ((IStructuredSelection) selection).getFirstElement();
-            // if we had a selection lets open the editor
             if (sel == null) {
                 return null;
             }

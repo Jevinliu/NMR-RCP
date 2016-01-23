@@ -13,9 +13,8 @@ public class RulerEditPart extends DAAbstractEditPart {
     }
     
     @Override public void propertyChange(PropertyChangeEvent evt) {
-        String[] eventsName = new String[] { Ruler.PRO_RULER_STEPSIZE,
-                Ruler.PRO_RULER_INTERVAL, Ruler.PRO_RULER_TOTALSIZE,
-                Ruler.PRO_RULER_OFFSET, Ruler.PRO_RULER_TOTALSCALE };
+        String[] eventsName = new String[] { Ruler.PRO_RULER_OFFSET,
+                Ruler.PRO_RULER_AXIS };
         for (String eventName : eventsName) {
             if (evt.getPropertyName().equals(eventName)) {
                 refreshVisuals();
@@ -32,12 +31,14 @@ public class RulerEditPart extends DAAbstractEditPart {
     @Override protected void refreshVisuals() {
         RulerFigure figure = (RulerFigure) getFigure();
         Ruler ruler = (Ruler) getModel();
-        figure.setGridLayout();
         figure.setOrient(ruler.getOrient());
-        figure.setInterval((int) ruler.getInterval());
-        figure.setTotalSize(ruler.getTotalSize());
-        figure.setScale(ruler.getTotalScale());
+        figure.setGridLayout();
         figure.setOffset(ruler.getOffset());
+        if (ruler.getAxis() != null) {
+            figure.setFactor(ruler.getAxis().get("factor"));
+            figure.setInterval((int) Math.floor(ruler.getAxis().get("gap")));
+            figure.setUnitLabelText(ruler.getAxis().get("exp"));
+        }
     }
     
     @Override protected void createEditPolicies() {

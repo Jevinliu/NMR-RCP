@@ -24,12 +24,18 @@ public class FidEditPart extends DAAbstractEditPart {
         figure.setGridLayout();
         figure.setRawData(fidData.getRawData()); // 模型层与view层结合，装填数据
         figure.setAbsMax(fidData.getAbsMax());
-        figure.setVInterval(fidData.getVInterval());
-        figure.setHInterval(fidData.getHInterval());
         figure.setVScale(fidData.getVScale());
         figure.setOffsetY(fidData.getOffsetY());
         figure.setOffsetX(fidData.getOffsetX());
         figure.setHScale(fidData.getHScale());
+        if (fidData.getYAxis() != null) {
+            figure.setVInterval(
+                    (int) Math.floor(fidData.getYAxis().get("gap")));
+        }
+        if (fidData.getXAxis() != null) {
+            figure.setHInterval(
+                    (int) Math.floor(fidData.getXAxis().get("gap")));
+        }
         figure.repaint();
     }
     
@@ -39,9 +45,8 @@ public class FidEditPart extends DAAbstractEditPart {
     
     @Override public void propertyChange(PropertyChangeEvent evt) {
         String[] eventsName = new String[] { FidData.PRO_FD_FIDDATA,
-                FidData.PRO_FD_STEPSIZE, FElement.PRO_FE_LAYOUT,
-                FidData.PRO_FD_VINTERVAL, FidData.PRO_FD_OFFSETY,
-                FidData.PRO_FD_PART_ZOOM };
+                FElement.PRO_FE_LAYOUT, FidData.PRO_FD_OFFSETY,
+                FidData.PRO_FD_YAXIS, FidData.PRO_FD_XAXIS };
         for (String eventName : eventsName) {
             if (evt.getPropertyName().equals(eventName)) {
                 refreshVisuals();

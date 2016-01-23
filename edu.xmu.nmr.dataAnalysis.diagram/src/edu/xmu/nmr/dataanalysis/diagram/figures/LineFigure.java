@@ -234,6 +234,9 @@ public class LineFigure extends Figure {
     }
     
     public void setGridLayout() {
+        if (getParent() == null) {
+            return;
+        }
         getParent().setConstraint(this,
                 new GridData(GridData.FILL, GridData.FILL, true, true, 4, 4));
     }
@@ -270,7 +273,7 @@ public class LineFigure extends Figure {
         int centerY = bounds.y + bounds.height / 2 + offsetY; // 以中点为基准
         int endX = bounds.x + bounds.width;
         int endY = bounds.y + bounds.height;
-        // 绘制y轴 记录当前的状态
+        // 绘制水平网格线
         int aboveY = centerY;
         int belowY = centerY;
         for (int i = 0; aboveY >= bounds.y || belowY <= endY; i++) {
@@ -283,8 +286,8 @@ public class LineFigure extends Figure {
                 graphics.drawLine(bounds.x, belowY, endX, belowY);
             }
         }
+        // 绘制竖直网格线
         int ox = hInterval - Math.abs(offsetX) % hInterval;
-        // 绘制x轴
         for (int j = 0; j * hInterval < bounds.width; j++) {
             int x = bounds.x + ox + j * hInterval;
             graphics.drawLine(x, bounds.y, x, endY);

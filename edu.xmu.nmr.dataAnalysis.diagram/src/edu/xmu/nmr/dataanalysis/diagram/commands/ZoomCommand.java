@@ -12,6 +12,9 @@ public class ZoomCommand extends Command {
     
     private double factor;
     
+    /**
+     * 标志位，表示<code>factor</code>是否已经被乘到当前的<code>totalScale</code>中，主要为了在Undo中使用
+     */
     private boolean isMultiFactor;
     
     public void setModel(FidData model) {
@@ -31,14 +34,14 @@ public class ZoomCommand extends Command {
     }
     
     @Override public void execute() {
-        this.model.setVIntervalScale(totalScale, factor);
+        this.model.setVScale(totalScale);
     }
     
     @Override public void undo() {
         if (isMultiFactor) {
-            this.model.setVIntervalScale(totalScale * 1 / factor, 1 / factor);
+            this.model.setVScale(totalScale * 1 / factor);
         } else {
-            this.model.setVIntervalScale(totalScale, 1 / factor);
+            this.model.setVScale(totalScale);
         }
     }
 }

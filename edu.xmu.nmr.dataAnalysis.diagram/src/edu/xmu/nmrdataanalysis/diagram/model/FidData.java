@@ -1,8 +1,12 @@
 package edu.xmu.nmrdataanalysis.diagram.model;
 
 import java.util.ArrayList;
+import java.util.Map;
 
-import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAZoomManager;
+import org.eclipse.draw2d.geometry.Dimension;
+
+import edu.xmu.nmr.dataanalysis.diagram.figures.PointsTools;
+import edu.xmu.nmr.dataanalysis.diagram.layouts.AxisProcess;
 
 public class FidData extends FElement {
     
@@ -14,10 +18,6 @@ public class FidData extends FElement {
      * 原始数据中绝对值的最大者
      */
     private float absMax;
-    /**
-     * 水平方向网格间隔，和ruler保持一致
-     */
-    private int hInterval;
     
     /**
      * 当前竖直方向上维持的一个缩放总比例
@@ -30,11 +30,6 @@ public class FidData extends FElement {
     private int offsetY;
     
     /**
-     * 竖直方向网格间隔，和竖直ruler保持一致
-     */
-    private int vInterval;
-    
-    /**
      * 在当前水平方向的缩放比例下，当前x轴方向偏移量，
      */
     private int offsetX;
@@ -44,13 +39,27 @@ public class FidData extends FElement {
      */
     private double hScale;
     
+    /**
+     * 数据长度
+     */
+    private int dataSize;
+    
+    /**
+     * 数据点间的步长
+     */
+    private float stride;
+    
+    private Dimension size;
+    
+    private Map<String, Float> yAxis;
+    
+    private Map<String, Float> xAxis;
+    
     public static final String PRO_FD_FIDDATA = "pro_fd_fiddata";
-    public static final String PRO_FD_STEPSIZE = "pro_fd_stepsize";
-    public static final String PRO_FD_VINTERVAL = "pro_fd_interval";
     public static final String PRO_FD_OFFSETY = "pro_fd_offsety";
-    public static final String PRO_FD_PART_ZOOM = "pro_fd_part_zoom";
     public static final String PRO_FD_OFFSETX = "pro_fd_offsetx";
-    public static final String PRO_FD_VSCALE = "pro_fd_vscal";
+    public static final String PRO_FD_YAXIS = "pro_fd_yaxis";
+    public static final String PRO_FD_XAXIS = "pro_fd_xaxis";
     
     public FidData() {
         reset();
@@ -63,7 +72,46 @@ public class FidData extends FElement {
     public void setRawData(ArrayList<Float> rawData) {
         ArrayList<Float> old = this.rawData;
         this.rawData = rawData;
+        setAbsMax(PointsTools.getAbsMax(this.rawData));
+        setDataSize(this.rawData.size());
         getListeners().firePropertyChange(PRO_FD_FIDDATA, old, this.rawData);
+    }
+    
+    public int getDataSize() {
+        return dataSize;
+    }
+    
+    public Dimension getSize() {
+        return size;
+    }
+    
+    public void setSize(Dimension size) {
+        Dimension old = this.size;
+        this.size = size;
+        if (old == null || this.size == null || !old.equals(this.size)) {
+            setYAxis();
+            setXAxis();
+        }
+    }
+    
+    public void setDataSize(int dataSize) {
+        int old = this.dataSize;
+        this.dataSize = dataSize;
+        if (old != this.dataSize) {
+            setXAxis();
+        }
+    }
+    
+    public float getStride() {
+        return stride;
+    }
+    
+    public void setStride(float stride) {
+        float old = this.stride;
+        this.stride = stride;
+        if (old != this.stride) {
+            setXAxis();
+        }
     }
     
     public float getAbsMax() {
@@ -71,36 +119,45 @@ public class FidData extends FElement {
     }
     
     public void setAbsMax(float absMax) {
+        float old = this.absMax;
         this.absMax = absMax;
+        if (old != this.absMax) {
+            setYAxis();
+        }
     }
     
-    public int getHInterval() {
-        return hInterval;
+    public Map<String, Float> getYAxis() {
+        return yAxis;
     }
     
-    public void setHInterval(int hInterval) {
-        this.hInterval = hInterval;
+    public void setYAxis() {
+        if (absMax <= 0 || vScale == 0 || this.size == null
+                || this.size.height <= 0) {
+            return;
+        }
+        Map<String, Float> old = this.yAxis;
+        this.yAxis = AxisProcess.getAxis(0, (float) (2 * absMax / vScale),
+                this.size.height);
+        getListeners().firePropertyChange(PRO_FD_YAXIS, old, this.yAxis);
     }
     
-    public int getVInterval() {
-        return vInterval;
-    }
-    
-    public void setVInterval(int vInterval) {
-        int old = this.vInterval;
-        this.vInterval = vInterval;
-        getListeners().firePropertyChange(PRO_FD_VINTERVAL, old, this.vInterval);
+    public Map<String, Float> getXAxis() {
+        return xAxis;
     }
     
     /**
-     * 设置当前fid data的纵坐标间隔的比例，根据设置比例，生成最新的纵坐标间隔，主要在{@link DAZoomManager}中使用，
-     * 
-     * @param factor
-     * @return
+     * 计算x坐标比例
      */
-    public void setVIntervalScale(double totalScale, double factor) {
-        setVScale(totalScale);
-        setVInterval((int) Math.floor(factor * vInterval));
+    public void setXAxis() {
+        if (this.rawData == null || this.rawData.size() == 0 || this.hScale == 0
+                || this.size == null || this.size.width <= 0
+                || this.stride == 0) {
+            return;
+        }
+        Map<String, Float> old = this.xAxis;
+        this.xAxis = AxisProcess.getAxis(0,
+                (float) (dataSize * stride / hScale), this.size.width);
+        getListeners().firePropertyChange(PRO_FD_XAXIS, old, this.xAxis);
     }
     
     public double getVScale() {
@@ -110,7 +167,9 @@ public class FidData extends FElement {
     public void setVScale(double vScale) {
         double old = this.vScale;
         this.vScale = vScale;
-        getListeners().firePropertyChange(PRO_FD_VSCALE, old, this.vScale);
+        if (old != this.vScale) {
+            setYAxis();
+        }
     }
     
     public int getOffsetY() {
@@ -170,7 +229,9 @@ public class FidData extends FElement {
     public void setHScale(double hScale) {
         double old = this.hScale;
         this.hScale = hScale;
-        getListeners().firePropertyChange(PRO_FD_PART_ZOOM, old, this.hScale);
+        if (old != this.hScale) {
+            setXAxis();
+        }
     }
     
     public void appendHScale(double appendHScale) {

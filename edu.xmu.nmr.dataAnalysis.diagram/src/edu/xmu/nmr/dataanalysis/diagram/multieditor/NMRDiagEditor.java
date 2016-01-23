@@ -128,6 +128,7 @@ public class NMRDiagEditor extends MultiPageEditorPart {
         }
         fidEditorPage.setFidData(fidNode.getData().get("1"), rawStepSize);
         specEditorPage.setFidDataSets(fidNode.getData().get("1"));
+        specEditorPage.setFidIsComplex(fidNode.isComplex());
     }
     
     /**

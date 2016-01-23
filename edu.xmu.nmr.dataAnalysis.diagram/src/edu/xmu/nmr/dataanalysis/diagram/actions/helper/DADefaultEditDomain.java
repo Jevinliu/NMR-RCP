@@ -17,8 +17,10 @@ public class DADefaultEditDomain extends DefaultEditDomain {
     @Override public void mouseWheelScrolled(Event event,
             EditPartViewer viewer) {
         Tool tool = getDefaultTool();
+        Tool currentTool = getActiveTool();
         if (tool instanceof ZoomTool) {
             tool.mouseWheelScrolled(event, viewer);
+            setActiveTool(currentTool);
             return;
         }
         tool = getActiveTool();

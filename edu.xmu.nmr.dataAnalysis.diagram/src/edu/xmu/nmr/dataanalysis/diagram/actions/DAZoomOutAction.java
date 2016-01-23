@@ -8,7 +8,9 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IWorkbenchPart;
 
 import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAActionConstants;
+import edu.xmu.nmr.dataanalysis.diagram.multieditor.DAAbstractGraphicalEditor;
 import edu.xmu.nmr.dataanalysis.diagram.multieditor.FidEditorPage;
+import edu.xmu.nmr.dataanalysis.diagram.multieditor.SpecEditorPage;
 
 public class DAZoomOutAction extends SelectionAction {
     
@@ -23,14 +25,14 @@ public class DAZoomOutAction extends SelectionAction {
     
     @Override protected boolean calculateEnabled() {
         IWorkbenchPart part = getWorkbenchPart();
-        if (!(part instanceof FidEditorPage)) {
-            return false;
+        if (part instanceof FidEditorPage || part instanceof SpecEditorPage) {
+            return true;
         }
-        return true;
+        return false;
     }
     
     @Override public void run() {
-        FidEditorPage editorPage = (FidEditorPage) getWorkbenchPart();
+        DAAbstractGraphicalEditor editorPage = (DAAbstractGraphicalEditor) getWorkbenchPart();
         EditDomain editDomain = editorPage.getGraphicalViewer().getEditDomain();
         Event e = new Event();
         e.count = -1;

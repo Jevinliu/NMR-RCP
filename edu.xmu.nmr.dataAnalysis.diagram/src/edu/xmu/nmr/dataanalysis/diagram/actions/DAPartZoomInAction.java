@@ -5,7 +5,9 @@ import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IWorkbenchPart;
 
 import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAActionConstants;
+import edu.xmu.nmr.dataanalysis.diagram.multieditor.DAAbstractGraphicalEditor;
 import edu.xmu.nmr.dataanalysis.diagram.multieditor.FidEditorPage;
+import edu.xmu.nmr.dataanalysis.diagram.multieditor.SpecEditorPage;
 import edu.xmu.nmr.dataanalysis.diagram.others.DASharedImages;
 import edu.xmu.nmr.dataanalysis.diagram.tool.DAPartZoomInTool;
 
@@ -22,10 +24,10 @@ public class DAPartZoomInAction extends SelectionAction {
     
     @Override protected boolean calculateEnabled() {
         IWorkbenchPart part = getWorkbenchPart();
-        if (!(part instanceof FidEditorPage)) {
-            return false;
+        if (part instanceof FidEditorPage || part instanceof SpecEditorPage) {
+            return true;
         }
-        return true;
+        return false;
     }
     
     @Override public boolean isChecked() {
@@ -37,7 +39,7 @@ public class DAPartZoomInAction extends SelectionAction {
     }
     
     @Override public void run() {
-        FidEditorPage editorPage = (FidEditorPage) getWorkbenchPart();
+        DAAbstractGraphicalEditor editorPage = (DAAbstractGraphicalEditor) getWorkbenchPart();
         EditDomain editDomain = editorPage.getGraphicalViewer().getEditDomain();
         if (isChecked()) {
             DAPartZoomInTool zoomTool = new DAPartZoomInTool();
