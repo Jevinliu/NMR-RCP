@@ -8,17 +8,18 @@ import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAActionConstants;
 import edu.xmu.nmr.dataanalysis.diagram.multieditor.DAAbstractGraphicalEditor;
 import edu.xmu.nmr.dataanalysis.diagram.multieditor.FidEditorPage;
 import edu.xmu.nmr.dataanalysis.diagram.multieditor.SpecEditorPage;
+import edu.xmu.nmr.dataanalysis.diagram.others.DA;
 import edu.xmu.nmr.dataanalysis.diagram.others.DASharedImages;
 import edu.xmu.nmr.dataanalysis.diagram.tool.DAMoveTool;
 
-public class DAMoveAction extends SelectionAction {
+public class DAXMoveAction extends SelectionAction {
     
     private boolean checked = false;
     
-    public DAMoveAction(IWorkbenchPart part) {
+    public DAXMoveAction(IWorkbenchPart part) {
         super(part);
-        setId(DAActionConstants.DA_MOVE_IMG);
-        setText("Move");
+        setId(DAActionConstants.DA_MOVE_H_IMG);
+        setText("Move Horizontal");
         setImageDescriptor(DASharedImages.MOVE_V);
     }
     
@@ -43,10 +44,10 @@ public class DAMoveAction extends SelectionAction {
         EditDomain editDomain = editorPage.getGraphicalViewer().getEditDomain();
         if (isChecked()) {
             DAMoveTool mvTool = new DAMoveTool();
+            mvTool.setType(DA.HORIZONTAL);
             editDomain.setActiveTool(mvTool);
         } else {
             editDomain.setActiveTool(editDomain.getDefaultTool());
         }
     }
-    
 }

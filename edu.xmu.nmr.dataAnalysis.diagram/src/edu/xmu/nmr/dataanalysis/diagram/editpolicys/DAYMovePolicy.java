@@ -8,6 +8,8 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 
 import edu.xmu.nmr.dataanalysis.diagram.commands.DAMoveCommand;
+import edu.xmu.nmr.dataanalysis.diagram.commands.DAXMoveCommand;
+import edu.xmu.nmr.dataanalysis.diagram.commands.DAYMoveCommand;
 import edu.xmu.nmr.dataanalysis.diagram.requests.DAMoveRequest;
 import edu.xmu.nmr.dataanalysis.diagram.requests.DARequestConstants;
 import edu.xmu.nmrdataanalysis.diagram.model.Container;
@@ -16,26 +18,27 @@ import edu.xmu.nmrdataanalysis.diagram.model.FidData;
 
 /**
  * 
- * DAMovePolicy
+ * DAYMovePolicy
  * <p>
- * 移动fid等图形的policy
+ * Y轴方向上移动fid等图形的policy
  * </p>
  * 
  * @see
  */
-public class DAMovePolicy extends AbstractEditPolicy {
+public class DAYMovePolicy extends AbstractEditPolicy {
     
     public static final String ROLE = "DAMovePolicy_Role";
     
     @Override public Command getCommand(Request request) {
-        if (request.getType().equals(DARequestConstants.DA_REQ_MOVE_IMG)) {
+        if (request.getType().equals(DARequestConstants.DA_REQ_MOVE_V_IMG)
+                || request.getType()
+                        .equals(DARequestConstants.DA_REQ_MOVE_H_IMG)) {
             return createMoveCommand(request);
         }
         return null;
     }
     
     protected Command createMoveCommand(Request moveRequest) {
-        DAMoveCommand cmd = new DAMoveCommand();
         Object parent = getHost().getModel();
         if (!(parent instanceof Container)) {
             return null;
@@ -46,11 +49,21 @@ public class DAMovePolicy extends AbstractEditPolicy {
         List<FElement> children = ((Container) parent).getChildren();
         for (FElement child : children) {
             if (child instanceof FidData) {
-                cmd.setModel(child);
                 DAMoveRequest req = (DAMoveRequest) moveRequest;
-                int offsetY = req.getCurrentLocation().y
-                        - req.getStartLocation().y;
-                cmd.setAppendOffsetY(offsetY);
+                DAMoveCommand cmd;
+                if (moveRequest.getType()
+                        .equals(DARequestConstants.DA_REQ_MOVE_V_IMG)) {
+                    cmd = new DAYMoveCommand();
+                    int offsetY = req.getCurrentLocation().y
+                            - req.getStartLocation().y;
+                    ((DAYMoveCommand) cmd).setAppendOffsetY(offsetY);
+                } else {
+                    cmd = new DAXMoveCommand();
+                    int offsetX = req.getCurrentLocation().x
+                            - req.getStartLocation().x;
+                    ((DAXMoveCommand) cmd).setAppendOffsetX(offsetX);
+                }
+                cmd.setModel(child);
                 cmd.setStartLocation(req.getDefaultLocation());
                 cmd.setEndLocation(req.getCurrentLocation());
                 return cmd;
@@ -67,7 +80,9 @@ public class DAMovePolicy extends AbstractEditPolicy {
      * @see org.eclipse.gef.editpolicies.AbstractEditPolicy#getTargetEditPart(org.eclipse.gef.Request)
      */
     @Override public EditPart getTargetEditPart(Request request) {
-        if (DARequestConstants.DA_REQ_MOVE_IMG.equals(request.getType())) {
+        if (DARequestConstants.DA_REQ_MOVE_V_IMG.equals(request.getType())
+                || DARequestConstants.DA_REQ_MOVE_H_IMG
+                        .equals(request.getType())) {
             return getHost();
         }
         return super.getTargetEditPart(request);

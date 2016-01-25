@@ -24,7 +24,10 @@ public class DAMoveRequest extends Request {
     private Point currentLocation;
     
     public DAMoveRequest() {
-        setType(DARequestConstants.DA_REQ_MOVE_IMG);
+    }
+    
+    public DAMoveRequest(Object type) {
+        super(type);
     }
     
     public Point getStartLocation() {

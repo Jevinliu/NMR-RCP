@@ -5,23 +5,15 @@ import org.eclipse.gef.commands.Command;
 
 import edu.xmu.nmrdataanalysis.diagram.model.FidData;
 
-public class DAMoveCommand extends Command {
+public abstract class DAMoveCommand extends Command {
+    
     private FidData model;
-    private int appendOffsetY;
     
     private Point startLocation;
     private Point endLocation;
     
     public void setModel(Object model) {
         this.model = (FidData) model;
-    }
-    
-    @Override public void execute() {
-        this.model.appendOffsetY(appendOffsetY);
-    }
-    
-    public void setAppendOffsetY(int appendOffsetY) {
-        this.appendOffsetY = appendOffsetY;
     }
     
     public void setStartLocation(Point startLocation) {
@@ -32,8 +24,15 @@ public class DAMoveCommand extends Command {
         this.endLocation = endLocation;
     }
     
-    @Override public void undo() {
-        this.model.appendOffsetY(startLocation.y - endLocation.y);
+    public FidData getModel() {
+        return model;
     }
     
+    public Point getStartLocation() {
+        return startLocation;
+    }
+    
+    public Point getEndLocation() {
+        return endLocation;
+    }
 }

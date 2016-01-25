@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
 
-import edu.xmu.nmr.dataanalysis.diagram.editpolicys.DAMovePolicy;
+import edu.xmu.nmr.dataanalysis.diagram.editpolicys.DAYMovePolicy;
 import edu.xmu.nmr.dataanalysis.diagram.editpolicys.DAPartZoomInPolicy;
 import edu.xmu.nmr.dataanalysis.diagram.editpolicys.ShowFullPolicy;
 import edu.xmu.nmr.dataanalysis.diagram.editpolicys.ZoomPolicy;
@@ -24,7 +24,7 @@ public class FidContainerEditPart extends DAAbstractEditPart {
     }
     
     @Override protected void createEditPolicies() {
-        installEditPolicy(DAMovePolicy.ROLE, new DAMovePolicy());
+        installEditPolicy(DAYMovePolicy.ROLE, new DAYMovePolicy());
         installEditPolicy(DAPartZoomInPolicy.ROLE, new DAPartZoomInPolicy());
         installEditPolicy(ZoomPolicy.ROLE, new ZoomPolicy());
         installEditPolicy(ShowFullPolicy.ROLE, new ShowFullPolicy());

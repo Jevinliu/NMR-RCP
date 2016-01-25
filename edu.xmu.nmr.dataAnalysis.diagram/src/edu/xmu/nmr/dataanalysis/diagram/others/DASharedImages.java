@@ -11,6 +11,10 @@ public final class DASharedImages {
      */
     public static final ImageDescriptor MOVE_V = get(
             "/resources/images/move_v.png");
+            
+    public static final ImageDescriptor MOVE_H = get(
+            "/resources/images/move_h.png");
+            
     /**
      * 局部放大
      */

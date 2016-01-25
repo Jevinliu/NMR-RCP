@@ -34,8 +34,12 @@
             name="Open NMR Editor">
       </command>
       <command
-            id="edu.xmu.nmr.dataanalysis.da_move_img"
-            name="Move">
+            id="edu.xmu.nmr.dataanalysis.da_move_v_img"
+            name="Move Vertical">
+      </command>
+      <command
+            id="edu.xmu.nmr.dataanalysis.da_move_h_img"
+            name="Move Horizontal">
       </command>
       <command
             id="edu.xmu.nmr.dataanalysis.zoom_in"

@@ -21,8 +21,9 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.actions.ActionFactory;
 
-import edu.xmu.nmr.dataanalysis.diagram.actions.DAMoveAction;
 import edu.xmu.nmr.dataanalysis.diagram.actions.DAPartZoomInAction;
+import edu.xmu.nmr.dataanalysis.diagram.actions.DAXMoveAction;
+import edu.xmu.nmr.dataanalysis.diagram.actions.DAYMoveAction;
 import edu.xmu.nmr.dataanalysis.diagram.actions.DAZoomInAction;
 import edu.xmu.nmr.dataanalysis.diagram.actions.DAZoomOutAction;
 import edu.xmu.nmr.dataanalysis.diagram.actions.ShowFullAction;
@@ -80,9 +81,13 @@ public abstract class DAAbstractGraphicalEditor extends GraphicalEditor {
     @Override protected void createActions() {
         super.createActions();
         ActionRegistry registry = getActionRegistry();
-        IAction moveAction = new DAMoveAction(this);
-        registry.registerAction(moveAction);
-        getSelectionActions().add(moveAction.getId());
+        IAction yMoveAction = new DAYMoveAction(this);
+        registry.registerAction(yMoveAction);
+        getSelectionActions().add(yMoveAction.getId());
+        
+        IAction xMoveAction = new DAXMoveAction(this);
+        registry.registerAction(xMoveAction);
+        getSelectionActions().add(xMoveAction.getId());
         
         IAction partZoominAction = new DAPartZoomInAction(this);
         registry.registerAction(partZoominAction);

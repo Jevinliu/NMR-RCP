@@ -139,7 +139,7 @@ public class RulerFigure extends Figure {
             graphics.drawLine(endX, bounds.y, endX, endY);
             break;
         case BOTTOM:
-            for (int j = 1 + Math.abs(offset) / interval; j
+            for (int j = -offset / interval; j
                     * interval <= (bounds.width + Math.abs(offset)); j++) {
                 int pX = bounds.x + interval * j + offset;
                 graphics.drawLine(pX, bounds.y, pX, bounds.y + tall);

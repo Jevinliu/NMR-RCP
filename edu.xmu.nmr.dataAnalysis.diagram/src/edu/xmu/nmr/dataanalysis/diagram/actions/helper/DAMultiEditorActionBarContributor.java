@@ -5,8 +5,9 @@ import org.eclipse.gef.ui.actions.UndoRetargetAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.ui.actions.ActionFactory;
 
-import edu.xmu.nmr.dataanalysis.diagram.retargetactions.DAMoveRetargetAction;
 import edu.xmu.nmr.dataanalysis.diagram.retargetactions.DAPartZoomInRetargetAction;
+import edu.xmu.nmr.dataanalysis.diagram.retargetactions.DAXMoveRetargetAction;
+import edu.xmu.nmr.dataanalysis.diagram.retargetactions.DAYMoveRetargetAction;
 import edu.xmu.nmr.dataanalysis.diagram.retargetactions.DAZoomInRetargetAction;
 import edu.xmu.nmr.dataanalysis.diagram.retargetactions.DAZoomOutRetargetAction;
 import edu.xmu.nmr.dataanalysis.diagram.retargetactions.FFTRetargetAction;
@@ -21,17 +22,27 @@ public class DAMultiEditorActionBarContributor
     @Override public void buildActions() {
         addRetargetAction(new UndoRetargetAction());
         addRetargetAction(new RedoRetargetAction());
+        
         addRetargetAction(new DAZoomInRetargetAction());
         addRetargetAction(new DAZoomOutRetargetAction());
-        DAMoveRetargetAction moveAction = new DAMoveRetargetAction();
-        addRetargetAction(moveAction);
+        
+        DAYMoveRetargetAction yMoveAction = new DAYMoveRetargetAction();
+        addRetargetAction(yMoveAction);
+        
+        DAXMoveRetargetAction xMoveAction = new DAXMoveRetargetAction();
+        addRetargetAction(xMoveAction);
+        
         DAPartZoomInRetargetAction partAction = new DAPartZoomInRetargetAction();
-        partAction.addListener(moveAction);
-        moveAction.addListener(partAction);
+        partAction.addListener(yMoveAction);
+        partAction.addListener(xMoveAction);
+        yMoveAction.addListener(partAction);
+        yMoveAction.addListener(xMoveAction);
+        xMoveAction.addListener(partAction);
+        xMoveAction.addListener(yMoveAction);
         addRetargetAction(partAction);
-        addRetargetAction(new FFTRetargetAction());
         
         addRetargetAction(new ShowFullRetargetAction());
+        addRetargetAction(new FFTRetargetAction());
     }
     
     @Override public void declareGlobalActionKeys() {
@@ -43,9 +54,10 @@ public class DAMultiEditorActionBarContributor
         toolBarManager.add(getAction(ActionFactory.REDO.getId()));
         toolBarManager.add(getAction(DAActionConstants.DA_ZOOM_IN));
         toolBarManager.add(getAction(DAActionConstants.DA_ZOOM_OUT));
-        toolBarManager.add(getAction(DAActionConstants.DA_MOVE_IMG));
+        toolBarManager.add(getAction(DAActionConstants.DA_MOVE_V_IMG));
+        toolBarManager.add(getAction(DAActionConstants.DA_MOVE_H_IMG));
         toolBarManager.add(getAction(DAActionConstants.DA_PART_ZOOM_IN));
-        toolBarManager.add(getAction(DAActionConstants.DA_FFT));
         toolBarManager.add(getAction(DAActionConstants.DA_SHOW_FULL));
+        toolBarManager.add(getAction(DAActionConstants.DA_FFT));
     }
 }

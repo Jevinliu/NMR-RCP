@@ -13,6 +13,7 @@
 package edu.xmu.nmr.dataanalysis.diagram.actions;
 
 import org.eclipse.gef.EditDomain;
+import org.eclipse.gef.Tool;
 import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -71,10 +72,11 @@ public class ShowFullAction extends SelectionAction {
     @Override public void run() {
         DAAbstractGraphicalEditor part = (DAAbstractGraphicalEditor) getWorkbenchPart();
         EditDomain editDomain = part.getGraphicalViewer().getEditDomain();
+        Tool oldTool = editDomain.getActiveTool();
         ShowFullTool tool = new ShowFullTool();
         editDomain.setActiveTool(tool);
         tool.mouseDown(null, part.getGraphicalViewer());
-        
+        editDomain.setActiveTool(oldTool);
     }
     
 }

@@ -3,10 +3,13 @@ package edu.xmu.nmr.dataanalysis.diagram.tool;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.gef.Request;
 
+import edu.xmu.nmr.dataanalysis.diagram.others.DA;
 import edu.xmu.nmr.dataanalysis.diagram.requests.DAMoveRequest;
 import edu.xmu.nmr.dataanalysis.diagram.requests.DARequestConstants;
 
 public class DAMoveTool extends DAAbstractDragTool {
+    
+    private int type = -1;
     
     public DAMoveTool() {
         setDefaultCursor(Cursors.HAND);
@@ -14,7 +17,27 @@ public class DAMoveTool extends DAAbstractDragTool {
     }
     
     @Override protected String getCommandName() {
-        return DARequestConstants.DA_REQ_MOVE_IMG;
+        if (type == DA.HORIZONTAL) {
+            return DARequestConstants.DA_REQ_MOVE_H_IMG;
+        } else {
+            return DARequestConstants.DA_REQ_MOVE_V_IMG;
+        }
+    }
+    
+    /**
+     * 该MoveTool对应的 移动类型，该值只能为<code>DA.VERTICAL</code>或
+     * <code>DA.HORIZONTAL</code>.
+     * 
+     * @param type
+     *            如果为<code>DA.VERTICAL</code>表示为竖直方向移动，反之如果为
+     *            <code>DA.HORIZONTAL</code>则为水平方向移动。
+     */
+    public void setType(int type) {
+        if (type != DA.HORIZONTAL && type != DA.VERTICAL) {
+            throw new IllegalArgumentException(
+                    "Type must be 'DA.VERTICAL' or 'DA.HORIZONTAL'");
+        }
+        this.type = type;
     }
     
     protected Request createTargetRequest() {
