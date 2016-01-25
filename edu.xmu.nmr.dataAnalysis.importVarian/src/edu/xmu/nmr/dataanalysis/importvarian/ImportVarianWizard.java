@@ -67,11 +67,11 @@ public class ImportVarianWizard extends DAImportWizard {
                         parent.addChild(etp);
                         FidNode fid = new FidNode(
                                 etp.getNodePath() + File.separator + "fid",
-                                FileType.BRUKER, "fid");
+                                FileType.VARIAN, "fid");
                         ParamtersNode params = new ParamtersNode(
                                 etp.getNodePath() + File.separator
                                         + "paramters",
-                                FileType.BRUKER);
+                                FileType.VARIAN);
                         etp.addChild(fid);
                         etp.addChild(params);
                         this.parserFile(directoryPath, version, etp);

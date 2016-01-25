@@ -125,15 +125,21 @@ public class RulerFigure extends Figure {
                 if (aboveY >= bounds.y) {
                     graphics.drawLine(endX - tall, aboveY, endX, aboveY);
                     layout.setText(sy);
-                    graphics.drawTextLayout(layout, endX - rulerWidth,
-                            aboveY - 6);
+                    int textY = aboveY - 8;
+                    if (textY < bounds.y) {
+                        textY = aboveY;
+                    }
+                    graphics.drawTextLayout(layout, endX - rulerWidth, textY);
                 }
                 sy = "-" + sy;
                 if (i != 0 && belowY <= endY) {
                     graphics.drawLine(endX - tall, belowY, endX, belowY); // 绘制坐标短线
                     layout.setText(sy);
-                    graphics.drawTextLayout(layout, endX - rulerWidth,
-                            belowY - 6);
+                    int textY = belowY - 8;
+                    if (belowY + 8 > endY) { // 判断是否坐标值绘制点超出边界
+                        textY = belowY - 16;
+                    }
+                    graphics.drawTextLayout(layout, endX - rulerWidth, textY);
                 }
             }
             graphics.drawLine(endX, bounds.y, endX, endY);
@@ -148,7 +154,18 @@ public class RulerFigure extends Figure {
                 bLayout.setText(sb);
                 bLayout.setWidth(interval - 10);
                 bLayout.setAlignment(SWT.CENTER);
-                graphics.drawTextLayout(bLayout, pX - interval / 2 + 5,
+                int textLeftX = pX - interval / 2 + 5;
+                int textRightX = pX + interval / 2 - 5;
+                if (textLeftX < bounds.x) {
+                    textLeftX = pX;
+                    bLayout.setAlignment(SWT.LEFT);
+                } else if (textRightX > endX) {
+                    textLeftX = pX - interval + 10;
+                    bLayout.setAlignment(SWT.RIGHT);
+                } else {
+                    bLayout.setAlignment(SWT.CENTER);
+                }
+                graphics.drawTextLayout(bLayout, textLeftX,
                         bounds.y + tall + 1);
             }
             graphics.drawLine(bounds.x, bounds.y, endX, bounds.y);

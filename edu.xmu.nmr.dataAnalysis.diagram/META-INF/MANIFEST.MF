@@ -18,4 +18,6 @@ Bundle-ClassPath: resource/lib/log4j-1.2.17.jar,
  .,
  resource/lib/JTransforms-3.0.jar
 Export-Package: edu.xmu.nmr.dataanalysis.diagram.handlers,
- edu.xmu.nmr.dataanalysis.diagram.multieditor
+ edu.xmu.nmr.dataanalysis.diagram.math,
+ edu.xmu.nmr.dataanalysis.diagram.multieditor,
+ edu.xmu.nmr.dataanalysis.diagram.others

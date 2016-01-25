@@ -107,4 +107,27 @@
          </property>
       </product>
    </extension>
+   <extension
+         point="org.eclipse.ui.console.consoleFactories">
+      <consoleFactory
+            class="edu.xmu.nmr.app.views.NMRConsoleFactory"
+            label="Console">
+      </consoleFactory>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:menu.window?after=menu.window.showview">
+         <menu
+               label="Perspective">
+            <command
+                  commandId="org.eclipse.ui.window.resetPerspective"
+                  id="menu.window.perspective.reset"
+                  label="Reset Perspective..."
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
 </plugin>

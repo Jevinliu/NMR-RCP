@@ -16,7 +16,7 @@ public class FidContainerFigure extends Figure {
         layout.horizontalSpacing = 3;
         layout.verticalSpacing = 3;
         setLayoutManager(layout);
-        setBorder(new LineBorder(ColorConstants.gray, 2));
+        setBorder(new LineBorder(ColorConstants.darkGreen, 2));
         setBackgroundColor(ColorConstants.white);
         setOpaque(true);
     }

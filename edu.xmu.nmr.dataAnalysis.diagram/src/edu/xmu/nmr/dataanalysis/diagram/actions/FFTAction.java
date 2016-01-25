@@ -29,13 +29,8 @@ public class FFTAction extends SelectionAction {
     @Override public void run() {
         SpecEditorPage specEditorPage = (SpecEditorPage) getWorkbenchPart();
         FidData specNode = specEditorPage.getSpecNode();
-        if (specEditorPage.isFidIsComplex()) {
-            specNode.setRawData(FFTMathUtils
-                    .getComplexFloatFFT_1D(specEditorPage.getFidDataSets()));
-        } else {
-            specNode.setRawData(FFTMathUtils
-                    .getRealFloatFFT_1D(specEditorPage.getFidDataSets()));
-        }
+        specNode.setRawData(FFTMathUtils
+                .getComplexFloatFFT_1D(specEditorPage.getFidDataSets()));
         specNode.setStride(3);
     }
 }

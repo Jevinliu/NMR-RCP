@@ -5,7 +5,8 @@ Bundle-SymbolicName: edu.xmu.nmr.app;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: edu.xmu.nmr.app.Activator
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.eclipse.ui.console;bundle-version="3.6.100"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: edu.xmu.dataanalysis.explorer.view,

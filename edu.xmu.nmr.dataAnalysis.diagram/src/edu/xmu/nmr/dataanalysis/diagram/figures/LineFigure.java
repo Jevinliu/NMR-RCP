@@ -287,7 +287,12 @@ public class LineFigure extends Figure {
             }
         }
         // 绘制竖直网格线
-        int ox = hInterval - Math.abs(offsetX) % hInterval;
+        int ox = 0;
+        if (offsetX >= 0) {
+            ox = offsetX % hInterval;
+        } else {
+            ox = hInterval + offsetX % hInterval;
+        }
         for (int j = 0; j * hInterval < bounds.width; j++) {
             int x = bounds.x + ox + j * hInterval;
             graphics.drawLine(x, bounds.y, x, endY);

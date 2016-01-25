@@ -12,6 +12,7 @@ import org.eclipse.ui.part.MultiPageEditorPart;
 
 import edu.xmu.nmr.custom.extensions.beans.EditorPageBean;
 import edu.xmu.nmr.custom.extensions.provider.EditorPageProvider;
+import edu.xmu.nmr.dataanalysis.importvarian.model.ParamsReal;
 import edu.xmu.nmr.dataanalysis.logic.datacenter.FileType;
 import edu.xmu.nmr.dataanalysis.logic.explorermodel.AbstractDataNode;
 import edu.xmu.nmr.dataanalysis.logic.explorermodel.FidNode;
@@ -120,14 +121,16 @@ public class NMRDiagEditor extends MultiPageEditorPart {
         if (fidNode == null || paramsNode == null || fidEditorPage == null) {
             return;
         }
-        float rawStepSize = -1f;
+        float stride = -1f; // 采样时间
         if (paramsNode.getFileType().equals(FileType.BRUKER)) {
-            rawStepSize = 5;
+            stride = 5;
         } else if (paramsNode.getFileType().equals(FileType.VARIAN)) {
-            rawStepSize = (float) paramsNode.getParams().get("at"); // 采样间隔
+            stride = Float
+                    .valueOf(((ParamsReal) paramsNode.getParams().get("at"))
+                            .getCurrentValuesTrim()); // 采样间隔
         }
-        fidEditorPage.setFidData(fidNode.getData().get("1"), rawStepSize);
-        specEditorPage.setFidDataSets(fidNode.getData().get("1"));
+        fidEditorPage.setFidData(fidNode.getData().get("0"), stride);
+        specEditorPage.setFidDataSets(fidNode.getData().get("0"));
         specEditorPage.setFidIsComplex(fidNode.isComplex());
     }
     
