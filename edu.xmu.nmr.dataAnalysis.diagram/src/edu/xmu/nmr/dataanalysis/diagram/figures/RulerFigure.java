@@ -61,9 +61,8 @@ public class RulerFigure extends Figure {
     }
     
     public void setOrient(RulerOrient orient) {
-        RulerOrient old = this.orient;
-        this.orient = orient;
-        if (!this.orient.equals(old)) {
+        if (this.orient == null || !this.orient.equals(orient)) {
+            this.orient = orient;
             setUnitLabel();
         }
     }
