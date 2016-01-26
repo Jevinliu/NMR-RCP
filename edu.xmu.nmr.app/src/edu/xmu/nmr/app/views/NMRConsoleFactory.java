@@ -3,8 +3,13 @@ package edu.xmu.nmr.app.views;
 import java.io.PrintStream;
 
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
+import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.console.IConsoleFactory;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
@@ -12,9 +17,11 @@ import org.eclipse.ui.console.MessageConsoleStream;
 
 public class NMRConsoleFactory implements IConsoleFactory {
     
-    static MessageConsole console = new MessageConsole("", null);
+    int counter = 1;
     
-    public static void closeConsole() {
+    private static MessageConsole console = new MessageConsole("", null);
+    
+    public void closeConsole() {
         final IConsoleManager manager = ConsolePlugin.getDefault()
                 .getConsoleManager();
         if (console != null) {
@@ -22,19 +29,20 @@ public class NMRConsoleFactory implements IConsoleFactory {
         }
     }
     
-    public static MessageConsole getConsole() {
+    public MessageConsole getConsole() {
         return console;
     }
     
-    public static void showconsole() {
+    public void showConsole() {
         if (console != null) {
             final IConsoleManager manager = ConsolePlugin.getDefault()
                     .getConsoleManager();
             final IConsole[] existing = manager.getConsoles();
             boolean exists = false;
-            for (final IConsole element : existing) {
+            for (IConsole element : existing) {
                 if (console == element) {
                     exists = true;
+                    break;
                 }
             }
             if (!exists) {
@@ -53,7 +61,7 @@ public class NMRConsoleFactory implements IConsoleFactory {
     
     @Override public void openConsole() {
         // TODO Auto-generated method stub
-        showconsole();
+         showConsole();
     }
     
 }

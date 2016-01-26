@@ -16,10 +16,11 @@ public class ArrayUtils {
             throw new IllegalArgumentException(
                     "Float array's length is not even number.");
         }
-        float[] dest = new float[sour.length];
+        float[] dest = new float[sour.length / 2];
         System.arraycopy(sour, sour.length / 2, dest, 0, sour.length / 2);
-        System.arraycopy(sour, 0, dest, sour.length / 2, sour.length / 2);
-        return dest;
+        System.arraycopy(sour, 0, sour, sour.length / 2, sour.length / 2);
+        System.arraycopy(dest, 0, sour, 0, sour.length / 2);
+        return sour;
     }
     
     /**

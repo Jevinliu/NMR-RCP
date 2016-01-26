@@ -21,7 +21,7 @@ public class FFTMathUtils {
         float[] result = new float[length * 2];
         System.arraycopy(source, 0, result, 0, source.length);
         floatFFT.complexForward(result);
-        return ArrayUtils.swapArrayInMid(extractReOrImDataArray(result, 0));
+        return extractReOrImDataArray(ArrayUtils.swapArrayInMid(result), 0);
     }
     
     /**
@@ -43,9 +43,7 @@ public class FFTMathUtils {
             }
         }
         floatFFT.complexForward(result);
-        float[] res = ArrayUtils
-                .swapArrayInMid(extractReOrImDataArray(result, 0));
-        return ArrayUtils.floatArrayToList(res);
+        return extractReOrImData(ArrayUtils.swapArrayInMid(result), 0);
     }
     
     /**

@@ -33,6 +33,11 @@ public class NMRDiagEditor extends MultiPageEditorPart {
             log.error("Diagram editor's input is error");
         }
         super.init(site, input);
+        AbstractDataNode adn = (AbstractDataNode) input;
+        if (adn.getParent() == null || adn.getParent().getParent() == null) {
+            return;
+        }
+        this.setPartName(adn.getParent().getParent().getName());
     }
     
     public NMRDiagEditor() {

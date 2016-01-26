@@ -130,4 +130,13 @@
          </menu>
       </menuContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="edu.xmu.nmr.app.views.NMRConsoleView"
+            id="edu.xmu.nmr.app.views.NMRConsoleView"
+            name="NMRConsole"
+            restorable="true">
+      </view>
+   </extension>
 </plugin>

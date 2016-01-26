@@ -2,10 +2,10 @@ package edu.xmu.nmr.app.perspectives;
 
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.eclipse.ui.console.IConsoleConstants;
 
 import edu.xmu.dataanalysis.explorer.view.NMRExplorer;
 import edu.xmu.nmr.app.views.NMRConsoleFactory;
+import edu.xmu.nmr.app.views.NMRConsoleView;
 import edu.xmu.nmr.dataanalysis.diagram.multieditor.NMRDiagEditor;
 
 public class DAPerspectiveFactory implements IPerspectiveFactory {
@@ -21,9 +21,8 @@ public class DAPerspectiveFactory implements IPerspectiveFactory {
         layout.addView(NMRExplorer.ID, IPageLayout.LEFT, 0.25f, editor);
         layout.addView(NMRDiagEditor.ID, IPageLayout.TOP, 0.25f, editor);
         
-        layout.addView(IConsoleConstants.ID_CONSOLE_VIEW, IPageLayout.BOTTOM,
-                0.75f, editor);
-                
+        layout.addView(NMRConsoleView.ID, IPageLayout.BOTTOM, 0.75f, editor);
+        
         layout.addPlaceholder(IPageLayout.ID_PROP_SHEET, IPageLayout.RIGHT,
                 0.75f, editor);
     }
