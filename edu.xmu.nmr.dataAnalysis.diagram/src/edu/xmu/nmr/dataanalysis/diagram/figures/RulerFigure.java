@@ -42,6 +42,8 @@ public class RulerFigure extends Figure {
     /**
      * 单位和坐标间隔标签
      */
+    private VerticalLabel vUnitLabel;
+    
     private Label unitLabel;
     
     public RulerFigure() {
@@ -49,6 +51,7 @@ public class RulerFigure extends Figure {
         setOpaque(false);
         setFont(new Font(null, "Arial", 8, SWT.NORMAL));
         setLayoutManager(new DAHintLayout());
+        vUnitLabel = new VerticalLabel();
         unitLabel = new Label();
         unitLabel.setOpaque(true);
     }
@@ -71,7 +74,10 @@ public class RulerFigure extends Figure {
     
     public void setUnitLabelText(float exp) {
         StringBuilder sb = new StringBuilder("e");
-        this.unitLabel.setText(sb.append(exp).toString());
+        if (this.orient.equals(RulerOrient.LEFT))
+            this.vUnitLabel.setText(sb.append(exp).toString());
+        else
+            this.unitLabel.setText(sb.append(exp).toString());
     }
     
     public void setFactor(float factor) {
@@ -179,7 +185,7 @@ public class RulerFigure extends Figure {
      */
     private void setUnitLabel() {
         if (this.orient.equals(RulerOrient.LEFT)) {
-            add(unitLabel, DAHintLayout.TOPLEFT);
+            add(vUnitLabel, DAHintLayout.TOPLEFT);
             
         } else {
             add(unitLabel, DAHintLayout.BOTTOMRIGHT);

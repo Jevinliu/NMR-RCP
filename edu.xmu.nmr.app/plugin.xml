@@ -135,7 +135,7 @@
       <view
             class="edu.xmu.nmr.app.views.NMRConsoleView"
             id="edu.xmu.nmr.app.views.NMRConsoleView"
-            name="NMRConsole"
+            name="Nmr Console"
             restorable="true">
       </view>
    </extension>

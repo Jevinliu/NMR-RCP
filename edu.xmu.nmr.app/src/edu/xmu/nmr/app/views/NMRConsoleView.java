@@ -2,6 +2,8 @@ package edu.xmu.nmr.app.views;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.VerifyEvent;
@@ -26,7 +28,7 @@ public class NMRConsoleView extends ConsoleView {
     }
     
     @Override public void createPartControl(Composite parent) {
-        SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
+        final SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
         super.createPartControl(sashForm);
         // 命令行输入面板布局
         Composite comp = new Composite(sashForm, SWT.NONE);
@@ -46,9 +48,18 @@ public class NMRConsoleView extends ConsoleView {
                 new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
         new Label(comp, SWT.NONE).setLayoutData(
                 new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
-                
         sashForm.setWeights(new int[] { 8, 2 });
-        
+        sashForm.addControlListener(new ControlAdapter() {
+            @Override public void controlResized(ControlEvent e) {
+                int height = sashForm.getClientArea().height;
+                int[] weights = sashForm.getWeights();
+                if (height >= 40) {
+                    weights[0] = height - 40;
+                    weights[1] = 40;
+                }
+                sashForm.setWeights(weights);
+            }
+        });
         // 进行输入判定
         cmdText.addVerifyListener(new VerifyListener() {
             
@@ -73,7 +84,5 @@ public class NMRConsoleView extends ConsoleView {
                 }
             }
         });
-        
     }
-    
 }
