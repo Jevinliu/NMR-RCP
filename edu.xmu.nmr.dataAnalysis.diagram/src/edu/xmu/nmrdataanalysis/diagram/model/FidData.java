@@ -3,10 +3,13 @@ package edu.xmu.nmrdataanalysis.diagram.model;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.swt.graphics.Color;
 
 import edu.xmu.nmr.dataanalysis.diagram.figures.PointsTools;
 import edu.xmu.nmr.dataanalysis.diagram.layouts.AxisProcess;
+import edu.xmu.nmr.dataanalysis.diagram.propertysheet.FigureProperty;
 
 public class FidData extends FElement {
     
@@ -60,6 +63,11 @@ public class FidData extends FElement {
     public static final String PRO_FD_OFFSETX = "pro_fd_offsetx";
     public static final String PRO_FD_YAXIS = "pro_fd_yaxis";
     public static final String PRO_FD_XAXIS = "pro_fd_xaxis";
+    
+    /// 非业务模型区
+    private Color foregroundColor = ColorConstants.blue;
+    private Color backgroundColor = ColorConstants.white;
+    private boolean hasGird = true;
     
     public FidData() {
         reset();
@@ -253,5 +261,39 @@ public class FidData extends FElement {
     public void setHScaleAndOffset(int appendOffsetX, double appendHScale) {
         this.setOffsetX((int) ((this.offsetX + appendOffsetX) * appendHScale));
         this.appendHScale(appendHScale);
+    }
+    
+    /// 非业务模型区
+    public Color getForegroundColor() {
+        return foregroundColor;
+    }
+    
+    public void setForegroundColor(Color foregroundColor) {
+        Color old = this.foregroundColor;
+        this.foregroundColor = foregroundColor;
+        getListeners().firePropertyChange(FigureProperty.PROPERTY_FORE_COLOR,
+                old, this.foregroundColor);
+    }
+    
+    public Color getBackgroundColor() {
+        return backgroundColor;
+    }
+    
+    public void setBackgroundColor(Color backgroundColor) {
+        Color old = this.backgroundColor;
+        this.backgroundColor = backgroundColor;
+        getListeners().firePropertyChange(FigureProperty.PROPERTY_BACK_COLOR,
+                old, this.backgroundColor);
+    }
+    
+    public boolean isHasGird() {
+        return hasGird;
+    }
+    
+    public void setHasGird(boolean hasGird) {
+        boolean old = this.hasGird;
+        this.hasGird = hasGird;
+        getListeners().firePropertyChange(FigureProperty.PROPERTY_HAS_GRID, old,
+                this.hasGird);
     }
 }

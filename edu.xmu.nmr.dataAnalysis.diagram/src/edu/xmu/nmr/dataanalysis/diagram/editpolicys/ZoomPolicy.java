@@ -8,6 +8,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 
 import edu.xmu.nmr.dataanalysis.diagram.commands.ZoomCommand;
+import edu.xmu.nmr.dataanalysis.diagram.editparts.FidContainerEditPart;
 import edu.xmu.nmr.dataanalysis.diagram.requests.DARequestConstants;
 import edu.xmu.nmr.dataanalysis.diagram.requests.ZoomRequst;
 import edu.xmu.nmrdataanalysis.diagram.model.Container;
@@ -26,23 +27,25 @@ public class ZoomPolicy extends AbstractEditPolicy {
     }
     
     protected Command createMoveCommand(Request request) {
-        ZoomCommand cmd = new ZoomCommand();
         Object parent = getHost().getModel();
-        if (!(parent instanceof Container)) {
-            return null;
-        }
-        if (!((Container) parent).hasChildren()) {
-            return null;
-        }
-        List<FElement> children = ((Container) parent).getChildren();
-        for (FElement child : children) {
-            if (child instanceof FidData) {
-                cmd.setModel((FidData) child);
-                ZoomRequst req = (ZoomRequst) request;
-                cmd.setTotalScale(req.getTotalScale());
-                cmd.setFactor(req.getFactor());
-                cmd.setMultiFactor(req.isMultiFactor());
-                return cmd;
+        if (getHost() instanceof FidContainerEditPart) {
+            if (!(parent instanceof Container)) {
+                return null;
+            }
+            if (!((Container) parent).hasChildren()) {
+                return null;
+            }
+            List<FElement> children = ((Container) parent).getChildren();
+            for (FElement child : children) {
+                if (child instanceof FidData) {
+                    ZoomCommand cmd = new ZoomCommand();
+                    cmd.setModel((FidData) child);
+                    ZoomRequst req = (ZoomRequst) request;
+                    cmd.setTotalScale(req.getTotalScale());
+                    cmd.setFactor(req.getFactor());
+                    cmd.setMultiFactor(req.isMultiFactor());
+                    return cmd;
+                }
             }
         }
         return null;

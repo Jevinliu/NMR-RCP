@@ -3,7 +3,7 @@ package edu.xmu.nmr.dataanalysis.diagram.tool;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
-import org.eclipse.gef.tools.TargetingTool;
+import org.eclipse.gef.tools.SelectionTool;
 import org.eclipse.swt.widgets.Event;
 
 import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAZoomManager;
@@ -11,7 +11,7 @@ import edu.xmu.nmr.dataanalysis.diagram.editparts.FidContainerEditPart;
 import edu.xmu.nmr.dataanalysis.diagram.requests.DARequestConstants;
 import edu.xmu.nmr.dataanalysis.diagram.requests.ZoomRequst;
 
-public class ZoomTool extends TargetingTool {
+public class ZoomTool extends SelectionTool {
     
     private DAZoomManager zoomMgr;
     
@@ -33,6 +33,9 @@ public class ZoomTool extends TargetingTool {
     
     @Override protected void updateTargetRequest() {
         ZoomRequst request = (ZoomRequst) getTargetRequest();
+        if (zoomMgr == null) {
+            return;
+        }
         request.setTotalScale(zoomMgr.getTotalScale());
         request.setFactor(zoomMgr.getFactor());
         request.setMultiFactor(zoomMgr.isMultiFactor());
@@ -68,5 +71,4 @@ public class ZoomTool extends TargetingTool {
     @Override protected boolean handleEnteredEditPart() {
         return false;
     }
-    
 }

@@ -115,7 +115,7 @@ public abstract class DAAbstractDragTool extends SelectionTool {
         updateTargetUnderMouse();
         EditPart editpart = getTargetEditPart();
         if (editpart != null) {
-            setDragTracker(editpart.getDragTracker(getTargetRequest()));
+            // setDragTracker(editpart.getDragTracker(getTargetRequest()));
             lockTargetEditPart(editpart);
             return true;
         }

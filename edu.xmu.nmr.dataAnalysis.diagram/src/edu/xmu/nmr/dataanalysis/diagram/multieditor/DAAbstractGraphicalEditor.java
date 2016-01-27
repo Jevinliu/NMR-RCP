@@ -31,7 +31,6 @@ import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAActionConstants;
 import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DADefaultEditDomain;
 import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAZoomManager;
 import edu.xmu.nmr.dataanalysis.diagram.editparts.DAEditPartFactory;
-import edu.xmu.nmr.dataanalysis.diagram.tool.ZoomTool;
 
 /**
  * DAAbstractGraphicalEditor
@@ -46,9 +45,6 @@ public abstract class DAAbstractGraphicalEditor extends GraphicalEditor {
     
     public DAAbstractGraphicalEditor() {
         setEditDomain(new DADefaultEditDomain(this));
-        ZoomTool zoomTool = new ZoomTool();
-        getEditDomain().setDefaultTool(zoomTool);
-        getEditDomain().setActiveTool(zoomTool);
     }
     
     @Override protected void configureGraphicalViewer() {

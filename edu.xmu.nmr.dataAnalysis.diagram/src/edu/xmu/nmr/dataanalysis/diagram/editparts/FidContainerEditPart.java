@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
 
-import edu.xmu.nmr.dataanalysis.diagram.editpolicys.DAYMovePolicy;
 import edu.xmu.nmr.dataanalysis.diagram.editpolicys.DAPartZoomInPolicy;
+import edu.xmu.nmr.dataanalysis.diagram.editpolicys.DAYMovePolicy;
 import edu.xmu.nmr.dataanalysis.diagram.editpolicys.ShowFullPolicy;
 import edu.xmu.nmr.dataanalysis.diagram.editpolicys.ZoomPolicy;
 import edu.xmu.nmr.dataanalysis.diagram.figures.FidContainerFigure;

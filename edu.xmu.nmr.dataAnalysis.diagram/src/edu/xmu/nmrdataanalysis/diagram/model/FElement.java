@@ -8,9 +8,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.ui.views.properties.IPropertySource;
+
+import edu.xmu.nmr.dataanalysis.diagram.propertysheet.DAPropertySource;
 
 public class FElement implements IAdaptable {
     
+    private IPropertySource propertySource = null;
     private List<FElement> children;
     private FElement parent;
     private PropertyChangeSupport listeners;
@@ -62,6 +66,12 @@ public class FElement implements IAdaptable {
     }
     
     @Override public Object getAdapter(Class adapter) {
+        if (adapter == IPropertySource.class) {
+            if (propertySource == null) {
+                propertySource = new DAPropertySource(this);
+            }
+            return propertySource;
+        }
         return null;
     }
     

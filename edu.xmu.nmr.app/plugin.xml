@@ -134,8 +134,9 @@
          point="org.eclipse.ui.views">
       <view
             class="edu.xmu.nmr.app.views.NMRConsoleView"
+            icon="icons/tv.png"
             id="edu.xmu.nmr.app.views.NMRConsoleView"
-            name="Nmr Console"
+            name=" "
             restorable="true">
       </view>
    </extension>

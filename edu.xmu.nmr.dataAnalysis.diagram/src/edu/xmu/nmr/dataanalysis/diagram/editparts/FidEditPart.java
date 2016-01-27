@@ -5,6 +5,7 @@ import java.beans.PropertyChangeEvent;
 import org.eclipse.draw2d.IFigure;
 
 import edu.xmu.nmr.dataanalysis.diagram.figures.LineFigure;
+import edu.xmu.nmr.dataanalysis.diagram.propertysheet.FigureProperty;
 import edu.xmu.nmrdataanalysis.diagram.model.FElement;
 import edu.xmu.nmrdataanalysis.diagram.model.FidData;
 
@@ -36,18 +37,23 @@ public class FidEditPart extends DAAbstractEditPart {
             figure.setHInterval(
                     (int) Math.floor(fidData.getXAxis().get("gap")));
         }
+        
+        figure.setForegroundColor(fidData.getForegroundColor());
+        figure.setBackgroundColor(fidData.getBackgroundColor());
+        figure.setHasGrid(fidData.isHasGird());
         figure.repaint();
     }
     
     @Override protected void createEditPolicies() {
-    
     }
     
     @Override public void propertyChange(PropertyChangeEvent evt) {
         String[] eventsName = new String[] { FidData.PRO_FD_FIDDATA,
                 FElement.PRO_FE_LAYOUT, FidData.PRO_FD_OFFSETY,
                 FidData.PRO_FD_OFFSETX, FidData.PRO_FD_YAXIS,
-                FidData.PRO_FD_XAXIS };
+                FidData.PRO_FD_XAXIS, FigureProperty.PROPERTY_FORE_COLOR,
+                FigureProperty.PROPERTY_BACK_COLOR,
+                FigureProperty.PROPERTY_HAS_GRID };
         for (String eventName : eventsName) {
             if (evt.getPropertyName().equals(eventName)) {
                 refreshVisuals();

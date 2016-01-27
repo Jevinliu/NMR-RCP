@@ -3,16 +3,13 @@ package edu.xmu.nmr.dataanalysis.diagram.figures;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 
 import org.eclipse.draw2d.AbstractPointListShape;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.GridData;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LineBorder;
-import org.eclipse.draw2d.geometry.Geometry;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -40,7 +37,6 @@ public class LineFigure extends Figure {
     
     private ArrayList<Float> rawData; // 原始数据，如fid数据，proc数据
     private float absMax;
-    private int tolerance = 2;
     private CoordinateTf ctf;
     private Rectangle oldBounds;
     private ArrayList<Integer> selectedIndex;
@@ -66,8 +62,13 @@ public class LineFigure extends Figure {
     
     private int offsetX;
     
+    /**
+     * 设置是否有网格
+     */
+    private boolean hasGrid = true;
+    
     public LineFigure() {
-        setOpaque(false);
+        setOpaque(true);
         getInitConfig();
         ctf = new CoordinateTf();
         addPreferenceListener();
@@ -127,6 +128,10 @@ public class LineFigure extends Figure {
     
     public void setOffsetX(int offsetX) {
         this.offsetX = offsetX;
+    }
+    
+    public void setHasGrid(boolean hasGrid) {
+        this.hasGrid = hasGrid;
     }
     
     /**
@@ -251,7 +256,9 @@ public class LineFigure extends Figure {
         boolean isAdvanced = graphics.getAdvanced();
         graphics.setAdvanced(true);
         graphics.setAntialias(SWT.ON);
-        this.drawGrid(graphics);
+        if (this.hasGrid) {
+            this.drawGrid(graphics);
+        }
         this.drawPolyline(graphics);
         graphics.setAdvanced(isAdvanced);
         graphics.popState();
@@ -299,29 +306,6 @@ public class LineFigure extends Figure {
         }
         graphics.setLineStyle(SWT.LINE_SOLID);
         graphics.setForegroundColor(getForegroundColor());
-    }
-    
-    @Override public boolean containsPoint(int x, int y) {
-        if (!super.containsPoint(x, y)) {
-            return false;
-        }
-        return shapeContainsPoint(x, y) || childrenContainsPoint(x, y);
-    }
-    
-    protected boolean shapeContainsPoint(int x, int y) {
-        Point location = getLocation();
-        return Geometry.polylineContainsPoint(points, x - location.x,
-                y - location.y, tolerance);
-    }
-    
-    protected boolean childrenContainsPoint(int x, int y) {
-        for (Iterator it = getChildren().iterator(); it.hasNext();) {
-            IFigure nextChild = (IFigure) it.next();
-            if (nextChild.containsPoint(x, y)) {
-                return true;
-            }
-        }
-        return false;
     }
     
     /**
