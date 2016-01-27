@@ -136,7 +136,7 @@
             class="edu.xmu.nmr.app.views.NMRConsoleView"
             icon="icons/tv.png"
             id="edu.xmu.nmr.app.views.NMRConsoleView"
-            name=" "
+            name="Log"
             restorable="true">
       </view>
    </extension>

@@ -9,6 +9,7 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import edu.xmu.nmr.dataanalysis.diagram.propertydescriptors.CheckBoxPropertyDescriptor;
+import edu.xmu.nmr.dataanalysis.diagram.propertydescriptors.SpinnerPropertyDescriptor;
 import edu.xmu.nmrdataanalysis.diagram.model.FElement;
 import edu.xmu.nmrdataanalysis.diagram.model.FidData;
 
@@ -33,6 +34,9 @@ public class DAPropertySource implements IPropertySource {
                     FigureProperty.PROPERTY_BACK_COLOR, "Background Color"));
             properties.add(new CheckBoxPropertyDescriptor(
                     FigureProperty.PROPERTY_HAS_GRID, "Has Grid"));
+            properties.add(new SpinnerPropertyDescriptor(
+                    FigureProperty.PROPERTY_LINEWIDTH, "Line Width", 1, 40, 1,
+                    1, 5));
         }
         return properties.toArray(new IPropertyDescriptor[0]);
     }
@@ -45,6 +49,8 @@ public class DAPropertySource implements IPropertySource {
             return ((FidData) fElement).getBackgroundColor().getRGB();
         case FigureProperty.PROPERTY_HAS_GRID:
             return ((FidData) fElement).isHasGird();
+        case FigureProperty.PROPERTY_LINEWIDTH:
+            return ((FidData) fElement).getLineWidth();
         default:
             return null;
         }
@@ -70,6 +76,10 @@ public class DAPropertySource implements IPropertySource {
             break;
         case FigureProperty.PROPERTY_HAS_GRID:
             ((FidData) fElement).setHasGird((boolean) value);
+            break;
+        case FigureProperty.PROPERTY_LINEWIDTH:
+            ((FidData) fElement).setLineWidth((int) value);
+            break;
         }
     }
     

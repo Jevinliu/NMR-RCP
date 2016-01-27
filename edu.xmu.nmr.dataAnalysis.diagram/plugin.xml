@@ -136,8 +136,5 @@
             class="edu.xmu.nmr.dataanalysis.diagram.pref.helper.DataAnalysisPrefInitializer">
       </initializer>
    </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-   </extension>
 
 </plugin>

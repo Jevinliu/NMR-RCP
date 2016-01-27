@@ -9,6 +9,7 @@ import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 
 import edu.xmu.nmr.dataanalysis.diagram.commands.ShowFullCommand;
 import edu.xmu.nmr.dataanalysis.diagram.requests.DARequestConstants;
+import edu.xmu.nmr.dataanalysis.diagram.requests.ShowFullRequest;
 import edu.xmu.nmrdataanalysis.diagram.model.Container;
 import edu.xmu.nmrdataanalysis.diagram.model.FElement;
 import edu.xmu.nmrdataanalysis.diagram.model.FidData;
@@ -37,6 +38,8 @@ public class ShowFullPolicy extends AbstractEditPolicy {
         for (FElement child : children) {
             if (child instanceof FidData) {
                 cmd.setModel((FidData) child);
+                cmd.setZoomManager(
+                        ((ShowFullRequest) request).getZoomManager());
                 return cmd;
             }
         }

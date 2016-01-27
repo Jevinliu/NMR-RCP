@@ -41,6 +41,7 @@ public class FidEditPart extends DAAbstractEditPart {
         figure.setForegroundColor(fidData.getForegroundColor());
         figure.setBackgroundColor(fidData.getBackgroundColor());
         figure.setHasGrid(fidData.isHasGird());
+        figure.setLineWidth(fidData.getLineWidth());
         figure.repaint();
     }
     
@@ -53,7 +54,8 @@ public class FidEditPart extends DAAbstractEditPart {
                 FidData.PRO_FD_OFFSETX, FidData.PRO_FD_YAXIS,
                 FidData.PRO_FD_XAXIS, FigureProperty.PROPERTY_FORE_COLOR,
                 FigureProperty.PROPERTY_BACK_COLOR,
-                FigureProperty.PROPERTY_HAS_GRID };
+                FigureProperty.PROPERTY_HAS_GRID,
+                FigureProperty.PROPERTY_LINEWIDTH };
         for (String eventName : eventsName) {
             if (evt.getPropertyName().equals(eventName)) {
                 refreshVisuals();

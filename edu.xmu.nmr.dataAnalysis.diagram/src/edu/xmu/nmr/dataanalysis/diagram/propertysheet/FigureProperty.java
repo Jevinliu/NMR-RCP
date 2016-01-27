@@ -7,4 +7,6 @@ public class FigureProperty {
     public static final String PROPERTY_BACK_COLOR = "Property_Back_Color";
     
     public static final String PROPERTY_HAS_GRID = "Property_Has_Grid";
+    
+    public static final String PROPERTY_LINEWIDTH = "Property_LineWidth";
 }

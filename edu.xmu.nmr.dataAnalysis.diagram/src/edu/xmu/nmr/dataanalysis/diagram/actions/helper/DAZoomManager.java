@@ -106,11 +106,18 @@ public class DAZoomManager {
      * @param zoom
      *            新的zoom level
      */
-    public void setZoom(double zoom) {
+    public void setZoomAndPrim(double zoom) {
         zoom = Math.min(getMaxZoom(), zoom);
         zoom = Math.max(getMinZoom(), zoom);
         if (this.zoom != zoom)
             primSetZoom(zoom);
+    }
+    
+    public void setZoom(double zoom) {
+        zoom = Math.min(getMaxZoom(), zoom);
+        zoom = Math.max(getMinZoom(), zoom);
+        if (this.zoom != zoom)
+            this.zoom = zoom;
     }
     
     public void setZoomLevels(double[] zoomLevels) {
@@ -129,18 +136,22 @@ public class DAZoomManager {
      * 放大
      */
     public void zoomIn() {
-        setZoom(getNextZoomLevel());
+        setZoomAndPrim(getNextZoomLevel());
     }
     
     /**
      * 缩小
      */
     public void zoomOut() {
-        setZoom(getPreviousZoomLevel());
+        setZoomAndPrim(getPreviousZoomLevel());
     }
     
     public double getTotalScale() {
         return totalScale;
+    }
+    
+    public void setTotalScale(double totalScale) {
+        this.totalScale = totalScale;
     }
     
     public double getFactor() {

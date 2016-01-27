@@ -5,13 +5,20 @@ import java.util.Map;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 
+import edu.xmu.nmr.dataanalysis.diagram.Activator;
 import edu.xmu.nmr.dataanalysis.diagram.figures.PointsTools;
 import edu.xmu.nmr.dataanalysis.diagram.layouts.AxisProcess;
+import edu.xmu.nmr.dataanalysis.diagram.pref.helper.DataAnalysisPrefConstants;
+import edu.xmu.nmr.dataanalysis.diagram.pref.helper.DataAnalysisPrefPageUtil;
 import edu.xmu.nmr.dataanalysis.diagram.propertysheet.FigureProperty;
 
-public class FidData extends FElement {
+public class FidData extends FElement implements IPropertyChangeListener {
     
     /**
      * 原始数据，如fid数据，proc数据
@@ -68,9 +75,24 @@ public class FidData extends FElement {
     private Color foregroundColor = ColorConstants.blue;
     private Color backgroundColor = ColorConstants.white;
     private boolean hasGird = true;
+    private int lineWidth = 1;
     
     public FidData() {
         reset();
+        getInitConfig();
+        IPreferenceStore ips = Activator.getDefault().getPreferenceStore();
+        ips.addPropertyChangeListener(this);
+    }
+    
+    /**
+     * 获取偏好页中的配置，设置绘图方式
+     */
+    private void getInitConfig() {
+        boolean isBorder = DataAnalysisPrefPageUtil.getValueOfFidBorderCheck();
+        foregroundColor = new Color(null,
+                DataAnalysisPrefPageUtil.getValueOfFidForeColor());
+        backgroundColor = new Color(null,
+                DataAnalysisPrefPageUtil.getValueOfFidBackColor());
     }
     
     public ArrayList<Float> getRawData() {
@@ -295,5 +317,30 @@ public class FidData extends FElement {
         this.hasGird = hasGird;
         getListeners().firePropertyChange(FigureProperty.PROPERTY_HAS_GRID, old,
                 this.hasGird);
+    }
+    
+    public int getLineWidth() {
+        return lineWidth;
+    }
+    
+    public void setLineWidth(int lineWidth) {
+        int old = this.lineWidth;
+        this.lineWidth = lineWidth;
+        getListeners().firePropertyChange(FigureProperty.PROPERTY_LINEWIDTH,
+                old, this.lineWidth);
+    }
+    
+    @Override public void propertyChange(PropertyChangeEvent event) {
+        switch (event.getProperty()) {
+        case DataAnalysisPrefConstants.FID_PREF_FOREGROUND_COLOR:
+            setForegroundColor(new Color(null, (RGB) event.getNewValue()));
+            break;
+        case DataAnalysisPrefConstants.FID_PREF_BACHGROUND_COLOR:
+            setBackgroundColor(new Color(null, (RGB) event.getNewValue()));
+            break;
+        case DataAnalysisPrefConstants.FID_PREF_HAVE_BORDER:
+            boolean isBorder = (boolean) event.getNewValue();
+            break;
+        }
     }
 }

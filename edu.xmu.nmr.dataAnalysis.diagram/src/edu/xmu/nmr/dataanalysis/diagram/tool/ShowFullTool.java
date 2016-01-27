@@ -19,6 +19,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.tools.TargetingTool;
 import org.eclipse.swt.events.MouseEvent;
 
+import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAZoomManager;
 import edu.xmu.nmr.dataanalysis.diagram.commands.ShowFullCommand;
 import edu.xmu.nmr.dataanalysis.diagram.editparts.FidContainerEditPart;
 import edu.xmu.nmr.dataanalysis.diagram.requests.DARequestConstants;
@@ -44,7 +45,9 @@ public class ShowFullTool extends TargetingTool {
     }
     
     @Override protected void updateTargetRequest() {
-        super.updateTargetRequest();
+        ShowFullRequest request = (ShowFullRequest) getTargetRequest();
+        request.setZoomManager((DAZoomManager) getCurrentViewer()
+                .getProperty(DAZoomManager.class.toString()));
     }
     
     @Override public void mouseDown(MouseEvent me, EditPartViewer viewer) {

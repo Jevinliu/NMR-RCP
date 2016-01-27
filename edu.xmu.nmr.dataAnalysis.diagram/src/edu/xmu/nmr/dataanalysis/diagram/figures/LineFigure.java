@@ -9,21 +9,12 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.GridData;
-import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.RGB;
 
-import edu.xmu.nmr.dataanalysis.diagram.Activator;
 import edu.xmu.nmr.dataanalysis.diagram.layouts.CoordinateTf;
-import edu.xmu.nmr.dataanalysis.diagram.pref.helper.DataAnalysisPrefConstants;
-import edu.xmu.nmr.dataanalysis.diagram.pref.helper.DataAnalysisPrefPageUtil;
 
 /**
  * <p>
@@ -67,30 +58,19 @@ public class LineFigure extends Figure {
      */
     private boolean hasGrid = true;
     
+    /**
+     * 
+     */
+    private int lineWidth = -1;
+    
     public LineFigure() {
         setOpaque(true);
-        getInitConfig();
         ctf = new CoordinateTf();
-        addPreferenceListener();
     }
     
     public LineFigure(ArrayList<Float> rawData) {
         this();
         this.rawData = rawData;
-    }
-    
-    /**
-     * 获取偏好页中的配置，设置绘图方式
-     */
-    private void getInitConfig() {
-        boolean isBorder = DataAnalysisPrefPageUtil.getValueOfFidBorderCheck();
-        RGB foreColor = DataAnalysisPrefPageUtil.getValueOfFidForeColor();
-        RGB backColor = DataAnalysisPrefPageUtil.getValueOfFidBackColor();
-        if (isBorder) {
-            setBorder(new LineBorder(ColorConstants.lightGray, 1));
-        }
-        setForegroundColor(new Color(null, foreColor));
-        setBackgroundColor(new Color(null, backColor));
     }
     
     /**
@@ -132,6 +112,15 @@ public class LineFigure extends Figure {
     
     public void setHasGrid(boolean hasGrid) {
         this.hasGrid = hasGrid;
+    }
+    
+    /**
+     * 设置线宽
+     * 
+     * @param lineWidth
+     */
+    public void setLineWidth(int lineWidth) {
+        this.lineWidth = lineWidth;
     }
     
     /**
@@ -230,7 +219,12 @@ public class LineFigure extends Figure {
     
     private void drawPolyline(Graphics graphics) {
         for (int i = 1; i < points.size(); i++) {
+            int old = graphics.getLineWidth();
+            if (lineWidth > 0) {
+                graphics.setLineWidth(lineWidth);
+            }
             graphics.drawLine(points.getPoint(i - 1), points.getPoint(i));
+            graphics.setLineWidth(old);
         }
     }
     
@@ -308,35 +302,4 @@ public class LineFigure extends Figure {
         graphics.setForegroundColor(getForegroundColor());
     }
     
-    /**
-     * 为preference 加入监听器，当preference发生变化时，刷新页面
-     */
-    private void addPreferenceListener() {
-        IPreferenceStore ips = Activator.getDefault().getPreferenceStore();
-        ips.addPropertyChangeListener(new IPropertyChangeListener() {
-            
-            @Override public void propertyChange(PropertyChangeEvent event) {
-                
-                switch (event.getProperty()) {
-                case DataAnalysisPrefConstants.FID_PREF_FOREGROUND_COLOR:
-                    setForegroundColor(
-                            new Color(null, (RGB) event.getNewValue()));
-                    break;
-                case DataAnalysisPrefConstants.FID_PREF_BACHGROUND_COLOR:
-                    setBackgroundColor(
-                            new Color(null, (RGB) event.getNewValue()));
-                    break;
-                case DataAnalysisPrefConstants.FID_PREF_HAVE_BORDER:
-                    boolean isBorder = (boolean) event.getNewValue();
-                    if (isBorder) {
-                        setBorder(new LineBorder(ColorConstants.lightGray, 1));
-                    } else {
-                        setBorder(null);
-                    }
-                    break;
-                }
-                repaint();
-            }
-        });
-    }
 }
