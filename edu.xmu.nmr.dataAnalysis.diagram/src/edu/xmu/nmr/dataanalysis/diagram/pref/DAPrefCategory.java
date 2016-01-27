@@ -4,7 +4,7 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-public class DataAnalysisCategory extends FieldEditorPreferencePage implements
+public class DAPrefCategory extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage {
 
 	@Override

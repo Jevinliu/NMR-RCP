@@ -14,9 +14,8 @@ import org.eclipse.swt.graphics.RGB;
 import edu.xmu.nmr.dataanalysis.diagram.Activator;
 import edu.xmu.nmr.dataanalysis.diagram.figures.PointsTools;
 import edu.xmu.nmr.dataanalysis.diagram.layouts.AxisProcess;
-import edu.xmu.nmr.dataanalysis.diagram.pref.helper.DataAnalysisPrefConstants;
-import edu.xmu.nmr.dataanalysis.diagram.pref.helper.DataAnalysisPrefPageUtil;
-import edu.xmu.nmr.dataanalysis.diagram.propertysheet.FigureProperty;
+import edu.xmu.nmr.dataanalysis.diagram.pref.helper.DAPrefConstants;
+import edu.xmu.nmr.dataanalysis.diagram.pref.helper.DAPrefPageUtil;
 
 public class FidData extends FElement implements IPropertyChangeListener {
     
@@ -76,6 +75,7 @@ public class FidData extends FElement implements IPropertyChangeListener {
     private Color backgroundColor = ColorConstants.white;
     private boolean hasGird = true;
     private int lineWidth = 1;
+    private boolean hasBorder;
     
     public FidData() {
         reset();
@@ -88,11 +88,11 @@ public class FidData extends FElement implements IPropertyChangeListener {
      * 获取偏好页中的配置，设置绘图方式
      */
     private void getInitConfig() {
-        boolean isBorder = DataAnalysisPrefPageUtil.getValueOfFidBorderCheck();
+        hasBorder = DAPrefPageUtil.getValueOfFidBorderCheck();
         foregroundColor = new Color(null,
-                DataAnalysisPrefPageUtil.getValueOfFidForeColor());
+                DAPrefPageUtil.getValueOfFidForeColor());
         backgroundColor = new Color(null,
-                DataAnalysisPrefPageUtil.getValueOfFidBackColor());
+                DAPrefPageUtil.getValueOfFidBackColor());
     }
     
     public ArrayList<Float> getRawData() {
@@ -285,7 +285,11 @@ public class FidData extends FElement implements IPropertyChangeListener {
         this.appendHScale(appendHScale);
     }
     
-    /// 非业务模型区
+    /**
+     * *****************************************************************
+     * ******非业务模型区*******
+     * *****************************************************************
+     */
     public Color getForegroundColor() {
         return foregroundColor;
     }
@@ -293,7 +297,7 @@ public class FidData extends FElement implements IPropertyChangeListener {
     public void setForegroundColor(Color foregroundColor) {
         Color old = this.foregroundColor;
         this.foregroundColor = foregroundColor;
-        getListeners().firePropertyChange(FigureProperty.PROPERTY_FORE_COLOR,
+        getListeners().firePropertyChange(DAPrefConstants.FID_PREF_FORE_COLOR,
                 old, this.foregroundColor);
     }
     
@@ -304,7 +308,7 @@ public class FidData extends FElement implements IPropertyChangeListener {
     public void setBackgroundColor(Color backgroundColor) {
         Color old = this.backgroundColor;
         this.backgroundColor = backgroundColor;
-        getListeners().firePropertyChange(FigureProperty.PROPERTY_BACK_COLOR,
+        getListeners().firePropertyChange(DAPrefConstants.FID_PREF_BACH_COLOR,
                 old, this.backgroundColor);
     }
     
@@ -315,8 +319,8 @@ public class FidData extends FElement implements IPropertyChangeListener {
     public void setHasGird(boolean hasGird) {
         boolean old = this.hasGird;
         this.hasGird = hasGird;
-        getListeners().firePropertyChange(FigureProperty.PROPERTY_HAS_GRID, old,
-                this.hasGird);
+        getListeners().firePropertyChange(DAPrefConstants.FID_PREF_HAS_GRID,
+                old, this.hasGird);
     }
     
     public int getLineWidth() {
@@ -326,20 +330,37 @@ public class FidData extends FElement implements IPropertyChangeListener {
     public void setLineWidth(int lineWidth) {
         int old = this.lineWidth;
         this.lineWidth = lineWidth;
-        getListeners().firePropertyChange(FigureProperty.PROPERTY_LINEWIDTH,
+        getListeners().firePropertyChange(DAPrefConstants.FID_PREF_LINE_WIDTH,
                 old, this.lineWidth);
+    }
+    
+    public boolean isHasBorder() {
+        return hasBorder;
+    }
+    
+    public void setHasBorder(boolean hasBorder) {
+        boolean old = this.hasBorder;
+        this.hasBorder = hasBorder;
+        getListeners().firePropertyChange(DAPrefConstants.FID_PREF_HAS_BORDER,
+                old, this.hasBorder);
     }
     
     @Override public void propertyChange(PropertyChangeEvent event) {
         switch (event.getProperty()) {
-        case DataAnalysisPrefConstants.FID_PREF_FOREGROUND_COLOR:
+        case DAPrefConstants.FID_PREF_FORE_COLOR:
             setForegroundColor(new Color(null, (RGB) event.getNewValue()));
             break;
-        case DataAnalysisPrefConstants.FID_PREF_BACHGROUND_COLOR:
+        case DAPrefConstants.FID_PREF_BACH_COLOR:
             setBackgroundColor(new Color(null, (RGB) event.getNewValue()));
             break;
-        case DataAnalysisPrefConstants.FID_PREF_HAVE_BORDER:
-            boolean isBorder = (boolean) event.getNewValue();
+        case DAPrefConstants.FID_PREF_HAS_BORDER:
+            setHasBorder((boolean) event.getNewValue());
+            break;
+        case DAPrefConstants.FID_PREF_HAS_GRID:
+            setHasGird((boolean) event.getNewValue());
+            break;
+        case DAPrefConstants.FID_PREF_LINE_WIDTH:
+            setLineWidth((int) event.getNewValue());
             break;
         }
     }

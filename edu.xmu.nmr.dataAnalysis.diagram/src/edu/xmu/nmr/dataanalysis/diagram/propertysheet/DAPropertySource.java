@@ -8,6 +8,7 @@ import org.eclipse.ui.views.properties.ColorPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
+import edu.xmu.nmr.dataanalysis.diagram.pref.helper.DAPrefConstants;
 import edu.xmu.nmr.dataanalysis.diagram.propertydescriptors.CheckBoxPropertyDescriptor;
 import edu.xmu.nmr.dataanalysis.diagram.propertydescriptors.SpinnerPropertyDescriptor;
 import edu.xmu.nmrdataanalysis.diagram.model.FElement;
@@ -29,27 +30,31 @@ public class DAPropertySource implements IPropertySource {
         ArrayList<IPropertyDescriptor> properties = new ArrayList<IPropertyDescriptor>();
         if (fElement instanceof FidData) {
             properties.add(new ColorPropertyDescriptor(
-                    FigureProperty.PROPERTY_FORE_COLOR, "Foreground Color"));
+                    DAPrefConstants.FID_PREF_FORE_COLOR, "Foreground Color"));
             properties.add(new ColorPropertyDescriptor(
-                    FigureProperty.PROPERTY_BACK_COLOR, "Background Color"));
+                    DAPrefConstants.FID_PREF_BACH_COLOR, "Background Color"));
             properties.add(new CheckBoxPropertyDescriptor(
-                    FigureProperty.PROPERTY_HAS_GRID, "Has Grid"));
+                    DAPrefConstants.FID_PREF_HAS_GRID, "Has Grid"));
             properties.add(new SpinnerPropertyDescriptor(
-                    FigureProperty.PROPERTY_LINEWIDTH, "Line Width", 1, 40, 1,
+                    DAPrefConstants.FID_PREF_LINE_WIDTH, "Line Width", 1, 40, 1,
                     1, 5));
+            properties.add(new CheckBoxPropertyDescriptor(
+                    DAPrefConstants.FID_PREF_HAS_BORDER, "Has Border"));
         }
         return properties.toArray(new IPropertyDescriptor[0]);
     }
     
     @Override public Object getPropertyValue(Object id) {
         switch ((String) id) {
-        case FigureProperty.PROPERTY_FORE_COLOR:
+        case DAPrefConstants.FID_PREF_FORE_COLOR:
             return ((FidData) fElement).getForegroundColor().getRGB();
-        case FigureProperty.PROPERTY_BACK_COLOR:
+        case DAPrefConstants.FID_PREF_BACH_COLOR:
             return ((FidData) fElement).getBackgroundColor().getRGB();
-        case FigureProperty.PROPERTY_HAS_GRID:
+        case DAPrefConstants.FID_PREF_HAS_GRID:
             return ((FidData) fElement).isHasGird();
-        case FigureProperty.PROPERTY_LINEWIDTH:
+        case DAPrefConstants.FID_PREF_HAS_BORDER:
+            return ((FidData) fElement).isHasBorder();
+        case DAPrefConstants.FID_PREF_LINE_WIDTH:
             return ((FidData) fElement).getLineWidth();
         default:
             return null;
@@ -66,20 +71,22 @@ public class DAPropertySource implements IPropertySource {
     
     @Override public void setPropertyValue(Object id, Object value) {
         switch ((String) id) {
-        case FigureProperty.PROPERTY_FORE_COLOR:
+        case DAPrefConstants.FID_PREF_FORE_COLOR:
             ((FidData) fElement)
                     .setForegroundColor(new Color(null, (RGB) value));
             break;
-        case FigureProperty.PROPERTY_BACK_COLOR:
+        case DAPrefConstants.FID_PREF_BACH_COLOR:
             ((FidData) fElement)
                     .setBackgroundColor(new Color(null, (RGB) value));
             break;
-        case FigureProperty.PROPERTY_HAS_GRID:
+        case DAPrefConstants.FID_PREF_HAS_GRID:
             ((FidData) fElement).setHasGird((boolean) value);
             break;
-        case FigureProperty.PROPERTY_LINEWIDTH:
+        case DAPrefConstants.FID_PREF_LINE_WIDTH:
             ((FidData) fElement).setLineWidth((int) value);
             break;
+        case DAPrefConstants.FID_PREF_HAS_BORDER:
+            ((FidData) fElement).setHasBorder((boolean) value);
         }
     }
     
