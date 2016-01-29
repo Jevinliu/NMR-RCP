@@ -116,7 +116,7 @@ public class FidPrefPage extends PreferencePage
         selectedRGB[0] = PreferenceConverter.getColor(ips,
                 DAPrefConstants.FID_PREF_FORE_COLOR);
         selectedRGB[1] = PreferenceConverter.getColor(ips,
-                DAPrefConstants.FID_PREF_BACH_COLOR);
+                DAPrefConstants.FID_PREF_BACK_COLOR);
         setColorSelector(colorIndex);
         
     }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.views.properties.ColorPropertyDescriptor;
+import org.eclipse.ui.views.properties.ComboBoxPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
@@ -13,10 +14,12 @@ import edu.xmu.nmr.dataanalysis.diagram.propertydescriptors.CheckBoxPropertyDesc
 import edu.xmu.nmr.dataanalysis.diagram.propertydescriptors.SpinnerPropertyDescriptor;
 import edu.xmu.nmrdataanalysis.diagram.model.FElement;
 import edu.xmu.nmrdataanalysis.diagram.model.FidData;
+import edu.xmu.nmrdataanalysis.diagram.model.Ruler;
 
 public class DAPropertySource implements IPropertySource {
     
     private FElement fElement;
+    private String[] scales = new String[] { "s", "ms", "us" };
     
     public DAPropertySource(FElement fElement) {
         this.fElement = fElement;
@@ -28,11 +31,13 @@ public class DAPropertySource implements IPropertySource {
     
     @Override public IPropertyDescriptor[] getPropertyDescriptors() {
         ArrayList<IPropertyDescriptor> properties = new ArrayList<IPropertyDescriptor>();
-        if (fElement instanceof FidData) {
+        if (fElement instanceof FidData || fElement instanceof Ruler) {
             properties.add(new ColorPropertyDescriptor(
                     DAPrefConstants.FID_PREF_FORE_COLOR, "Foreground Color"));
             properties.add(new ColorPropertyDescriptor(
-                    DAPrefConstants.FID_PREF_BACH_COLOR, "Background Color"));
+                    DAPrefConstants.FID_PREF_BACK_COLOR, "Background Color"));
+        }
+        if (fElement instanceof FidData) {
             properties.add(new CheckBoxPropertyDescriptor(
                     DAPrefConstants.FID_PREF_HAS_GRID, "Has Grid"));
             properties.add(new SpinnerPropertyDescriptor(
@@ -41,24 +46,44 @@ public class DAPropertySource implements IPropertySource {
             properties.add(new CheckBoxPropertyDescriptor(
                     DAPrefConstants.FID_PREF_HAS_BORDER, "Has Border"));
         }
+        if (fElement instanceof Ruler) {
+            properties.add(new CheckBoxPropertyDescriptor(
+                    DAPrefConstants.V_RULER_PREF_IS_VISIABLE, "Visiable"));
+            properties.add(new ComboBoxPropertyDescriptor(
+                    DAPrefConstants.V_RULER_PREF_SCALE, "Scale", scales));
+                    
+        }
         return properties.toArray(new IPropertyDescriptor[0]);
     }
     
     @Override public Object getPropertyValue(Object id) {
-        switch ((String) id) {
-        case DAPrefConstants.FID_PREF_FORE_COLOR:
-            return ((FidData) fElement).getForegroundColor().getRGB();
-        case DAPrefConstants.FID_PREF_BACH_COLOR:
-            return ((FidData) fElement).getBackgroundColor().getRGB();
-        case DAPrefConstants.FID_PREF_HAS_GRID:
-            return ((FidData) fElement).isHasGird();
-        case DAPrefConstants.FID_PREF_HAS_BORDER:
-            return ((FidData) fElement).isHasBorder();
-        case DAPrefConstants.FID_PREF_LINE_WIDTH:
-            return ((FidData) fElement).getLineWidth();
-        default:
-            return null;
+        if (fElement instanceof FidData || fElement instanceof Ruler) {
+            switch ((String) id) {
+            case DAPrefConstants.FID_PREF_FORE_COLOR:
+                return fElement.getForegroundColor().getRGB();
+            case DAPrefConstants.FID_PREF_BACK_COLOR:
+                return fElement.getBackgroundColor().getRGB();
+            }
         }
+        if (fElement instanceof FidData) {
+            switch ((String) id) {
+            case DAPrefConstants.FID_PREF_HAS_GRID:
+                return ((FidData) fElement).isHasGird();
+            case DAPrefConstants.FID_PREF_HAS_BORDER:
+                return ((FidData) fElement).isHasBorder();
+            case DAPrefConstants.FID_PREF_LINE_WIDTH:
+                return ((FidData) fElement).getLineWidth();
+            }
+        }
+        if (fElement instanceof Ruler) {
+            switch ((String) id) {
+            case DAPrefConstants.V_RULER_PREF_IS_VISIABLE:
+                return ((Ruler) fElement).isVisiable();
+            case DAPrefConstants.V_RULER_PREF_SCALE:
+                return 1;
+            }
+        }
+        return null;
     }
     
     @Override public boolean isPropertySet(Object id) {
@@ -70,24 +95,38 @@ public class DAPropertySource implements IPropertySource {
     }
     
     @Override public void setPropertyValue(Object id, Object value) {
-        switch ((String) id) {
-        case DAPrefConstants.FID_PREF_FORE_COLOR:
-            ((FidData) fElement)
-                    .setForegroundColor(new Color(null, (RGB) value));
-            break;
-        case DAPrefConstants.FID_PREF_BACH_COLOR:
-            ((FidData) fElement)
-                    .setBackgroundColor(new Color(null, (RGB) value));
-            break;
-        case DAPrefConstants.FID_PREF_HAS_GRID:
-            ((FidData) fElement).setHasGird((boolean) value);
-            break;
-        case DAPrefConstants.FID_PREF_LINE_WIDTH:
-            ((FidData) fElement).setLineWidth((int) value);
-            break;
-        case DAPrefConstants.FID_PREF_HAS_BORDER:
-            ((FidData) fElement).setHasBorder((boolean) value);
+        if (fElement instanceof FidData || fElement instanceof Ruler) {
+            switch ((String) id) {
+            case DAPrefConstants.FID_PREF_FORE_COLOR:
+                fElement.setForegroundColor(new Color(null, (RGB) value));
+                break;
+            case DAPrefConstants.FID_PREF_BACK_COLOR:
+                fElement.setBackgroundColor(new Color(null, (RGB) value));
+                break;
+            }
+        }
+        if (fElement instanceof FidData) {
+            switch ((String) id) {
+            case DAPrefConstants.FID_PREF_HAS_GRID:
+                ((FidData) fElement).setHasGird((boolean) value);
+                break;
+            case DAPrefConstants.FID_PREF_LINE_WIDTH:
+                ((FidData) fElement).setLineWidth((int) value);
+                break;
+            case DAPrefConstants.FID_PREF_HAS_BORDER:
+                ((FidData) fElement).setHasBorder((boolean) value);
+                break;
+            }
+        }
+        if (fElement instanceof Ruler) {
+            switch ((String) id) {
+            case DAPrefConstants.V_RULER_PREF_IS_VISIABLE:
+                ((Ruler) fElement).setVisiable((boolean) value);
+                break;
+            case DAPrefConstants.V_RULER_PREF_SCALE:
+                ((Ruler) fElement).setScale("cm");
+                break;
+            }
         }
     }
-    
 }

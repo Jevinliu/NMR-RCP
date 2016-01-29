@@ -3,7 +3,6 @@ package edu.xmu.nmrdataanalysis.diagram.model;
 import java.util.ArrayList;
 import java.util.Map;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -71,8 +70,6 @@ public class FidData extends FElement implements IPropertyChangeListener {
     public static final String PRO_FD_XAXIS = "pro_fd_xaxis";
     
     /// 非业务模型区
-    private Color foregroundColor = ColorConstants.blue;
-    private Color backgroundColor = ColorConstants.white;
     private boolean hasGird = true;
     private int lineWidth = 1;
     private boolean hasBorder;
@@ -90,10 +87,10 @@ public class FidData extends FElement implements IPropertyChangeListener {
      */
     private void getInitConfig() {
         hasBorder = DAPrefPageUtil.getValueOfFidBorderCheck();
-        foregroundColor = new Color(null,
-                DAPrefPageUtil.getValueOfFidForeColor());
-        backgroundColor = new Color(null,
-                DAPrefPageUtil.getValueOfFidBackColor());
+        setForegroundColor(
+                new Color(null, DAPrefPageUtil.getValueOfFidForeColor()));
+        setBackgroundColor(
+                new Color(null, DAPrefPageUtil.getValueOfFidBackColor()));
     }
     
     public ArrayList<Float> getRawData() {
@@ -291,27 +288,6 @@ public class FidData extends FElement implements IPropertyChangeListener {
      * ******非业务模型区*******
      * *****************************************************************
      */
-    public Color getForegroundColor() {
-        return foregroundColor;
-    }
-    
-    public void setForegroundColor(Color foregroundColor) {
-        Color old = this.foregroundColor;
-        this.foregroundColor = foregroundColor;
-        getListeners().firePropertyChange(DAPrefConstants.FID_PREF_FORE_COLOR,
-                old, this.foregroundColor);
-    }
-    
-    public Color getBackgroundColor() {
-        return backgroundColor;
-    }
-    
-    public void setBackgroundColor(Color backgroundColor) {
-        Color old = this.backgroundColor;
-        this.backgroundColor = backgroundColor;
-        getListeners().firePropertyChange(DAPrefConstants.FID_PREF_BACH_COLOR,
-                old, this.backgroundColor);
-    }
     
     public boolean isHasGird() {
         return hasGird;
@@ -351,7 +327,7 @@ public class FidData extends FElement implements IPropertyChangeListener {
         case DAPrefConstants.FID_PREF_FORE_COLOR:
             setForegroundColor(new Color(null, (RGB) event.getNewValue()));
             break;
-        case DAPrefConstants.FID_PREF_BACH_COLOR:
+        case DAPrefConstants.FID_PREF_BACK_COLOR:
             setBackgroundColor(new Color(null, (RGB) event.getNewValue()));
             break;
         case DAPrefConstants.FID_PREF_HAS_BORDER:

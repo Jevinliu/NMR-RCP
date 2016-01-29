@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import org.eclipse.draw2d.AbstractPointListShape;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.GridData;
@@ -32,15 +31,6 @@ public class LineFigure extends Figure {
     private Rectangle oldBounds;
     private ArrayList<Integer> selectedIndex;
     PointList points = new PointList();
-    /**
-     * 水平方向网格间隔，和ruler的interval保持一致
-     */
-    private int hInterval;
-    
-    /**
-     * 竖直方向网格间隔，和ruler的interval保持一致
-     */
-    private int vInterval;
     
     /**
      * 竖直方向上维持的缩放总比例
@@ -54,17 +44,12 @@ public class LineFigure extends Figure {
     private int offsetX;
     
     /**
-     * 设置是否有网格
-     */
-    private boolean hasGrid = true;
-    
-    /**
-     * 
+     * 线宽
      */
     private int lineWidth = -1;
     
     public LineFigure() {
-        setOpaque(true);
+        setOpaque(false);
         ctf = new CoordinateTf();
     }
     
@@ -86,14 +71,6 @@ public class LineFigure extends Figure {
         this.absMax = max;
     }
     
-    public void setHInterval(int hInterval) {
-        this.hInterval = hInterval;
-    }
-    
-    public void setVInterval(int vInterval) {
-        this.vInterval = vInterval;
-    }
-    
     public void setVScale(double vScale) {
         this.vScale = vScale;
     }
@@ -108,10 +85,6 @@ public class LineFigure extends Figure {
     
     public void setOffsetX(int offsetX) {
         this.offsetX = offsetX;
-    }
-    
-    public void setHasGrid(boolean hasGrid) {
-        this.hasGrid = hasGrid;
     }
     
     /**
@@ -250,56 +223,8 @@ public class LineFigure extends Figure {
         boolean isAdvanced = graphics.getAdvanced();
         graphics.setAdvanced(true);
         graphics.setAntialias(SWT.ON);
-        if (this.hasGrid) {
-            this.drawGrid(graphics);
-        }
         this.drawPolyline(graphics);
         graphics.setAdvanced(isAdvanced);
         graphics.popState();
     }
-    
-    /**
-     * 绘制网格
-     * 
-     * @param graphics
-     */
-    private void drawGrid(Graphics graphics) {
-        if (vInterval == 0) {
-            return;
-        }
-        Rectangle bounds = getBounds();
-        graphics.getLineStyle();
-        graphics.setForegroundColor(ColorConstants.lightGray);
-        graphics.setLineStyle(SWT.LINE_DOT);
-        int centerY = bounds.y + bounds.height / 2 + offsetY; // 以中点为基准
-        int endX = bounds.x + bounds.width;
-        int endY = bounds.y + bounds.height;
-        // 绘制水平网格线
-        int aboveY = centerY;
-        int belowY = centerY;
-        for (int i = 0; aboveY >= bounds.y || belowY <= endY; i++) {
-            aboveY = centerY - vInterval * i;
-            belowY = centerY + vInterval * i;
-            if (aboveY >= bounds.y) {
-                graphics.drawLine(bounds.x, aboveY, endX, aboveY);
-            }
-            if (i != 0 && belowY <= endY) {
-                graphics.drawLine(bounds.x, belowY, endX, belowY);
-            }
-        }
-        // 绘制竖直网格线
-        int ox = 0;
-        if (offsetX >= 0) {
-            ox = offsetX % hInterval;
-        } else {
-            ox = hInterval + offsetX % hInterval;
-        }
-        for (int j = 0; j * hInterval < bounds.width; j++) {
-            int x = bounds.x + ox + j * hInterval;
-            graphics.drawLine(x, bounds.y, x, endY);
-        }
-        graphics.setLineStyle(SWT.LINE_SOLID);
-        graphics.setForegroundColor(getForegroundColor());
-    }
-    
 }

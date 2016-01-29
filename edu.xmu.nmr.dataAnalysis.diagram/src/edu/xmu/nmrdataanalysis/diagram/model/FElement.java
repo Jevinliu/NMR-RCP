@@ -7,9 +7,12 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.views.properties.IPropertySource;
 
+import edu.xmu.nmr.dataanalysis.diagram.pref.helper.DAPrefConstants;
 import edu.xmu.nmr.dataanalysis.diagram.propertysheet.DAPropertySource;
 
 public class FElement implements IAdaptable {
@@ -23,6 +26,10 @@ public class FElement implements IAdaptable {
     protected Logger log = Logger.getLogger(this.getClass());
     
     public static final String PRO_FE_LAYOUT = "pro_fe_layout";
+    
+    ////// 可视化属性
+    private Color foregroundColor = ColorConstants.blue;
+    private Color backgroundColor = ColorConstants.white;
     
     public FElement() {
         this.parent = null;
@@ -83,6 +90,29 @@ public class FElement implements IAdaptable {
         Rectangle old = this.layout;
         this.layout = layout;
         this.listeners.firePropertyChange(PRO_FE_LAYOUT, old, this.layout);
+    }
+    
+    ////// 可视化属性
+    public Color getForegroundColor() {
+        return foregroundColor;
+    }
+    
+    public void setForegroundColor(Color foregroundColor) {
+        Color old = this.foregroundColor;
+        this.foregroundColor = foregroundColor;
+        getListeners().firePropertyChange(DAPrefConstants.FID_PREF_FORE_COLOR,
+                old, this.foregroundColor);
+    }
+    
+    public Color getBackgroundColor() {
+        return backgroundColor;
+    }
+    
+    public void setBackgroundColor(Color backgroundColor) {
+        Color old = this.backgroundColor;
+        this.backgroundColor = backgroundColor;
+        getListeners().firePropertyChange(DAPrefConstants.FID_PREF_BACK_COLOR,
+                old, this.backgroundColor);
     }
     
 }

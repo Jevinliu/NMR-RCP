@@ -14,6 +14,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.LayerConstants;
 
 import edu.xmu.nmr.dataanalysis.diagram.editpolicys.DAPartZoomInPolicy;
+import edu.xmu.nmr.dataanalysis.diagram.figures.DAGridLayer;
 import edu.xmu.nmr.dataanalysis.diagram.figures.LineFigure;
 import edu.xmu.nmr.dataanalysis.diagram.pref.helper.DAPrefConstants;
 import edu.xmu.nmrdataanalysis.diagram.model.FElement;
@@ -61,6 +62,7 @@ public class FidEditPart extends DAAbstractEditPart implements LayerConstants {
     }
     
     private void createLayers(LayeredPane layeredPane) {
+        layeredPane.add(new DAGridLayer(), GRID_LAYER);
         layeredPane.add(getPrintableLayers(), PRINTABLE_LAYERS);
         layeredPane.add(new FeedbackLayer(), FEEDBACK_LAYER);
     }
@@ -81,10 +83,11 @@ public class FidEditPart extends DAAbstractEditPart implements LayerConstants {
     }
     
     @Override public void refreshVisuals() {
-        IFigure bottomFigure = getFigure();
-        bottomFigure.getParent().add(bottomFigure,
+        IFigure baseFigure = getFigure();
+        baseFigure.getParent().add(baseFigure,
                 new GridData(GridData.FILL, GridData.FILL, true, true, 4, 4),
                 1);
+                
         LineFigure figure = (LineFigure) getPrimaryFigure();
         FidData fidData = (FidData) getModel();
         figure.setRawData(fidData.getRawData()); // 模型层与view层结合，装填数据
@@ -93,24 +96,36 @@ public class FidEditPart extends DAAbstractEditPart implements LayerConstants {
         figure.setOffsetY(fidData.getOffsetY());
         figure.setOffsetX(fidData.getOffsetX());
         figure.setHScale(fidData.getHScale());
-        if (fidData.getYAxis() != null) {
-            figure.setVInterval(
-                    (int) Math.floor(fidData.getYAxis().get("gap")));
-        }
-        if (fidData.getXAxis() != null) {
-            figure.setHInterval(
-                    (int) Math.floor(fidData.getXAxis().get("gap")));
-        }
-        
         figure.setForegroundColor(fidData.getForegroundColor());
-        figure.setBackgroundColor(fidData.getBackgroundColor());
-        figure.setHasGrid(fidData.isHasGird());
         figure.setLineWidth(fidData.getLineWidth());
         if (fidData.isHasBorder()) {
             figure.setBorder(new LineBorder(ColorConstants.lightGray, 1));
         } else
             figure.setBorder(null);
         figure.repaint();
+        refreshGrid(fidData);
+    }
+    
+    /**
+     * 刷新网格
+     * 
+     * @param model
+     */
+    private void refreshGrid(FidData model) {
+        DAGridLayer gridLayer = (DAGridLayer) getLayer(GRID_LAYER);
+        gridLayer.setBackgroundColor(model.getBackgroundColor());
+        if (model.getYAxis() != null) {
+            gridLayer.setVInterval(
+                    (int) Math.floor(model.getYAxis().get("gap")));
+        }
+        if (model.getXAxis() != null) {
+            gridLayer.setHInterval(
+                    (int) Math.floor(model.getXAxis().get("gap")));
+        }
+        gridLayer.setOffsetX(model.getOffsetX());
+        gridLayer.setOffsetY(model.getOffsetY());
+        gridLayer.setHasGrid(model.isHasGird());
+        gridLayer.repaint();
     }
     
     @Override protected void createEditPolicies() {
@@ -122,7 +137,7 @@ public class FidEditPart extends DAAbstractEditPart implements LayerConstants {
                 FElement.PRO_FE_LAYOUT, FidData.PRO_FD_OFFSETY,
                 FidData.PRO_FD_OFFSETX, FidData.PRO_FD_YAXIS,
                 FidData.PRO_FD_XAXIS, DAPrefConstants.FID_PREF_FORE_COLOR,
-                DAPrefConstants.FID_PREF_BACH_COLOR,
+                DAPrefConstants.FID_PREF_BACK_COLOR,
                 DAPrefConstants.FID_PREF_HAS_BORDER,
                 DAPrefConstants.FID_PREF_HAS_GRID,
                 DAPrefConstants.FID_PREF_LINE_WIDTH };

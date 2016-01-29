@@ -1,6 +1,5 @@
 package edu.xmu.nmr.dataanalysis.diagram.figures;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.GridData;
@@ -47,8 +46,7 @@ public class RulerFigure extends Figure {
     private Label unitLabel;
     
     public RulerFigure() {
-        setForegroundColor(ColorConstants.black);
-        setOpaque(false);
+        setOpaque(true);
         setFont(new Font(null, "Arial", 8, SWT.NORMAL));
         setLayoutManager(new DAHintLayout());
         vUnitLabel = new VerticalLabel();

@@ -20,7 +20,7 @@ public class DAPrefInitializer extends AbstractPreferenceInitializer {
         PreferenceConverter.setDefault(store,
                 DAPrefConstants.FID_PREF_FORE_COLOR, new RGB(0, 0, 255));
         PreferenceConverter.setDefault(store,
-                DAPrefConstants.FID_PREF_BACH_COLOR, new RGB(255, 255, 255));
+                DAPrefConstants.FID_PREF_BACK_COLOR, new RGB(255, 255, 255));
         store.setDefault(DAPrefConstants.FID_PREF_HAS_BORDER, true);
         store.setDefault(DAPrefConstants.FID_PREF_LINE_WIDTH, 1);
         store.setDefault(DAPrefConstants.FID_PREF_HAS_GRID, true);

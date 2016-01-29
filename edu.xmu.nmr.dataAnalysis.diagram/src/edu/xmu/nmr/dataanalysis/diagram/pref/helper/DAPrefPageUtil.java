@@ -35,11 +35,11 @@ public class DAPrefPageUtil {
     
     public static RGB getValueOfFidBackColor() {
         return PreferenceConverter.getColor(store,
-                DAPrefConstants.FID_PREF_BACH_COLOR);
+                DAPrefConstants.FID_PREF_BACK_COLOR);
     }
     
     public static void setValueOfFidBackColor(RGB fidBackColor) {
-        PreferenceConverter.setValue(store, DAPrefConstants.FID_PREF_BACH_COLOR,
+        PreferenceConverter.setValue(store, DAPrefConstants.FID_PREF_BACK_COLOR,
                 fidBackColor);
     }
     
