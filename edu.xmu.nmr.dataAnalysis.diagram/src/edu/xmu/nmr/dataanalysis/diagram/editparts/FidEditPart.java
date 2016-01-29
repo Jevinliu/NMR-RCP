@@ -3,28 +3,90 @@ package edu.xmu.nmr.dataanalysis.diagram.editparts;
 import java.beans.PropertyChangeEvent;
 
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.GridData;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Layer;
+import org.eclipse.draw2d.LayeredPane;
 import org.eclipse.draw2d.LineBorder;
+import org.eclipse.draw2d.StackLayout;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.LayerConstants;
 
+import edu.xmu.nmr.dataanalysis.diagram.editpolicys.DAPartZoomInPolicy;
 import edu.xmu.nmr.dataanalysis.diagram.figures.LineFigure;
 import edu.xmu.nmr.dataanalysis.diagram.pref.helper.DAPrefConstants;
 import edu.xmu.nmrdataanalysis.diagram.model.FElement;
 import edu.xmu.nmrdataanalysis.diagram.model.FidData;
 
-public class FidEditPart extends DAAbstractEditPart {
+public class FidEditPart extends DAAbstractEditPart implements LayerConstants {
+    
+    class FeedbackLayer extends Layer {
+        FeedbackLayer() {
+            setEnabled(false);
+        }
+        
+        /**
+         * @see org.eclipse.draw2d.Figure#getPreferredSize(int, int)
+         */
+        public Dimension getPreferredSize(int wHint, int hHint) {
+            Rectangle rect = new Rectangle();
+            for (int i = 0; i < getChildren().size(); i++)
+                rect.union(((IFigure) getChildren().get(i)).getBounds());
+            return rect.getSize();
+        }
+        
+    }
+    
+    private LayeredPane innerLayers;
+    private LayeredPane printableLayers;
+    private IFigure primaryFigure;
     
     public FidEditPart() {
     }
     
     @Override protected IFigure createFigure() {
-        IFigure fidFigure = new LineFigure();
-        return fidFigure;
+        innerLayers = new LayeredPane();
+        createLayers(innerLayers);
+        IFigure fidFigure = getPrimaryFigure();
+        getLayer(PRIMARY_LAYER).add(fidFigure, 0);
+        return innerLayers;
+    }
+    
+    public IFigure getPrimaryFigure() {
+        if (primaryFigure == null) {
+            primaryFigure = new LineFigure();
+        }
+        return primaryFigure;
+    }
+    
+    private void createLayers(LayeredPane layeredPane) {
+        layeredPane.add(getPrintableLayers(), PRINTABLE_LAYERS);
+        layeredPane.add(new FeedbackLayer(), FEEDBACK_LAYER);
+    }
+    
+    private LayeredPane createPrintableLayers() {
+        LayeredPane pane = new LayeredPane();
+        Layer layer = new Layer();
+        layer.setLayoutManager(new StackLayout());
+        pane.add(layer, PRIMARY_LAYER);
+        return pane;
+    }
+    
+    protected LayeredPane getPrintableLayers() {
+        if (printableLayers == null) {
+            printableLayers = createPrintableLayers();
+        }
+        return printableLayers;
     }
     
     @Override public void refreshVisuals() {
-        LineFigure figure = (LineFigure) getFigure();
+        IFigure bottomFigure = getFigure();
+        bottomFigure.getParent().add(bottomFigure,
+                new GridData(GridData.FILL, GridData.FILL, true, true, 4, 4),
+                1);
+        LineFigure figure = (LineFigure) getPrimaryFigure();
         FidData fidData = (FidData) getModel();
-        figure.setGridLayout();
         figure.setRawData(fidData.getRawData()); // 模型层与view层结合，装填数据
         figure.setAbsMax(fidData.getAbsMax());
         figure.setVScale(fidData.getVScale());
@@ -52,6 +114,7 @@ public class FidEditPart extends DAAbstractEditPart {
     }
     
     @Override protected void createEditPolicies() {
+        installEditPolicy(DAPartZoomInPolicy.ROLE, new DAPartZoomInPolicy());
     }
     
     @Override public void propertyChange(PropertyChangeEvent evt) {
@@ -69,5 +132,18 @@ public class FidEditPart extends DAAbstractEditPart {
                 return;
             }
         }
+    }
+    
+    @Override public IFigure getLayer(Object key) {
+        if (innerLayers == null)
+            return null;
+        IFigure layer = printableLayers.getLayer(key);
+        if (layer != null)
+            return layer;
+        return innerLayers.getLayer(key);
+    }
+    
+    public IFigure getContentPane() {
+        return getPrimaryFigure();
     }
 }

@@ -78,6 +78,7 @@ public class FidData extends FElement implements IPropertyChangeListener {
     private boolean hasBorder;
     
     public FidData() {
+        this.size = new Dimension(0, 0);
         reset();
         getInitConfig();
         IPreferenceStore ips = Activator.getDefault().getPreferenceStore();
