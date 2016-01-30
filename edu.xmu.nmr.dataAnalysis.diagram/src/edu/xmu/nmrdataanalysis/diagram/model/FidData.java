@@ -3,6 +3,7 @@ package edu.xmu.nmrdataanalysis.diagram.model;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -70,6 +71,8 @@ public class FidData extends FElement implements IPropertyChangeListener {
     public static final String PRO_FD_XAXIS = "pro_fd_xaxis";
     
     /// 非业务模型区
+    private Color fidGridColor = ColorConstants.lightGray;
+    private Color fidBorderColor = ColorConstants.lightGray;
     private boolean hasGird = true;
     private int lineWidth = 1;
     private boolean hasBorder;
@@ -91,6 +94,10 @@ public class FidData extends FElement implements IPropertyChangeListener {
                 new Color(null, DAPrefPageUtil.getValueOfFidForeColor()));
         setBackgroundColor(
                 new Color(null, DAPrefPageUtil.getValueOfFidBackColor()));
+        this.fidGridColor = new Color(null,
+                DAPrefPageUtil.getValueOfFidGridColor());
+        this.fidBorderColor = new Color(null,
+                DAPrefPageUtil.getValueOfFidBorderColor());
     }
     
     public ArrayList<Float> getRawData() {
@@ -322,6 +329,28 @@ public class FidData extends FElement implements IPropertyChangeListener {
                 old, this.hasBorder);
     }
     
+    public Color getFidGridColor() {
+        return fidGridColor;
+    }
+    
+    public void setFidGridColor(Color fidGridColor) {
+        Color old = this.fidGridColor;
+        this.fidGridColor = fidGridColor;
+        getListeners().firePropertyChange(DAPrefConstants.FID_PREF_GRID_COLOR,
+                old, this.fidGridColor);
+    }
+    
+    public Color getFidBorderColor() {
+        return fidBorderColor;
+    }
+    
+    public void setFidBorderColor(Color fidBorderColor) {
+        Color old = this.fidBorderColor;
+        this.fidBorderColor = fidBorderColor;
+        getListeners().firePropertyChange(DAPrefConstants.FID_PREF_BORDER_COLOR,
+                old, this.fidBorderColor);
+    }
+    
     @Override public void propertyChange(PropertyChangeEvent event) {
         switch (event.getProperty()) {
         case DAPrefConstants.FID_PREF_FORE_COLOR:
@@ -338,6 +367,12 @@ public class FidData extends FElement implements IPropertyChangeListener {
             break;
         case DAPrefConstants.FID_PREF_LINE_WIDTH:
             setLineWidth((int) event.getNewValue());
+            break;
+        case DAPrefConstants.FID_PREF_GRID_COLOR:
+            setFidGridColor((Color) event.getNewValue());
+            break;
+        case DAPrefConstants.FID_PREF_BORDER_COLOR:
+            setFidBorderColor((Color) event.getNewValue());
             break;
         }
     }

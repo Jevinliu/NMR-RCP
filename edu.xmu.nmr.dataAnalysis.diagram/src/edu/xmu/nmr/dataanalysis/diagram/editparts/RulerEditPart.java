@@ -16,7 +16,8 @@ public class RulerEditPart extends DAAbstractEditPart {
     @Override public void propertyChange(PropertyChangeEvent evt) {
         String[] eventsName = new String[] { Ruler.PRO_RULER_OFFSET,
                 Ruler.PRO_RULER_AXIS, DAPrefConstants.FID_PREF_FORE_COLOR,
-                DAPrefConstants.FID_PREF_BACK_COLOR };
+                DAPrefConstants.FID_PREF_BACK_COLOR,
+                DAPrefConstants.L_RULER_PREF_IS_VISIABLE };
         for (String eventName : eventsName) {
             if (evt.getPropertyName().equals(eventName)) {
                 refreshVisuals();
@@ -36,8 +37,14 @@ public class RulerEditPart extends DAAbstractEditPart {
         }
         RulerFigure figure = (RulerFigure) getFigure();
         Ruler ruler = (Ruler) getModel();
+        if (!ruler.isVisiable()) {
+            if (figure.getParent() != null)
+                figure.getParent().remove(figure);
+            return;
+        }
+        addParentFigure();
         figure.setOrient(ruler.getOrient());
-        figure.setGridLayout();
+        figure.setLayout();
         figure.setOffset(ruler.getOffset());
         figure.setBackgroundColor(ruler.getBackgroundColor());
         figure.setForegroundColor(ruler.getForegroundColor());
@@ -46,7 +53,17 @@ public class RulerEditPart extends DAAbstractEditPart {
             figure.setInterval((int) Math.floor(ruler.getAxis().get("gap")));
             figure.setUnitLabelText(ruler.getAxis().get("exp"));
         }
-        
+        figure.repaint();
+    }
+    
+    /**
+     * 添加当前EditPart下Figure的父Figure
+     */
+    private void addParentFigure() {
+        if (getFigure().getParent() == null) {
+            ((DAAbstractEditPart) this.getParent()).getFigure()
+                    .add(getFigure());
+        }
     }
     
     @Override protected void createEditPolicies() {

@@ -2,15 +2,12 @@ package edu.xmu.nmr.dataanalysis.diagram.figures;
 
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.GridData;
 import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.TextLayout;
 
+import edu.xmu.nmr.dataanalysis.diagram.layouts.DABorderLayout;
 import edu.xmu.nmr.dataanalysis.diagram.layouts.DAHintLayout;
-import edu.xmu.nmrdataanalysis.diagram.model.Ruler;
 import edu.xmu.nmrdataanalysis.diagram.model.RulerOrient;
 
 public class RulerFigure extends Figure {
@@ -71,34 +68,39 @@ public class RulerFigure extends Figure {
     
     public void setUnitLabelText(float exp) {
         StringBuilder sb = new StringBuilder("e");
-        if (this.orient.equals(RulerOrient.LEFT))
+        switch (orient) {
+        case LEFT:
             this.vUnitLabel.setText(sb.append(exp).toString());
-        else
+            break;
+        case BOTTOM:
             this.unitLabel.setText(sb.append(exp).toString());
+            break;
+        default:
+            break;
+        }
     }
     
     public void setFactor(float factor) {
         this.factor = factor;
     }
     
-    public void setLayout(Rectangle rect) {
-        getParent().setConstraint(this, rect); // 设置子figure在父figure中的位置
-    }
-    
-    public void setGridLayout() {
+    public void setLayout() {
         if (this.orient == null) {
             return;
         }
-        switch (this.orient) {
+        switch (orient) {
         case LEFT:
-            this.setSize(Ruler.AXISLL, -1);
-            getParent().setConstraint(this, new GridData(GridData.FILL,
-                    GridData.FILL, false, true, 1, 4));
+            getParent().setConstraint(this, DABorderLayout.LEFT);
             break;
         case BOTTOM:
-            this.setSize(-1, Ruler.AXISLL);
-            getParent().setConstraint(this, new GridData(GridData.FILL,
-                    GridData.FILL, true, false, 4, 1));
+            getParent().setConstraint(this, DABorderLayout.BOTTOM);
+            break;
+        case RIGHT:
+            getParent().setConstraint(this, DABorderLayout.RIGHT);
+            break;
+        case TOP:
+            getParent().setConstraint(this, DABorderLayout.TOP);
+            break;
         }
     }
     
@@ -108,70 +110,22 @@ public class RulerFigure extends Figure {
             return;
         }
         graphics.pushState();
-        Rectangle bounds = getBounds();
-        int rulerWidth = Ruler.AXISLL - 5;
-        int endX = bounds.getTopRight().x - 1;
-        int endY = bounds.getBottomLeft().y;
-        int centerY = bounds.y + bounds.height() / 2 + offset;
         switch (orient) {
         case LEFT:
-            TextLayout layout = new TextLayout(null);
-            layout.setText("0");
-            layout.setAlignment(SWT.RIGHT);
-            layout.setWidth(rulerWidth - tall - 1); // 设置文字的宽度，该宽度要去除坐标轴的宽度
-            int aboveY = centerY;
-            int belowY = centerY;
-            for (int i = 0; aboveY >= bounds.y || belowY <= endY; i++) {
-                aboveY = centerY - interval * i;
-                belowY = centerY + interval * i;
-                String sy = String.valueOf(i * factor); // 绘制坐标值
-                if (aboveY >= bounds.y) {
-                    graphics.drawLine(endX - tall, aboveY, endX, aboveY);
-                    layout.setText(sy);
-                    int textY = aboveY - 8;
-                    if (textY < bounds.y) {
-                        textY = aboveY;
-                    }
-                    graphics.drawTextLayout(layout, endX - rulerWidth, textY);
-                }
-                sy = "-" + sy;
-                if (i != 0 && belowY <= endY) {
-                    graphics.drawLine(endX - tall, belowY, endX, belowY); // 绘制坐标短线
-                    layout.setText(sy);
-                    int textY = belowY - 8;
-                    if (belowY + 8 > endY) { // 判断是否坐标值绘制点超出边界
-                        textY = belowY - 16;
-                    }
-                    graphics.drawTextLayout(layout, endX - rulerWidth, textY);
-                }
-            }
-            graphics.drawLine(endX, bounds.y, endX, endY);
+            DAFigureUtils.paintLeftAxis(graphics, getBounds(), interval, offset,
+                    factor, tall);
             break;
         case BOTTOM:
-            for (int j = -offset / interval; j
-                    * interval <= (bounds.width + Math.abs(offset)); j++) {
-                int pX = bounds.x + interval * j + offset;
-                graphics.drawLine(pX, bounds.y, pX, bounds.y + tall);
-                String sb = String.valueOf(j * factor);
-                TextLayout bLayout = new TextLayout(null);
-                bLayout.setText(sb);
-                bLayout.setWidth(interval - 10);
-                bLayout.setAlignment(SWT.CENTER);
-                int textLeftX = pX - interval / 2 + 5;
-                int textRightX = pX + interval / 2 - 5;
-                if (textLeftX < bounds.x) {
-                    textLeftX = pX;
-                    bLayout.setAlignment(SWT.LEFT);
-                } else if (textRightX > endX) {
-                    textLeftX = pX - interval + 10;
-                    bLayout.setAlignment(SWT.RIGHT);
-                } else {
-                    bLayout.setAlignment(SWT.CENTER);
-                }
-                graphics.drawTextLayout(bLayout, textLeftX,
-                        bounds.y + tall + 1);
-            }
-            graphics.drawLine(bounds.x, bounds.y, endX, bounds.y);
+            DAFigureUtils.paintBottomAxis(graphics, getBounds(), interval,
+                    offset, factor, tall);
+            break;
+        case RIGHT:
+            DAFigureUtils.paintRightAxis(graphics, getBounds(), interval,
+                    offset, factor, tall);
+            break;
+        case TOP:
+            DAFigureUtils.paintTopAxis(graphics, bounds, interval, offset,
+                    factor, tall);
             break;
         }
         graphics.popState();

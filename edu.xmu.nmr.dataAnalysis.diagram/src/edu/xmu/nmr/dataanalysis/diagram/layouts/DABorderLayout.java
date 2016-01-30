@@ -58,13 +58,15 @@ public class DABorderLayout extends AbstractHintLayout {
         Rectangle area = container.getClientArea();
         Rectangle rect = new Rectangle();
         
-        int hTotalGap = rulerGap + hSpacing + hMargin;
-        int vTotalGap = rulerGap + vSpacing + vMargin;
+        int hTotalGap = rulerGap + hSpacing;
+        int vTotalGap = rulerGap + vSpacing;
         
         /// 以中心的figure为参考点，之后换算出上下左右的figure.bounds
-        Dimension centerDs = area.getSize().getCopy();
-        Point centerTopLeft = area.getTopLeft().getCopy();
-        Point centerBottomRight = area.getBottomRight().getCopy();
+        Dimension centerDs = area.getSize().getCopy().expand(-2 * hMargin,
+                -2 * vMargin);
+        Point centerTopLeft = area.getTopLeft().getTranslated(hMargin, vMargin);
+        Point centerBottomRight = area.getBottomRight().getTranslated(-hMargin,
+                -vMargin);
         if (left != null && left.isVisible()) {
             centerDs.width -= hTotalGap;
             centerTopLeft.x += hTotalGap;

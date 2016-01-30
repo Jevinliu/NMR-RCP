@@ -1,5 +1,6 @@
 package edu.xmu.nmr.dataanalysis.diagram.pref;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -30,13 +31,14 @@ public class FidPrefPage extends PreferencePage
         implements IWorkbenchPreferencePage {
         
     private Font font; // 面板上的字体设置
-    private List list; // 相关的颜色设置列表
-    private String[] colorLists = new String[] { "Fid figure foreground",
-            "Fid figure background" };
+    private List colorDespList; // 相关的颜色设置列表
+    private String[] colorDesps = new String[] { "Fid figure foreground",
+            "Fid figure background", "Grid Color", "Border Color" };
     private ColorSelector colorSelector; // 颜色按钮
     private Button borderCheckBtn, gridCheckBtn;
-    private RGB[] selectedRGB = new RGB[2]; // 0: fid foreground color, 1: fid
-                                            // background color
+    private RGB[] selectedRGB = new RGB[4]; // 0: fid foreground color, 1: fid
+                                            // background color, 2: fid Grid
+                                            // color, 3: fid border color
     private Spinner lineWidthSpn;
     
     public FidPrefPage() {
@@ -112,11 +114,15 @@ public class FidPrefPage extends PreferencePage
         lineWidthSpn
                 .setSelection(ips.getInt(DAPrefConstants.FID_PREF_LINE_WIDTH));
         int colorIndex = ips.getInt(DAPrefConstants.FID_PREF_COLORLIST_SELECT);
-        list.setSelection(colorIndex);
+        colorDespList.setSelection(colorIndex);
         selectedRGB[0] = PreferenceConverter.getColor(ips,
                 DAPrefConstants.FID_PREF_FORE_COLOR);
         selectedRGB[1] = PreferenceConverter.getColor(ips,
                 DAPrefConstants.FID_PREF_BACK_COLOR);
+        selectedRGB[2] = PreferenceConverter.getColor(ips,
+                DAPrefConstants.FID_PREF_GRID_COLOR);
+        selectedRGB[3] = PreferenceConverter.getColor(ips,
+                DAPrefConstants.FID_PREF_BORDER_COLOR);
         setColorSelector(colorIndex);
         
     }
@@ -139,13 +145,14 @@ public class FidPrefPage extends PreferencePage
         listComp.setLayout(layout);
         listComp.setLayoutData(gridData);
         listComp.setFont(font);
-        list = new List(listComp, SWT.BORDER | SWT.SINGLE);
-        list.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-        list.setFont(font);
-        list.setItems(colorLists);
-        list.addSelectionListener(new SelectionAdapter() {
+        colorDespList = new List(listComp, SWT.BORDER | SWT.SINGLE);
+        colorDespList.setLayoutData(
+                new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+        colorDespList.setFont(font);
+        colorDespList.setItems(colorDesps);
+        colorDespList.addSelectionListener(new SelectionAdapter() {
             @Override public void widgetSelected(SelectionEvent e) {
-                setColorSelector(list.getSelectionIndex());
+                setColorSelector(colorDespList.getSelectionIndex());
             }
         });
         createColorBtn(listComp);
@@ -163,13 +170,7 @@ public class FidPrefPage extends PreferencePage
      *            选择的颜色列表框按钮
      */
     private void setColorSelector(int colorIndex) {
-        switch (colorIndex) {
-        case 0:
-            colorSelector.setColorValue(selectedRGB[0]);
-            break;
-        case 1:
-            colorSelector.setColorValue(selectedRGB[1]);
-        }
+        colorSelector.setColorValue(selectedRGB[colorIndex]);
     }
     
     private void createColorBtn(Composite parent) {
@@ -180,14 +181,8 @@ public class FidPrefPage extends PreferencePage
         colorSelector.addListener(new IPropertyChangeListener() {
             
             @Override public void propertyChange(PropertyChangeEvent event) {
-                switch (list.getSelectionIndex()) {
-                case 0:
-                    selectedRGB[0] = (RGB) event.getNewValue();
-                    break;
-                case 1:
-                    selectedRGB[1] = (RGB) event.getNewValue();
-                    break;
-                }
+                selectedRGB[colorDespList.getSelectionIndex()] = (RGB) event
+                        .getNewValue();
             }
         });
     }
@@ -196,9 +191,11 @@ public class FidPrefPage extends PreferencePage
         borderCheckBtn.setSelection(true);
         gridCheckBtn.setSelection(true);
         lineWidthSpn.setSelection(1);
-        list.setSelection(0);
+        colorDespList.setSelection(0);
         selectedRGB[0] = new RGB(0, 0, 255);
         selectedRGB[1] = new RGB(255, 255, 255);
+        selectedRGB[2] = ColorConstants.lightGray.getRGB();
+        selectedRGB[3] = ColorConstants.lightGray.getRGB();
         colorSelector.setColorValue(selectedRGB[0]);
         super.performDefaults();
     }
@@ -208,9 +205,12 @@ public class FidPrefPage extends PreferencePage
         DAPrefPageUtil.setValueOfFidBorderCheck(borderCheckBtn.getSelection());
         DAPrefPageUtil.setValueOfFidGridCheck(gridCheckBtn.getSelection());
         DAPrefPageUtil.setValueOfFidLineWidth(lineWidthSpn.getSelection());
-        DAPrefPageUtil.setValueOfFidColorListIndex(list.getSelectionIndex());
+        DAPrefPageUtil
+                .setValueOfFidColorListIndex(colorDespList.getSelectionIndex());
         DAPrefPageUtil.setValueOfFidForeColor(selectedRGB[0]);
         DAPrefPageUtil.setValueOfFidBackColor(selectedRGB[1]);
+        DAPrefPageUtil.setValueOfFidGridColor(selectedRGB[2]);
+        DAPrefPageUtil.setValueOfFidBorderColor(selectedRGB[3]);
         return super.performOk();
     }
     

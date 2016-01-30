@@ -96,7 +96,7 @@ public abstract class Ruler extends FElement implements PropertyChangeListener {
         boolean old = this.isVisiable;
         this.isVisiable = isVisiable;
         getListeners().firePropertyChange(
-                DAPrefConstants.V_RULER_PREF_IS_VISIABLE, old, this.isVisiable);
+                DAPrefConstants.L_RULER_PREF_IS_VISIABLE, old, this.isVisiable);
     }
     
     public String getScale() {
@@ -106,7 +106,7 @@ public abstract class Ruler extends FElement implements PropertyChangeListener {
     public void setScale(String scale) {
         String old = this.scale;
         this.scale = scale;
-        getListeners().firePropertyChange(DAPrefConstants.V_RULER_PREF_SCALE,
+        getListeners().firePropertyChange(DAPrefConstants.L_RULER_PREF_SCALE,
                 old, this.scale);
     }
 }

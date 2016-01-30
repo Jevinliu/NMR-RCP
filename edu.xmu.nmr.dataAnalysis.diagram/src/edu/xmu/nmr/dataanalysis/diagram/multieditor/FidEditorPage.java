@@ -36,8 +36,8 @@ public class FidEditorPage extends DAAbstractGraphicalEditor {
     private Logger log = Logger.getLogger(this.getClass());
     public static final String ID = "edu.xmu.nmr.dataAnalysis.diagram.editorparts.fidEditorPage";
     private FidData fidData; // 模型节点
-    private VerticalRuler leftRuler;
-    private HorizontalRuler bottomRuler;
+    private VerticalRuler leftRuler, rightRuler;
+    private HorizontalRuler bottomRuler, topRuler;
     private Container fidContainer;
     
     @Override public void init(IEditorSite site, IEditorInput input)
@@ -110,14 +110,19 @@ public class FidEditorPage extends DAAbstractGraphicalEditor {
         fidContainer.setLayout(LayoutUtils.getClientArea());
         leftRuler.setOrient(RulerOrient.LEFT);
         leftRuler.setParent(fidContainer);
+        rightRuler = new VerticalRuler();
+        rightRuler.setOrient(RulerOrient.RIGHT);
+        rightRuler.setParent(fidContainer);
         fidData.setParent(fidContainer);
         fidData.addPropertyChangeListener(leftRuler);
-        Container placeholderContainer = new Container();
-        placeholderContainer.setCType(ContainerType.PLACEHOLDER);
-        placeholderContainer.setParent(fidContainer);
+        fidData.addPropertyChangeListener(rightRuler);
         bottomRuler = new HorizontalRuler();
         bottomRuler.setOrient(RulerOrient.BOTTOM);
         bottomRuler.setParent(fidContainer);
+        topRuler = new HorizontalRuler();
+        topRuler.setOrient(RulerOrient.TOP);
+        topRuler.setParent(fidContainer);
+        fidData.addPropertyChangeListener(topRuler);
         fidData.addPropertyChangeListener(bottomRuler);
         return fidContainer;
     }
@@ -126,6 +131,8 @@ public class FidEditorPage extends DAAbstractGraphicalEditor {
         if (fidData != null && leftRuler != null && bottomRuler != null) {
             fidData.removePropertyChangeListener(leftRuler);
             fidData.removePropertyChangeListener(bottomRuler);
+            fidData.removePropertyChangeListener(rightRuler);
+            fidData.removePropertyChangeListener(topRuler);
         }
         super.dispose();
     }

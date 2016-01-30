@@ -129,6 +129,12 @@
             id="edu.xmu.nmr.dataAnalysis.diagram.page.fid"
             name="Fid">
       </page>
+      <page
+            category="edu.xmu.nmr.dataAnalysis.diagram.page.dataanalysis"
+            class="edu.xmu.nmr.dataanalysis.diagram.pref.AxisPrefPage"
+            id="edu.xmu.nmr.dataAnalysis.diagram.page.axis"
+            name="Axis">
+      </page>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">

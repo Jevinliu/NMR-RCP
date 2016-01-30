@@ -1,6 +1,5 @@
 package edu.xmu.nmr.dataanalysis.diagram.figures;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -33,7 +32,6 @@ public class DAGridLayer extends FreeformLayer {
     public DAGridLayer() {
         super();
         setOpaque(true);
-        setForegroundColor(ColorConstants.lightGray);
     }
     
     public void setVInterval(int vInterval) {

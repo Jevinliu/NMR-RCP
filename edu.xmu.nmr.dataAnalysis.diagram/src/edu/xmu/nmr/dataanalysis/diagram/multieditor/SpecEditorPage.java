@@ -130,9 +130,9 @@ public class SpecEditorPage extends DAAbstractGraphicalEditor {
         specNode = new FidData();
         specNode.setParent(specContainer);
         specNode.addPropertyChangeListener(leftRuler);
-        Container placeholder = new Container();
-        placeholder.setCType(ContainerType.PLACEHOLDER);
-        placeholder.setParent(specContainer);
+        // Container placeholder = new Container();
+        // placeholder.setCType(ContainerType.PLACEHOLDER);
+        // placeholder.setParent(specContainer);
         Ruler bottomRuler = new HorizontalRuler();
         bottomRuler.setOrient(RulerOrient.BOTTOM);
         bottomRuler.setParent(specContainer);

@@ -2,8 +2,6 @@ package edu.xmu.nmr.dataanalysis.diagram.editparts;
 
 import java.beans.PropertyChangeEvent;
 
-import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.GridData;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Layer;
 import org.eclipse.draw2d.LayeredPane;
@@ -16,6 +14,7 @@ import org.eclipse.gef.LayerConstants;
 import edu.xmu.nmr.dataanalysis.diagram.editpolicys.DAPartZoomInPolicy;
 import edu.xmu.nmr.dataanalysis.diagram.figures.DAGridLayer;
 import edu.xmu.nmr.dataanalysis.diagram.figures.LineFigure;
+import edu.xmu.nmr.dataanalysis.diagram.layouts.DABorderLayout;
 import edu.xmu.nmr.dataanalysis.diagram.pref.helper.DAPrefConstants;
 import edu.xmu.nmrdataanalysis.diagram.model.FElement;
 import edu.xmu.nmrdataanalysis.diagram.model.FidData;
@@ -84,10 +83,8 @@ public class FidEditPart extends DAAbstractEditPart implements LayerConstants {
     
     @Override public void refreshVisuals() {
         IFigure baseFigure = getFigure();
-        baseFigure.getParent().add(baseFigure,
-                new GridData(GridData.FILL, GridData.FILL, true, true, 4, 4),
-                1);
-                
+        baseFigure.getParent().add(baseFigure, DABorderLayout.CENTER);
+        
         LineFigure figure = (LineFigure) getPrimaryFigure();
         FidData fidData = (FidData) getModel();
         figure.setRawData(fidData.getRawData()); // 模型层与view层结合，装填数据
@@ -99,9 +96,10 @@ public class FidEditPart extends DAAbstractEditPart implements LayerConstants {
         figure.setForegroundColor(fidData.getForegroundColor());
         figure.setLineWidth(fidData.getLineWidth());
         if (fidData.isHasBorder()) {
-            figure.setBorder(new LineBorder(ColorConstants.lightGray, 1));
+            figure.setBorder(new LineBorder(fidData.getFidBorderColor(), 1));
         } else
             figure.setBorder(null);
+            
         figure.repaint();
         refreshGrid(fidData);
     }
@@ -125,6 +123,7 @@ public class FidEditPart extends DAAbstractEditPart implements LayerConstants {
         gridLayer.setOffsetX(model.getOffsetX());
         gridLayer.setOffsetY(model.getOffsetY());
         gridLayer.setHasGrid(model.isHasGird());
+        gridLayer.setForegroundColor(model.getFidGridColor());
         gridLayer.repaint();
     }
     
@@ -140,7 +139,9 @@ public class FidEditPart extends DAAbstractEditPart implements LayerConstants {
                 DAPrefConstants.FID_PREF_BACK_COLOR,
                 DAPrefConstants.FID_PREF_HAS_BORDER,
                 DAPrefConstants.FID_PREF_HAS_GRID,
-                DAPrefConstants.FID_PREF_LINE_WIDTH };
+                DAPrefConstants.FID_PREF_LINE_WIDTH,
+                DAPrefConstants.FID_PREF_GRID_COLOR,
+                DAPrefConstants.FID_PREF_BORDER_COLOR };
         for (String eventName : eventsName) {
             if (evt.getPropertyName().equals(eventName)) {
                 refreshVisuals();

@@ -19,8 +19,7 @@ public class DAEditPartFactory implements EditPartFactory {
             case DIAGCONTAINER:
                 part = new FidContainerEditPart();
                 break;
-            case PLACEHOLDER:
-                part = new PlaceHolderEditPart();
+            default:
                 break;
             }
         } else if (model instanceof FidData) {

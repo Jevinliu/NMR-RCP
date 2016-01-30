@@ -45,12 +45,16 @@ public class DAPropertySource implements IPropertySource {
                     1, 5));
             properties.add(new CheckBoxPropertyDescriptor(
                     DAPrefConstants.FID_PREF_HAS_BORDER, "Has Border"));
+            properties.add(new ColorPropertyDescriptor(
+                    DAPrefConstants.FID_PREF_GRID_COLOR, "Grid Color"));
+            properties.add(new ColorPropertyDescriptor(
+                    DAPrefConstants.FID_PREF_BORDER_COLOR, "Border Color"));
         }
         if (fElement instanceof Ruler) {
             properties.add(new CheckBoxPropertyDescriptor(
-                    DAPrefConstants.V_RULER_PREF_IS_VISIABLE, "Visiable"));
+                    DAPrefConstants.L_RULER_PREF_IS_VISIABLE, "Visiable"));
             properties.add(new ComboBoxPropertyDescriptor(
-                    DAPrefConstants.V_RULER_PREF_SCALE, "Scale", scales));
+                    DAPrefConstants.L_RULER_PREF_SCALE, "Scale", scales));
                     
         }
         return properties.toArray(new IPropertyDescriptor[0]);
@@ -73,13 +77,17 @@ public class DAPropertySource implements IPropertySource {
                 return ((FidData) fElement).isHasBorder();
             case DAPrefConstants.FID_PREF_LINE_WIDTH:
                 return ((FidData) fElement).getLineWidth();
+            case DAPrefConstants.FID_PREF_GRID_COLOR:
+                return ((FidData) fElement).getFidGridColor().getRGB();
+            case DAPrefConstants.FID_PREF_BORDER_COLOR:
+                return ((FidData) fElement).getFidBorderColor().getRGB();
             }
         }
         if (fElement instanceof Ruler) {
             switch ((String) id) {
-            case DAPrefConstants.V_RULER_PREF_IS_VISIABLE:
+            case DAPrefConstants.L_RULER_PREF_IS_VISIABLE:
                 return ((Ruler) fElement).isVisiable();
-            case DAPrefConstants.V_RULER_PREF_SCALE:
+            case DAPrefConstants.L_RULER_PREF_SCALE:
                 return 1;
             }
         }
@@ -116,14 +124,22 @@ public class DAPropertySource implements IPropertySource {
             case DAPrefConstants.FID_PREF_HAS_BORDER:
                 ((FidData) fElement).setHasBorder((boolean) value);
                 break;
+            case DAPrefConstants.FID_PREF_BORDER_COLOR:
+                ((FidData) fElement)
+                        .setFidBorderColor(new Color(null, (RGB) value));
+                break;
+            case DAPrefConstants.FID_PREF_GRID_COLOR:
+                ((FidData) fElement)
+                        .setFidGridColor(new Color(null, (RGB) value));
+                break;
             }
         }
         if (fElement instanceof Ruler) {
             switch ((String) id) {
-            case DAPrefConstants.V_RULER_PREF_IS_VISIABLE:
+            case DAPrefConstants.L_RULER_PREF_IS_VISIABLE:
                 ((Ruler) fElement).setVisiable((boolean) value);
                 break;
-            case DAPrefConstants.V_RULER_PREF_SCALE:
+            case DAPrefConstants.L_RULER_PREF_SCALE:
                 ((Ruler) fElement).setScale("cm");
                 break;
             }

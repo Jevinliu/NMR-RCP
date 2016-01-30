@@ -2,19 +2,16 @@ package edu.xmu.nmr.dataanalysis.diagram.figures;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
-import org.eclipse.draw2d.GridLayout;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.geometry.Rectangle;
+
+import edu.xmu.nmr.dataanalysis.diagram.layouts.DABorderLayout;
 
 public class FidContainerFigure extends Figure {
     
     public FidContainerFigure() {
         
-        GridLayout layout = new GridLayout(5, false);
-        layout.marginHeight = 5;
-        layout.marginWidth = 5;
-        layout.horizontalSpacing = 3;
-        layout.verticalSpacing = 3;
+        DABorderLayout layout = new DABorderLayout();
         setLayoutManager(layout);
         setBorder(new LineBorder(ColorConstants.darkGreen, 2));
         setBackgroundColor(ColorConstants.white);
