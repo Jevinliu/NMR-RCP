@@ -3,7 +3,7 @@ package edu.xmu.nmr.dataanalysis.diagram.tool;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.gef.Request;
 
-import edu.xmu.nmr.dataanalysis.diagram.others.DA;
+import edu.xmu.nmr.dataanalysis.diagram.others.DAUI;
 import edu.xmu.nmr.dataanalysis.diagram.requests.DAMoveRequest;
 import edu.xmu.nmr.dataanalysis.diagram.requests.DARequestConstants;
 
@@ -17,7 +17,7 @@ public class DAMoveTool extends DAAbstractDragTool {
     }
     
     @Override protected String getCommandName() {
-        if (type == DA.HORIZONTAL) {
+        if (type == DAUI.HORIZONTAL) {
             return DARequestConstants.DA_REQ_MOVE_H_IMG;
         } else {
             return DARequestConstants.DA_REQ_MOVE_V_IMG;
@@ -33,7 +33,7 @@ public class DAMoveTool extends DAAbstractDragTool {
      *            <code>DA.HORIZONTAL</code>则为水平方向移动。
      */
     public void setType(int type) {
-        if (type != DA.HORIZONTAL && type != DA.VERTICAL) {
+        if (type != DAUI.HORIZONTAL && type != DAUI.VERTICAL) {
             throw new IllegalArgumentException(
                     "Type must be 'DA.VERTICAL' or 'DA.HORIZONTAL'");
         }

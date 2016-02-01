@@ -26,6 +26,10 @@ import edu.xmu.nmr.dataanalysis.diagram.layouts.CoordinateTf;
 public class LineFigure extends Figure {
     
     private ArrayList<Float> rawData; // 原始数据，如fid数据，proc数据
+    /**
+     * 标志数据集是否改变，主要为了fid与spec 的切换
+     */
+    private boolean isDataChange = false;
     private float absMax;
     private CoordinateTf ctf;
     private Rectangle oldBounds;
@@ -64,7 +68,10 @@ public class LineFigure extends Figure {
      * @param rawData
      */
     public void setRawData(ArrayList<Float> rawData) {
-        this.rawData = rawData;
+        if (this.rawData == null || !this.rawData.equals(rawData)) {
+            this.rawData = rawData;
+            isDataChange = true;
+        }
     }
     
     public void setAbsMax(float max) {
@@ -121,7 +128,7 @@ public class LineFigure extends Figure {
      */
     private void selectPoints() {
         if (selectedIndex != null && !selectedIndex.isEmpty()
-                && oldBounds.equals(getBounds())) {
+                && oldBounds.equals(getBounds()) && !isDataChange) {
             return;
         }
         if (rawData == null || rawData.size() == 0) {
@@ -174,6 +181,7 @@ public class LineFigure extends Figure {
             }
             sameXIndex.add(i);
         }
+        isDataChange = true;
     }
     
     /**

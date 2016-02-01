@@ -15,6 +15,47 @@
                style="push">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+         <toolbar
+               id="edu.xmu.nmr.dataAnalysis.diagram.toolbar.diagram"
+               label="Diagram">
+            <command
+                  commandId="edu.xmu.nmr.dataAnalysis.diagram.command.showFidOrSpec"
+                  icon="src/resources/images/image.png"
+                  id="edu.xmu.nmr.dataAnalysis.diagram.command"
+                  label="Diagram"
+                  style="pulldown">
+               <parameter
+                     name="org.eclipse.ui.commands.radioStateParameter"
+                     value="Fid">
+               </parameter>
+            </command>
+         </toolbar>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:edu.xmu.nmr.dataAnalysis.diagram.command">
+         <command
+               commandId="edu.xmu.nmr.dataAnalysis.diagram.command.showFidOrSpec"
+               label="Show Fid"
+               style="radio">
+            <parameter
+                  name="org.eclipse.ui.commands.radioStateParameter"
+                  value="Fid">
+            </parameter>
+         </command>
+         <command
+               commandId="edu.xmu.nmr.dataAnalysis.diagram.command.showFidOrSpec"
+               label="Show Spec"
+               style="radio">
+            <parameter
+                  name="org.eclipse.ui.commands.radioStateParameter"
+                  value="Spec">
+            </parameter>
+         </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -141,6 +182,45 @@
       <initializer
             class="edu.xmu.nmr.dataanalysis.diagram.pref.helper.DAPrefInitializer">
       </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="edu.xmu.nmr.dataAnalysis.diagram.category.diagram"
+            name="Diagram">
+      </category>
+      <command
+            categoryId="edu.xmu.nmr.dataAnalysis.diagram.category.diagram"
+            defaultHandler="edu.xmu.nmr.dataanalysis.diagram.handlers.DiagramHandler"
+            id="edu.xmu.nmr.dataAnalysis.diagram.command.all"
+            name="Diagram">
+      </command>
+      <command
+            categoryId="edu.xmu.nmr.dataAnalysis.diagram.category.diagram"
+            defaultHandler="edu.xmu.nmr.dataanalysis.diagram.handlers.ShowDiagHandler"
+            id="edu.xmu.nmr.dataAnalysis.diagram.command.showFidOrSpec"
+            name="Fid Or Spec">
+         <commandParameter
+               id="org.eclipse.ui.commands.radioStateParameter"
+               name="FidorSpec"
+               optional="false">
+         </commandParameter>
+         <state
+               class="org.eclipse.ui.handlers.RadioState:Fid"
+               id="org.eclipse.ui.commands.radioState">
+            <class
+                  class="org.eclipse.ui.handlers.RadioState">
+               <parameter
+                     name="default"
+                     value="Fid">
+               </parameter>
+               <parameter
+                     name="persisted"
+                     value="false">
+               </parameter>
+            </class>
+         </state>
+      </command>
    </extension>
 
 </plugin>

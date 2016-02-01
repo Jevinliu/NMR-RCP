@@ -8,7 +8,7 @@ import edu.xmu.nmr.dataanalysis.diagram.actions.helper.DAActionConstants;
 import edu.xmu.nmr.dataanalysis.diagram.multieditor.DAAbstractGraphicalEditor;
 import edu.xmu.nmr.dataanalysis.diagram.multieditor.FidEditorPage;
 import edu.xmu.nmr.dataanalysis.diagram.multieditor.SpecEditorPage;
-import edu.xmu.nmr.dataanalysis.diagram.others.DA;
+import edu.xmu.nmr.dataanalysis.diagram.others.DAUI;
 import edu.xmu.nmr.dataanalysis.diagram.others.DASharedImages;
 import edu.xmu.nmr.dataanalysis.diagram.tool.DAMoveTool;
 
@@ -44,7 +44,7 @@ public class DAYMoveAction extends SelectionAction {
         EditDomain editDomain = editorPage.getGraphicalViewer().getEditDomain();
         if (isChecked()) {
             DAMoveTool mvTool = new DAMoveTool();
-            mvTool.setType(DA.VERTICAL);
+            mvTool.setType(DAUI.VERTICAL);
             editDomain.setActiveTool(mvTool);
         } else {
             editDomain.setActiveTool(editDomain.getDefaultTool());

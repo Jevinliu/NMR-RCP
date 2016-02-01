@@ -72,10 +72,14 @@ public class RulerFigure extends Figure {
         case LEFT:
             this.vUnitLabel.setText(sb.append(exp).toString());
             break;
+        case RIGHT:
+            this.vUnitLabel.setText(sb.append(exp).toString());
+            break;
         case BOTTOM:
             this.unitLabel.setText(sb.append(exp).toString());
             break;
-        default:
+        case TOP:
+            this.unitLabel.setText(sb.append(exp).toString());
             break;
         }
     }
@@ -135,11 +139,20 @@ public class RulerFigure extends Figure {
      * 添加表示坐标单位与指数因子的标签
      */
     private void setUnitLabel() {
-        if (this.orient.equals(RulerOrient.LEFT)) {
+        switch (orient) {
+        case LEFT:
             add(vUnitLabel, DAHintLayout.TOPLEFT);
-            
-        } else {
+            break;
+        case RIGHT:
+            add(vUnitLabel, DAHintLayout.TOPRIGHT);
+            vUnitLabel.setAlignment(SWT.RIGHT);
+            break;
+        case TOP:
+            add(unitLabel, DAHintLayout.TOPRIGHT);
+            break;
+        case BOTTOM:
             add(unitLabel, DAHintLayout.BOTTOMRIGHT);
+            break;
         }
     }
 }

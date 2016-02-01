@@ -11,7 +11,7 @@ import org.eclipse.swt.SWT;
  * 
  * @see
  */
-public class DA {
+public class DAUI {
     
     /* 方向类型 */
     

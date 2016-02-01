@@ -20,6 +20,7 @@ import edu.xmu.nmrdataanalysis.diagram.model.Container;
 import edu.xmu.nmrdataanalysis.diagram.model.ContainerType;
 import edu.xmu.nmrdataanalysis.diagram.model.FidData;
 import edu.xmu.nmrdataanalysis.diagram.model.HorizontalRuler;
+import edu.xmu.nmrdataanalysis.diagram.model.NMRDataSetBean;
 import edu.xmu.nmrdataanalysis.diagram.model.RulerOrient;
 import edu.xmu.nmrdataanalysis.diagram.model.VerticalRuler;
 
@@ -40,6 +41,8 @@ public class FidEditorPage extends DAAbstractGraphicalEditor {
     private HorizontalRuler bottomRuler, topRuler;
     private Container fidContainer;
     
+    private NMRDataSetBean nmrDataSetBean;
+    
     @Override public void init(IEditorSite site, IEditorInput input)
             throws PartInitException {
         if (!(input instanceof FidEditorInput)) {
@@ -53,6 +56,15 @@ public class FidEditorPage extends DAAbstractGraphicalEditor {
         super();
         fidData = new FidData();
         leftRuler = new VerticalRuler();
+        nmrDataSetBean = new NMRDataSetBean();
+    }
+    
+    public NMRDataSetBean getNmrDataSetBean() {
+        return nmrDataSetBean;
+    }
+    
+    public FidData getDataSetNode() {
+        return fidData;
     }
     
     @Override protected void configureGraphicalViewer() {
@@ -87,6 +99,7 @@ public class FidEditorPage extends DAAbstractGraphicalEditor {
             log.error("Fid' model is error.");
             return;
         }
+        nmrDataSetBean.setFidDataSet(rawData);
         fidData.setRawData(rawData);
         fidData.setStride(stride);
     }
@@ -140,4 +153,5 @@ public class FidEditorPage extends DAAbstractGraphicalEditor {
     @Override public void doSave(IProgressMonitor monitor) {
     
     }
+    
 }

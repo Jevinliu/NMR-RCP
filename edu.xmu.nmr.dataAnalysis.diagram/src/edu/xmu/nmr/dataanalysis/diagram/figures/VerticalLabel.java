@@ -2,10 +2,12 @@ package edu.xmu.nmr.dataanalysis.diagram.figures;
 
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.swt.SWT;
 
 public class VerticalLabel extends Figure {
     
     private String text;
+    private int alignment = SWT.LEFT;
     
     public String getText() {
         return text;
@@ -23,6 +25,11 @@ public class VerticalLabel extends Figure {
         setOpaque(false);
     }
     
+    public void setAlignment(int alignment) {
+        this.alignment = alignment;
+        repaint();
+    }
+    
     @Override protected void paintFigure(Graphics graphics) {
         super.paintFigure(graphics);
         if (text == null || text.equals("")) {
@@ -31,7 +38,11 @@ public class VerticalLabel extends Figure {
         graphics.pushState();
         graphics.translate(bounds.x, bounds.y);
         graphics.rotate(90);
-        graphics.drawString(text, 5, -14);
+        int y = -14;
+        if (alignment == SWT.RIGHT) {
+            y = -14 - getBounds().width / 2;
+        }
+        graphics.drawString(text, 5, y);
         graphics.popState();
     }
 }
